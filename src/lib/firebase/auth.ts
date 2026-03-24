@@ -55,6 +55,29 @@ export async function signOut(): Promise<void> {
 }
 
 /**
+ * Ensure a Firestore profile doc exists for the user.
+ * Called on every login / auth-state restore so that Google-sign-in users
+ * and legacy accounts that pre-date the profile bootstrap are covered.
+ * Uses setDoc with merge so existing fields are never overwritten.
+ */
+export async function ensureProfile(user: User): Promise<void> {
+  const { doc, getDoc, setDoc, serverTimestamp } = await import("firebase/firestore")
+  const { db } = await import("./client")
+
+  const profileRef = doc(db, "users", user.uid, "profile", "main")
+  const snap = await getDoc(profileRef)
+
+  if (!snap.exists()) {
+    await setDoc(profileRef, {
+      displayName: user.displayName || user.email || "",
+      email: user.email || "",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    })
+  }
+}
+
+/**
  * Get the ID token for API route authorization.
  */
 export async function getIdToken(): Promise<string | null> {

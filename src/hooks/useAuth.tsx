@@ -17,6 +17,7 @@ import {
   type User,
 } from "firebase/auth"
 import { auth } from "@/lib/firebase/client"
+import { ensureProfile } from "@/lib/firebase/auth"
 
 interface AuthContextValue {
   user: User | null
@@ -39,12 +40,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(fbUser)
       setLoading(false)
 
-      // populate admin custom claim (if present)
+      // populate admin custom claim (if present) & ensure profile doc exists
       if (fbUser) {
         fbUser
           .getIdTokenResult()
           .then((res) => setIsAdmin(Boolean(res.claims?.admin)))
           .catch(() => setIsAdmin(false))
+
+        // Fire-and-forget: create profile if missing
+        ensureProfile(fbUser).catch(() => {
+          /* silent — best-effort */
+        })
       } else {
         setIsAdmin(false)
       }

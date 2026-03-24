@@ -1,0 +1,75 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default;
+  logs: false;
+}
+
+/* ─── Tailwind v4 Config Import ─────────────────────────────────────────────── */
+@config "../../tailwind.config.ts";
+
+/* ─── daisyUI Sand Diamonds colour overrides (applied globally + per-theme) ─ */
+/*     Overrides daisyUI's light theme vars with our brand palette.            */
+:root,
+[data-theme="sanddiamonds"] {
+  --color-primary:           oklch(72% 0.13 65);   /* gold  #D4AF37 */
+  --color-primary-content:   oklch(14% 0.03 265);  /* charcoal */
+  --color-secondary:         oklch(44% 0.11 230);  /* ocean #006994 */
+  --color-secondary-content: oklch(97% 0.004 100); /* diamond */
+  --color-accent:            oklch(70% 0.07 65);   /* sand  #C2A978 */
+  --color-accent-content:    oklch(14% 0.03 265);
+  --color-neutral:           oklch(14% 0.03 265);  /* charcoal #1A1A2E */
+  --color-neutral-content:   oklch(97% 0.004 100);
+  --color-base-100:          oklch(97% 0.004 100); /* diamond #F5F5F0 */
+  --color-base-200:          oklch(93% 0.008 80);
+  --color-base-300:          oklch(90% 0.012 76);
+  --color-base-content:      oklch(14% 0.03 265);
+  --color-info:              oklch(44% 0.11 230);
+  --color-success:           oklch(54% 0.16 142);
+  --color-warning:           oklch(72% 0.13 65);
+  --color-error:             oklch(53% 0.20 27);
+}
+
+/* ─── Base Layer ─────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    /* Luxury palette as CSS custom properties (for non-Tailwind use cases) */
+    --color-sand: #c2a978;
+    --color-gold: #d4af37;
+    --color-ocean: #006994;
+    --color-diamond: #f5f5f0;
+    --color-charcoal: #1a1a2e;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100dvh;
+  }
+
+  /* Focus ring — accessible and on-brand */
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+
+  /* Selection color */
+  ::selection {
+    background-color: var(--color-sand);
+    color: var(--color-charcoal);
+  }
+}
+
+/* ─── Utility: hide scrollbar but keep scroll ────────────────────────────── */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

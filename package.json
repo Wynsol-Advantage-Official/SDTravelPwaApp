@@ -1,13 +1,31 @@
 {
-  "name": "sd-travel-pwa-app",
+  "name": "sand-diamonds-travel-pwa",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "next dev --turbopack",
+    "check:wix": "node ./scripts/check-wix.mjs",
+    "build": "next build --webpack",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
+    "@faker-js/faker": "^10.4.0",
+    "@wix/bookings": "^1.0.1331",
+    "@wix/crm": "^1.0.1502",
+    "@wix/data": "^1.0.428",
+    "@wix/inbox": "^1.0.103",
+    "@wix/members": "^1.0.435",
+    "@wix/sdk": "^1.21.5",
+    "@wix/stores": "^1.0.729",
+    "daisyui": "^5.5.19",
+    "firebase": "^12.11.0",
+    "firebase-admin": "^13.7.0",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.0.1",
     "next": "16.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4"
@@ -18,6 +36,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.1",
+    "postcss": "^8.5.8",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

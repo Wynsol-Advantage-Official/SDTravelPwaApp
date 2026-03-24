@@ -22,10 +22,18 @@ export function ChatBubble({ message, isOwn }: ChatBubbleProps) {
         <p
           className={`mt-1 text-[10px] ${isOwn ? "text-charcoal/50" : "text-charcoal/40"}`}
         >
-          {new Date(message.timestamp).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+          {(() => {
+            const ts = message.timestamp
+            const d =
+              ts && typeof ts === "object" && "toDate" in ts
+                ? (ts as unknown as { toDate(): Date }).toDate()
+                : ts instanceof Date
+                  ? ts
+                  : new Date(ts)
+            return isNaN(d.getTime())
+              ? ""
+              : d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          })()}
         </p>
       </div>
     </div>

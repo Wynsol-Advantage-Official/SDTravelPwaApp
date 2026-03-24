@@ -11,6 +11,6 @@
 export { mockUser, mockUserProfile } from "./user"
 export { mockBookings, mockBookingStats } from "./bookings"
 export { mockSavedDiamonds } from "./saved-diamonds"
-export { mockChatRooms, mockChatMessages } from "./chat"
+export { mockChatRooms, mockChatMessages, mockRoomMessages, mockClientNames } from "./chat"
 export { mockTours } from "./tours"
 export { mockActivity } from "./activity"

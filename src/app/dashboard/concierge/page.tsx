@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { AuthGuard } from "@/components/auth/AuthGuard"
 import { BookingCard } from "@/components/dashboard/BookingCard"
 import { BookingDetailModal } from "@/components/dashboard/BookingDetailModal"
+import { ConciergeInbox } from "@/components/dashboard/ConciergeInbox"
 import { auth } from "@/lib/firebase/client"
 import type { EnrichedBooking, BookingStatus } from "@/types/booking"
 
@@ -45,11 +46,17 @@ export default function ConciergeDashboardPage() {
 }
 
 // ---------------------------------------------------------------------------
+// Tab type
+// ---------------------------------------------------------------------------
+type ConciergeTab = "bookings" | "inbox"
+
+// ---------------------------------------------------------------------------
 // Main content
 // ---------------------------------------------------------------------------
 
 function ConciergeContent() {
   const { user } = useAuth()
+  const [activeTab, setActiveTab] = useState<ConciergeTab>("bookings")
   const [bookings, setBookings] = useState<EnrichedBooking[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<BookingStatus | "all">("all")
@@ -166,24 +173,58 @@ function ConciergeContent() {
               Concierge Dashboard
             </h1>
             <p className="mt-1 text-sm text-charcoal/50">
-              Manage bookings, approve holds, and track payment status in real time.
+              Manage bookings, chat channels, and concierge operations.
             </p>
           </div>
-          <div className="flex shrink-0 flex-col items-end gap-1">
-            <button
-              onClick={fetchBookings}
-              disabled={loading}
-              className="rounded-xl border border-charcoal/10 bg-white px-4 py-2 text-xs font-semibold text-charcoal/70 shadow-sm transition-all hover:border-gold hover:text-gold hover:shadow disabled:opacity-50"
-            >
-              ↻ Refresh
-            </button>
-            {lastRefreshed && (
-              <span className="text-[10px] text-charcoal/35">
-                Updated {lastRefreshed.toLocaleTimeString()}
-              </span>
-            )}
-          </div>
+          {activeTab === "bookings" && (
+            <div className="flex shrink-0 flex-col items-end gap-1">
+              <button
+                onClick={fetchBookings}
+                disabled={loading}
+                className="rounded-xl border border-charcoal/10 bg-white px-4 py-2 text-xs font-semibold text-charcoal/70 shadow-sm transition-all hover:border-gold hover:text-gold hover:shadow disabled:opacity-50"
+              >
+                ↻ Refresh
+              </button>
+              {lastRefreshed && (
+                <span className="text-[10px] text-charcoal/35">
+                  Updated {lastRefreshed.toLocaleTimeString()}
+                </span>
+              )}
+            </div>
+          )}
         </div>
+
+        {/* ── Tab bar ────────────────────────────────────────────────────── */}
+        <div className="mb-6 flex gap-1 rounded-xl bg-charcoal/[0.04] p-1">
+          <button
+            onClick={() => setActiveTab("bookings")}
+            className={[
+              "flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all",
+              activeTab === "bookings"
+                ? "bg-white text-charcoal shadow-sm"
+                : "text-charcoal/40 hover:text-charcoal/70",
+            ].join(" ")}
+          >
+            ◇ Bookings
+          </button>
+          <button
+            onClick={() => setActiveTab("inbox")}
+            className={[
+              "flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all",
+              activeTab === "inbox"
+                ? "bg-white text-charcoal shadow-sm"
+                : "text-charcoal/40 hover:text-charcoal/70",
+            ].join(" ")}
+          >
+            ✉ Inbox
+          </button>
+        </div>
+
+        {/* ── Tab content ────────────────────────────────────────────────── */}
+        {activeTab === "inbox" ? (
+          <ConciergeInbox />
+        ) : (
+          <>
 
         {/* Error banner */}
         {error && (
@@ -266,6 +307,9 @@ function ConciergeContent() {
               ))}
             </AnimatePresence>
           </div>
+        )}
+
+          </>
         )}
       </div>
 

@@ -8,9 +8,11 @@ import type { ChatMessage } from "@/types/chat"
 
 interface BookingChatPanelProps {
   bookingId: string
+  tourId?: string
+  tourSlug?: string
 }
 
-export function BookingChatPanel({ bookingId }: BookingChatPanelProps) {
+export function BookingChatPanel({ bookingId, tourId, tourSlug }: BookingChatPanelProps) {
   const { user } = useAuth()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [loading, setLoading] = useState(true)
@@ -36,7 +38,7 @@ export function BookingChatPanel({ bookingId }: BookingChatPanelProps) {
     let cancelled = false
     let unsubscribe: (() => void) | null = null
 
-    ensureRoomExists(roomId, uid)
+    ensureRoomExists(roomId, uid, { tourId, tourSlug })
       .then(() => {
         if (cancelled) return
         unsubscribe = subscribeToMessages(roomId, uid, (msgs) => {

@@ -6,6 +6,7 @@ export interface ChatRoom {
   _id: string;
   clientUid: string;
   agentUid: string;
+  tourId?: string;
   tourSlug?: string;
   status: "active" | "resolved" | "archived";
   createdAt: Date;

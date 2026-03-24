@@ -231,7 +231,11 @@ export default function BookingDetailPage() {
       </div>
 
       {/* Floating Chat Panel */}
-      <BookingChatPanel bookingId={bookingId} />
+      <BookingChatPanel
+        bookingId={bookingId}
+        tourId={booking.tourId}
+        tourSlug={booking.tourSlug}
+      />
     </main>
   )
 }

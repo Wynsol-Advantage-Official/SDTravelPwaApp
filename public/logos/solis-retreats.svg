@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 64" role="img" aria-label="Solis Retreats">
+  <rect width="220" height="64" fill="none"/>
+  <circle cx="34" cy="30" r="10" fill="#D4AF37"/>
+  <path d="M20 46h28" stroke="#D4AF37" stroke-width="3"/>
+  <text x="68" y="39" font-size="18" font-family="Georgia, serif" fill="#F5F5F0" letter-spacing="1.8">SOLIS RETREATS</text>
+</svg>

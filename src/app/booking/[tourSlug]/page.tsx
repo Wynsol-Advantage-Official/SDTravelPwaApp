@@ -10,9 +10,17 @@ interface BookingPageProps {
   params: Promise<{ tourSlug: string }>
 }
 
+export const revalidate = 300
+export const dynamicParams = true
+
 export async function generateStaticParams() {
-  const slugs = await getAllTourSlugs()
-  return slugs.map((tourSlug) => ({ tourSlug }))
+  try {
+    const slugs = await getAllTourSlugs()
+    return slugs.map((tourSlug) => ({ tourSlug }))
+  } catch {
+    // Wix unavailable at build time — pages render on first request (ISR)
+    return []
+  }
 }
 
 export async function generateMetadata({

@@ -5,7 +5,7 @@ import {
   ensureRoomExists,
   subscribeToMessages,
   sendMessage,
-} from "@/lib/firebase/chat"
+} from "@/lib/services/chat.service"
 import type { ChatMessage } from "@/types/chat"
 
 export function useChat(

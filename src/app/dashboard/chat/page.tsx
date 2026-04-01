@@ -90,7 +90,7 @@ function ChatContent() {
   }
 
   return (
-    <div className="flex h-[calc(100dvh-14rem)] flex-col md:h-[calc(100dvh-14rem)]">
+    <div className="flex min-h-0 flex-1 flex-col">
       {/* ── Native-style header ──────────────────────── */}
       <div className="flex items-center gap-3 border-b border-charcoal/5 bg-white px-4 py-3 md:rounded-t-2xl">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gold text-sm font-bold text-charcoal">

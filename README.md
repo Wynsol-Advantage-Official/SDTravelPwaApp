@@ -278,6 +278,213 @@ npm run dev
 # Cumulative Layout Shift: <0.1 in hero section
 ```
 
+## Dark Luxury UI System (2026-03-31 Redesign)
+
+### Overview
+
+A desktop-first dark luxury redesign replacing the light-theme Header/Footer shell with a fixed Sidebar + sticky TopBar, tokenized dark palette, bento-grid content system, and motion primitives — while preserving all existing backend, auth, data-fetching, and service contracts unchanged.
+
+> **No backend/auth/data contract changes were made.** All Firebase, Wix SDK, service layer (`src/lib/services/`), business rules (`src/lib/rules/`), API routes, and auth flows remain identical. The redesign is purely presentation and shell-level.
+
+### Design Tokens
+
+All tokens are defined in `src/styles/globals.css` as CSS custom properties and extended via `tailwind.config.ts`.
+
+#### Colors
+
+| Token | Value | Usage |
+|---|---|---|
+| Base background | `#0D0D0D` | Page canvas, PWA theme |
+| Surface 1 | `#111111` | Sidebar, stat cards |
+| Surface 2 | `#141414` | Default card surface |
+| Surface 3 | `#1A1A1A` | Alternate card surface, tooltips |
+| Border default | `rgba(255,255,255,0.07)` | Card/sidebar/topbar borders |
+| Border emphasis | `rgba(201,168,76,0.25)` | Gold hover/focus border |
+| Gold primary | `#C9A84C` | CTAs, accents, focus rings |
+| Gold light | `#E4C97E` | Active nav, stat values |
+| Gold wash | `rgba(201,168,76,0.15)` | Active nav background, tag selection |
+| Text primary | `#F0EDE6` | Body text, headings |
+| Text muted | `#7A7570` | Secondary labels, eyebrows |
+| Text subtle | `#4A4540` | Placeholder text, group labels |
+
+#### Typography
+
+| Font | Loaded Via | Role |
+|---|---|---|
+| Playfair Display | `next/font/google` | Display headings (H1–H3) |
+| Cormorant Garamond | `next/font/google` | Stat values, editorial quotes |
+| DM Sans | `next/font/google` | UI body, labels, navigation |
+
+Font variables are set on `<html>` in `src/app/layout.tsx` and consumed by Tailwind utilities.
+
+#### Card Primitives
+
+```
+Border radius:  14px  (primary content cards)
+                12px  (nested cards, pills, sub-panels)
+                 8px  (buttons, chips, nav items, form controls)
+Transitions:    transform, border-color, background-color, color, box-shadow
+                duration 220ms ease-out
+Hover:          translateY(-2px), gold-emphasis border
+Image zoom:     scale(1.05) over 0.5s on hover
+Focus ring:     2px gold (#C9A84C) with 2px offset
+```
+
+### Shell Architecture
+
+The desktop shell replaces Header/Footer with two primary components:
+
+#### Sidebar (`src/components/layout/desktop-shell/Sidebar.tsx`)
+
+| State | Width | Behavior |
+|---|---|---|
+| Expanded (≥1101px) | `220px` | Full nav labels, user footer, group headers |
+| Collapsed (768–1100px) | `64px` | Icon-only rail, tooltips on hover/focus |
+| Hidden (<768px) | `0px` | Not rendered; mobile nav takes over |
+
+- **Background**: `#111111` with right border `rgba(255,255,255,0.07)`
+- **Position**: Fixed, full height
+- **Navigation groups**:
+  - **Discover**: Home, Destinations, Saved, Tours
+  - **Account**: My Diamonds, Concierge, Bookings
+- **Nav items**: `8px` radius, `#7A7570` default → `#F0EDE6` hover → gold wash active
+- **User footer**: Anchored bottom with avatar and status
+
+#### TopBar (`src/components/layout/desktop-shell/TopBar.tsx`)
+
+| Property | Value |
+|---|---|
+| Height | `56px` |
+| Position | Sticky, top of content column |
+| Background | `rgba(13,13,13,0.92)` + `backdrop-blur(12px)` |
+| Border bottom | `rgba(255,255,255,0.05)` |
+
+- **Layout**: Greeting cluster (left) → Search input (center/right) → Plan a Trip CTA (right)
+- **Search**: `240px` wide, `34px` tall, `#141414` surface, gold focus border
+- **CTA**: `34px` tall, gold fill `#C9A84C`, dark text `#0D0D0D`, `8px` radius
+
+#### Shell Composition (`src/components/layout/desktop-shell/DesktopShell.tsx`)
+
+Wraps sidebar + topbar + scrolling content area. Content offset equals sidebar width + page padding (`2rem`).
+
+### Responsive Breakpoints
+
+| Breakpoint | Shell Behavior | Content Behavior |
+|---|---|---|
+| ≥1280px | Full sidebar (220px), full TopBar | Full bento grid geometry, designed spacing |
+| 1101–1279px | Full sidebar (220px), full TopBar | Content cards compress, 10px grid gaps preserved |
+| 768–1100px | Collapsed sidebar (64px icon rail), TopBar visible | Bento grids may reduce columns, component order preserved |
+| <768px | No sidebar, no TopBar | `MobileNav` + `MobileBottomNav` active, sections stack vertically |
+
+At 200% browser zoom, shell wraps text and expands card heights but primary navigation and CTA remain visible without horizontal overflow.
+
+### Bento Primitives (`src/components/bento/`)
+
+Reusable grid components for section composition:
+
+#### BentoGrid
+
+```typescript
+BentoGridProps = {
+  columns?: string;          // CSS grid-template-columns value, e.g. "1fr 1fr 280px" (default "1fr")
+  rows?: string;             // CSS grid-template-rows value, e.g. "260px 180px"
+  gap?: number;              // Gap between grid items in pixels (default 10)
+  className?: string;
+  children: ReactNode;
+}
+```
+
+#### BentoCard
+
+```typescript
+BentoCardProps = {
+  children: ReactNode;
+  span?: { col?: number; row?: number };                   // Grid span for column and/or row
+  variant?: "default" | "gold" | "hero" | "stat";          // Visual variant (default "default")
+  hoverable?: boolean;                                      // Enables hover lift + gold border emphasis (default false)
+  className?: string;
+}
+```
+
+Cards use `14px` radius, tokenized surfaces, gold-emphasis border on hover/focus, and `translateY(-2px)` lift.
+
+#### StatCard
+
+```typescript
+StatCardProps = {
+  value: string;             // Display value, e.g. "200+" or "4.9"
+  label: string;             // Descriptive label beneath the value
+  span?: { col?: number; row?: number };  // Grid span passthrough for BentoGrid placement
+  className?: string;
+}
+```
+
+### Motion System (`src/components/motion/`)
+
+#### Reveal
+
+Wraps a single element with fadeUp animation triggered by `IntersectionObserver` (via `src/hooks/use-in-view.ts`).
+
+```typescript
+RevealProps = { delayMs?: number; once?: boolean; children: React.ReactNode }
+```
+
+#### RevealStagger
+
+Wraps multiple children with staggered fadeUp delays.
+
+Both components respect `prefers-reduced-motion: reduce` — animations are disabled or minimized when the OS preference is set.
+
+### Homepage Luxury Sections
+
+The homepage (`src/app/page.tsx`) renders five bento sections in order:
+
+| # | Section | Component | Description |
+|---|---|---|---|
+| 1 | **Hero** | `LuxuryHero` | 3-column bento grid: main hero card, search, quick filters, weather, concierge |
+| 2 | **Destinations** | `LuxuryDestinations` | Asymmetric 4-column grid with featured/standard/tall destination cards |
+| 3 | **Tours + Stats** | `LuxuryToursStats` | Featured + standard tour cards with stat row (Cormorant values) |
+| 4 | **Testimonials** | `LuxuryTestimonials` | 3-column equal-height cards with editorial quote styling |
+| 5 | **Partners + CTA** | `LuxuryPartnersCta` | 2-column: partner pill grid + gradient CTA card |
+
+All sections live in `src/components/sections/luxury/` and use bento primitives, dark tokens, and motion reveals.
+
+### New Component Directories
+
+```
+src/components/layout/desktop-shell/   # DesktopShell, Sidebar, SidebarGroup, SidebarUserCard, TopBar
+src/components/bento/                  # BentoGrid, BentoCard, StatCard
+src/components/sections/luxury/        # LuxuryHero, LuxuryDestinations, LuxuryToursStats,
+                                       # LuxuryTestimonials, LuxuryPartnersCta
+src/components/motion/                 # Reveal, RevealStagger
+src/types/navigation.ts                # NavItem, NavGroup types
+src/lib/rules/navigation-rules.ts      # Pure nav group definitions and active-route helpers
+```
+
+### What Did NOT Change
+
+- **Backend/API**: No Firebase, Wix SDK, or API route changes
+- **Auth flows**: Sign-in, sign-up, auth guards, session management unchanged
+- **Service layer**: `src/lib/services/*` contracts identical
+- **Data fetching**: ISR, SSR, and client-fetch patterns unchanged
+- **Business rules**: `src/lib/rules/*` (except new `navigation-rules.ts`) unchanged
+- **Mobile navigation**: `MobileNav` and `MobileBottomNav` preserved as-is
+- **Types**: Domain types in `src/types/` unchanged (new `navigation.ts` added only)
+- **Existing tests**: All pre-existing tests continue to pass
+
+### Verification Commands
+
+```bash
+# Build verification — must complete with no TypeScript errors
+npm run build
+
+# Test suite — all tests must pass
+npm test
+
+# Development server — visual inspection at http://localhost:3000
+npm run dev
+```
+
 ## Troubleshooting
 
 ### Build errors

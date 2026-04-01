@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: light --default;
+  themes: light --default, sanddiamonds-dark;
   logs: false;
 }
 
@@ -29,6 +29,27 @@
   --color-error:             oklch(53% 0.20 27);
 }
 
+/* ─── daisyUI Sand Diamonds Dark theme ──────────────────────────────────────── */
+/*     Maps dark luxury tokens to daisyUI theme variables.                      */
+[data-theme="sanddiamonds-dark"] {
+  --color-primary:           oklch(72% 0.10 80);   /* luxgold #C9A84C */
+  --color-primary-content:   oklch(7% 0.01 0);     /* near-black #0D0D0D */
+  --color-secondary:         oklch(77% 0.08 80);   /* luxgold light #E4C97E */
+  --color-secondary-content: oklch(7% 0.01 0);
+  --color-accent:            oklch(72% 0.10 80);   /* luxgold */
+  --color-accent-content:    oklch(7% 0.01 0);
+  --color-neutral:           oklch(12% 0.005 0);   /* luxury card #141414 */
+  --color-neutral-content:   oklch(94% 0.01 80);   /* luxtext #F0EDE6 */
+  --color-base-100:          oklch(7% 0.01 0);     /* luxury base #0D0D0D */
+  --color-base-200:          oklch(10% 0.005 0);   /* luxury card3 #111111 */
+  --color-base-300:          oklch(12% 0.005 0);   /* luxury card #141414 */
+  --color-base-content:      oklch(94% 0.01 80);   /* luxtext #F0EDE6 */
+  --color-info:              oklch(44% 0.11 230);
+  --color-success:           oklch(54% 0.16 142);
+  --color-warning:           oklch(72% 0.13 65);
+  --color-error:             oklch(53% 0.20 27);
+}
+
 /* ─── Base Layer ─────────────────────────────────────────────────────────────── */
 @layer base {
   :root {
@@ -38,6 +59,27 @@
     --color-ocean: #006994;
     --color-diamond: #f5f5f0;
     --color-charcoal: #1a1a2e;
+
+    /* ─── Dark Luxury Tokens ─────────────────────────────────────────────── */
+    --lux-gold: #C9A84C;
+    --lux-gold-light: #E4C97E;
+    --lux-gold-dim: rgba(201,168,76,0.15);
+    --lux-bg-base: #0D0D0D;
+    --lux-bg-card: #141414;
+    --lux-bg-card2: #1A1A1A;
+    --lux-bg-card3: #111111;
+    --lux-border: rgba(255,255,255,0.07);
+    --lux-border-gold: rgba(201,168,76,0.25);
+    --lux-text: #F0EDE6;
+    --lux-text-muted: #7A7570;
+    --lux-text-subtle: #4A4540;
+
+    /* ─── Card Transition Primitive ──────────────────────────────────────── */
+    --card-radius: 14px;
+    --card-radius-inner: 12px;
+    --card-radius-compact: 8px;
+    --card-transition: transform 0.22s ease, border-color 0.22s ease,
+      background-color 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
   }
 
   html {
@@ -50,9 +92,9 @@
     min-height: 100dvh;
   }
 
-  /* Focus ring — accessible and on-brand */
+  /* Focus ring — accessible and on-brand (gold-accented) */
   :focus-visible {
-    outline: 2px solid var(--color-gold);
+    outline: 2px solid var(--lux-gold);
     outline-offset: 2px;
   }
 
@@ -60,6 +102,33 @@
   ::selection {
     background-color: var(--color-sand);
     color: var(--color-charcoal);
+  }
+}
+
+/* ─── Dark Luxury Card Primitives ────────────────────────────────────────── */
+@layer components {
+  .lux-card {
+    border-radius: var(--card-radius);
+    border: 1px solid var(--lux-border);
+    transition: var(--card-transition);
+  }
+
+  .lux-card:hover {
+    border-color: var(--lux-border-gold);
+  }
+
+  @media (hover: hover) {
+    .lux-card:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lux-card,
+    .lux-card:hover {
+      transition: none;
+      transform: none;
+    }
   }
 }
 

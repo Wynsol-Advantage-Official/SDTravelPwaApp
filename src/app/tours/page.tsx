@@ -20,22 +20,22 @@ export default async function ToursPage() {
   const tours = await getTours();
 
   return (
-    <main className="min-h-dvh bg-diamond">
+    <main className="min-h-dvh bg-luxury-base">
       {/* ── Page Header ──────────────────────────────────────────────────── */}
-      <section className="bg-charcoal px-6 pb-16 pt-24 text-center">
+      <section className="bg-luxury-card3 px-6 pb-16 pt-24 text-center">
         <FadeSlide>
           <FadeSlideChild>
-            <p className="mb-3 text-xs font-medium uppercase tracking-[0.3em] text-gold">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.3em] text-luxgold">
               Curated Collection
             </p>
           </FadeSlideChild>
           <FadeSlideChild>
-            <h1 className="font-serif text-4xl font-bold text-diamond sm:text-5xl">
+            <h1 className="font-serif text-4xl font-bold text-luxtext sm:text-5xl">
               Our Diamond Tours
             </h1>
           </FadeSlideChild>
           <FadeSlideChild>
-            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-diamond/70">
+            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-luxtext-muted">
               Each journey is a masterpiece — meticulously designed, personally
               curated, and delivered with concierge-level attention.
             </p>
@@ -57,7 +57,7 @@ export default async function ToursPage() {
           </div>
         ) : (
           <div className="py-20 text-center">
-            <p className="font-serif text-xl text-charcoal/50">
+            <p className="font-serif text-xl text-luxtext-subtle">
               New diamonds are being polished. Check back soon.
             </p>
           </div>

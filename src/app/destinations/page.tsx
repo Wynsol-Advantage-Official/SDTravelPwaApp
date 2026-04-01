@@ -29,9 +29,9 @@ export default async function DestinationsPage() {
   const rest = destinations.filter((d) => d._id !== featured?._id)
 
   return (
-    <main className="min-h-dvh bg-diamond">
-      {/* ── Hero banner ──────────────────────────────────────────── */}
-      <section className="hero relative min-h-[70vh] items-end overflow-hidden bg-charcoal">
+    <main className="min-h-dvh bg-luxury-base">
+      {/* ── Hero banner ──────────────────────────────────────── */}
+      <section className="hero relative min-h-[70vh] items-end overflow-hidden bg-luxury-card3">
         {featured?.heroImage?.src && featured.heroImage.src !== DEFAULT_SRC ? (
           <Image
             src={featured.heroImage.src}
@@ -42,26 +42,26 @@ export default async function DestinationsPage() {
             className="object-cover opacity-60"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-charcoal via-ocean/40 to-charcoal" />
+          <div className="absolute inset-0 bg-gradient-to-br from-luxury-base via-ocean/40 to-luxury-base" />
         )}
 
         {/* Gold grain overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-luxury-base via-luxury-base/20 to-transparent" />
 
         <div className="hero-content relative z-10 mx-auto w-full max-w-7xl self-end px-6 pb-16">
           <FadeSlide>
             <FadeSlideChild>
-              <div className="badge badge-outline mb-4 gap-2 border-gold/40 bg-gold/10 px-4 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-gold backdrop-blur-sm">
+              <div className="badge badge-outline mb-4 gap-2 border-luxborder-gold bg-luxgold-dim px-4 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-luxgold backdrop-blur-sm">
                 <Compass className="h-3 w-3" /> World-Class Luxury
               </div>
             </FadeSlideChild>
             <FadeSlideChild>
-              <h1 className="font-serif text-5xl font-bold text-diamond sm:text-6xl lg:text-7xl">
+              <h1 className="font-serif text-5xl font-bold text-luxtext sm:text-6xl lg:text-7xl">
                 Our Destinations
               </h1>
             </FadeSlideChild>
             <FadeSlideChild>
-              <p className="mt-4 max-w-2xl text-lg leading-relaxed text-diamond/70">
+              <p className="mt-4 max-w-2xl text-lg leading-relaxed text-luxtext-muted">
                 Each destination has been personally vetted by our concierge team
                 to ensure an unforgettable experience.
               </p>
@@ -111,16 +111,16 @@ export default async function DestinationsPage() {
                     href={`/destinations/${slug}`}
                     className="group relative overflow-hidden rounded-2xl"
                   >
-                    <div className="relative h-56 w-full bg-charcoal/10">
-                      <div className="flex h-full items-center justify-center bg-gradient-to-br from-sand/10 to-ocean/10">
-                        <MapPin className="h-8 w-8 text-charcoal/20" />
+                    <div className="relative h-56 w-full bg-luxury-card">
+                      <div className="flex h-full items-center justify-center bg-gradient-to-br from-luxgold-dim to-ocean/10">
+                        <MapPin className="h-8 w-8 text-luxtext-subtle" />
                       </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/75 via-transparent to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-luxury-base/75 via-transparent to-transparent" />
                     </div>
                     <div className="absolute bottom-0 left-0 p-5">
-                      <p className="text-xs font-medium uppercase tracking-[0.2em] text-gold">{region}</p>
-                      <h3 className="mt-0.5 font-serif text-xl font-bold text-diamond transition-colors group-hover:text-gold">{name}</h3>
-                      <p className="mt-1 line-clamp-1 text-xs text-diamond/65">{desc}</p>
+                      <p className="text-xs font-medium uppercase tracking-[0.2em] text-luxgold">{region}</p>
+                      <h3 className="mt-0.5 font-serif text-xl font-bold text-luxtext transition-colors group-hover:text-luxgold">{name}</h3>
+                      <p className="mt-1 line-clamp-1 text-xs text-luxtext-muted">{desc}</p>
                     </div>
                   </Link>
                 )
@@ -137,7 +137,7 @@ export default async function DestinationsPage() {
                   href={`/destinations/${featured.slug}`}
                   className="group relative col-span-1 overflow-hidden rounded-2xl md:col-span-2"
                 >
-                  <div className="relative h-[420px] w-full bg-charcoal/10">
+                  <div className="relative h-[420px] w-full bg-luxury-card">
                     {featured.heroImage?.src && featured.heroImage.src !== DEFAULT_SRC ? (
                       <Image
                         src={featured.heroImage.src}
@@ -148,26 +148,26 @@ export default async function DestinationsPage() {
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center bg-gradient-to-br from-charcoal/10 to-ocean/10">
-                        <MapPin className="h-12 w-12 text-charcoal/20" />
+                      <div className="flex h-full items-center justify-center bg-gradient-to-br from-luxury-card/10 to-ocean/10">
+                        <MapPin className="h-12 w-12 text-luxtext-subtle" />
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/10 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-luxury-base/80 via-luxury-base/10 to-transparent" />
                   </div>
                   <div className="absolute bottom-0 left-0 p-7">
                     <div className="badge badge-primary badge-sm mb-2 gap-1.5 backdrop-blur-sm">
                       <MapPin className="h-3 w-3" /> {featured.region}
                     </div>
-                    <h2 className="mt-1 font-serif text-3xl font-bold text-diamond transition-colors group-hover:text-gold md:text-4xl">
+                    <h2 className="mt-1 font-serif text-3xl font-bold text-luxtext transition-colors group-hover:text-luxgold md:text-4xl">
                       {featured.name}
                     </h2>
                     {featured.description && (
-                      <p className="mt-2 line-clamp-2 max-w-md text-sm text-diamond/70">
+                      <p className="mt-2 line-clamp-2 max-w-md text-sm text-luxtext-muted">
                         {featured.description}
                       </p>
                     )}
                     {featured.climate && (
-                      <p className="mt-2 flex items-center gap-1.5 text-xs text-gold/80">
+                      <p className="mt-2 flex items-center gap-1.5 text-xs text-luxgold/80">
                         <Sun className="h-3.5 w-3.5" /> {featured.climate}
                       </p>
                     )}
@@ -185,7 +185,7 @@ export default async function DestinationsPage() {
                       href={`/destinations/${dest.slug}`}
                       className="group relative flex-1 overflow-hidden rounded-2xl"
                     >
-                      <div className="relative h-[202px] w-full bg-charcoal/10">
+                      <div className="relative h-[202px] w-full bg-luxury-card">
                         {dest.heroImage?.src && dest.heroImage.src !== DEFAULT_SRC ? (
                           <Image
                             src={dest.heroImage.src}
@@ -195,17 +195,17 @@ export default async function DestinationsPage() {
                             className="object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                         ) : (
-                          <div className="flex h-full items-center justify-center bg-gradient-to-br from-sand/10 to-ocean/10">
-                            <MapPin className="h-8 w-8 text-charcoal/20" />
+                          <div className="flex h-full items-center justify-center bg-gradient-to-br from-luxgold-dim to-ocean/10">
+                            <MapPin className="h-8 w-8 text-luxtext-subtle" />
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-luxury-base/70 via-transparent to-transparent" />
                       </div>
                       <div className="absolute bottom-0 left-0 p-4">
-                        <p className="text-xs font-medium uppercase tracking-[0.2em] text-gold">
+                        <p className="text-xs font-medium uppercase tracking-[0.2em] text-luxgold">
                           {dest.region}
                         </p>
-                        <h3 className="font-serif text-xl font-bold text-diamond transition-colors group-hover:text-gold">
+                        <h3 className="font-serif text-xl font-bold text-luxtext transition-colors group-hover:text-luxgold">
                           {dest.name}
                         </h3>
                       </div>
@@ -228,7 +228,7 @@ export default async function DestinationsPage() {
                       href={`/destinations/${dest.slug}`}
                       className={`group relative overflow-hidden rounded-2xl${isWide ? " sm:col-span-2" : ""}`}
                     >
-                      <div className="relative h-56 w-full bg-charcoal/10">
+                      <div className="relative h-56 w-full bg-luxury-card">
                         {dest.heroImage?.src && dest.heroImage.src !== DEFAULT_SRC ? (
                           <Image
                             src={dest.heroImage.src}
@@ -238,21 +238,21 @@ export default async function DestinationsPage() {
                             className="object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                         ) : (
-                          <div className="flex h-full items-center justify-center bg-gradient-to-br from-sand/10 to-ocean/10">
-                            <MapPin className="h-8 w-8 text-charcoal/20" />
+                          <div className="flex h-full items-center justify-center bg-gradient-to-br from-luxgold-dim to-ocean/10">
+                            <MapPin className="h-8 w-8 text-luxtext-subtle" />
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/75 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-luxury-base/75 via-transparent to-transparent" />
                       </div>
                       <div className="absolute bottom-0 left-0 p-5">
-                        <p className="text-xs font-medium uppercase tracking-[0.2em] text-gold">
+                        <p className="text-xs font-medium uppercase tracking-[0.2em] text-luxgold">
                           {dest.region}
                         </p>
-                        <h3 className="mt-0.5 font-serif text-xl font-bold text-diamond transition-colors group-hover:text-gold">
+                        <h3 className="mt-0.5 font-serif text-xl font-bold text-luxtext transition-colors group-hover:text-luxgold">
                           {dest.name}
                         </h3>
                         {isWide && (
-                          <p className="mt-1 line-clamp-1 text-xs text-diamond/65">{tagline}</p>
+                          <p className="mt-1 line-clamp-1 text-xs text-luxtext-muted">{tagline}</p>
                         )}
                       </div>
                     </Link>
@@ -265,14 +265,14 @@ export default async function DestinationsPage() {
       </section>
 
       {/* ── CTA strip ────────────────────────────────────────────── */}
-      <section className="border-t border-charcoal/10 bg-charcoal py-16 text-center">
-        <div className="badge badge-outline mb-4 border-gold/40 uppercase tracking-[0.3em] text-gold">
+      <section className="border-t border-luxborder bg-luxury-card3 py-16 text-center">
+        <div className="badge badge-outline mb-4 border-luxborder-gold uppercase tracking-[0.3em] text-luxgold">
           Bespoke Travel
         </div>
-        <h2 className="font-serif text-3xl font-bold text-diamond">
+        <h2 className="font-serif text-3xl font-bold text-luxtext">
           Can&apos;t find your dream destination?
         </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm text-diamond/60">
+        <p className="mx-auto mt-3 max-w-md text-sm text-luxtext-muted">
           Our concierge team crafts fully custom itineraries to anywhere in the world.
         </p>
         <Link href="/concierge" className="btn btn-outline btn-primary mt-8">

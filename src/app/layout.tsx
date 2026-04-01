@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { Playfair_Display, Inter, Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { DesktopShell } from "@/components/layout";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import IOSInstallPrompt from "@/components/pwa/IOSInstallPrompt";
 import OfflineBanner from "@/components/pwa/OfflineBanner";
@@ -30,6 +29,21 @@ const inter = Inter({
   display: "swap",
   variable: "--font-inter",
   weight: ["300", "400", "500", "600", "700"],
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-cormorant",
+  weight: ["300", "400", "600"],
+  style: ["normal", "italic"],
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-dm-sans",
+  weight: ["300", "400", "500"],
 });
 
 // ---------------------------------------------------------------------------
@@ -102,7 +116,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#D4AF37",
+  themeColor: "#0D0D0D",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -148,29 +162,22 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${inter.variable}`}
+      className={`${playfair.variable} ${inter.variable} ${cormorant.variable} ${dmSans.variable}`}
       suppressHydrationWarning
     >
       <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
       </head>
-      <body className="bg-diamond font-sans text-charcoal antialiased">
+      <body className="bg-luxury-base font-sans text-luxtext antialiased">
         <OfflineBanner />
         <TravelAgencyJsonLd />
         <AuthProvider>
           <MockModeProvider>
-            {/* Desktop: show Header; Mobile: hidden */}
-            <div className="hidden md:block">
-              <Header />
-            </div>
-            {/* Desktop: pad for fixed header; Mobile: pad for bottom nav */}
-            <div className="pb-[calc(64px+env(safe-area-inset-bottom))] md:pb-0 md:pt-16">
+            {/* Desktop: sidebar shell (hidden on mobile via internal CSS) */}
+            {/* Mobile: children render directly, shell passthroughs */}
+            <DesktopShell>
               {children}
-            </div>
-            {/* Desktop: show Footer; Mobile: hidden */}
-            <div className="hidden md:block">
-              <Footer />
-            </div>
+            </DesktopShell>
             {/* Mobile only: bottom nav + iOS install prompt */}
             <div className="md:hidden">
               <MobileBottomNav />

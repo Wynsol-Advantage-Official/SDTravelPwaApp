@@ -74,15 +74,37 @@ const config: Config = {
           800: "#0B0B17",
           900: "#06060C",
         },
+        luxury: {
+          base: "#0D0D0D",
+          card: "#141414",
+          card2: "#1A1A1A",
+          card3: "#111111",
+        },
+        luxgold: {
+          DEFAULT: "#C9A84C",
+          light: "#E4C97E",
+          dim: "rgba(201,168,76,0.15)",
+        },
+        luxtext: {
+          DEFAULT: "#F0EDE6",
+          muted: "#7A7570",
+          subtle: "#4A4540",
+        },
+        luxborder: {
+          DEFAULT: "rgba(255,255,255,0.07)",
+          gold: "rgba(201,168,76,0.25)",
+        },
       },
       fontFamily: {
         serif: ["var(--font-playfair)", "Playfair Display", "Georgia", "serif"],
-        sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+        sans: ["var(--font-dm-sans)", "DM Sans", "var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+        display: ["var(--font-cormorant)", "Cormorant Garamond", "Georgia", "serif"],
       },
       animation: {
         "fade-in": "fadeIn 0.6s ease-out forwards",
         "slide-up": "slideUp 0.6s ease-out forwards",
         "fade-slide": "fadeSlide 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
+        "fade-up": "fadeUp 0.5s ease-out forwards",
       },
       keyframes: {
         fadeIn: {
@@ -95,6 +117,10 @@ const config: Config = {
         },
         fadeSlide: {
           "0%": { transform: "translateY(16px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        fadeUp: {
+          "0%": { transform: "translateY(12px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
       },

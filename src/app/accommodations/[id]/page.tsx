@@ -41,7 +41,7 @@ export default async function Page({ params }: PageProps) {
         </Link>
       </div>
 
-      <div className="rounded-2xl overflow-hidden border border-white/20 bg-white/10 shadow-lg">
+      <div className="rounded-2xl overflow-hidden border border-white/20 bg-white shadow-lg">
         <div className="grid grid-cols-1 gap-0 md:grid-cols-3">
           {/* Left: Large hero + details */}
           <div className="col-span-1 md:col-span-2">
@@ -85,7 +85,7 @@ export default async function Page({ params }: PageProps) {
           </div>
 
           {/* Right: Bento tiles */}
-          <aside className="col-span-1 border-l border-white/5 bg-white/5 p-4">
+          <aside className="col-span-1 border-l border-white/5 bg-white p-4">
             <div className="mb-3 rounded-lg border border-white/10 bg-white/5 p-4 shadow-sm">
               <h4 className="mb-1 text-xs font-semibold uppercase text-ocean">Why you'll love it</h4>
               <p className="text-sm text-charcoal/75">{demo.tagline}</p>

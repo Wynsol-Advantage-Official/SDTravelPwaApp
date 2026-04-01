@@ -232,9 +232,12 @@ export async function getTours(options?: {
     // Common Wix errors here include WDE0117 (MetaSite not found) when the
     // configured site id is incorrect or missing, or WDE0027 permission
     // issues when the OAuth client lacks read permission on the collection.
-    console.error("[getTours] Wix query failed:", err);
+    const errMsg = err instanceof Error ? err.message : JSON.stringify(err) || String(err);
+    console.error("[getTours] Wix query failed:", errMsg, err);
     console.error(
-      "Wix error during getTours: check WIX_SITE_ID, WIX_CLIENT_ID/SECRET and collection permissions",
+      "[getTours] Check: WIX_META_SITE_ID/WIX_SITE_ID, WIX_CLIENT_ID, WIX_CLIENT_SECRET, and that the collection '" +
+        TOURS_COLLECTION +
+        "' has read permissions enabled in Wix CMS\u2192Permissions.",
     );
     return [];
   }

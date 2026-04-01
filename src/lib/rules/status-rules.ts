@@ -29,7 +29,7 @@ export const STATUS_ACTIONS: Record<string, StatusAction[]> = {
 
 export const STATUS_BADGE: Record<BookingStatus, string> = {
   hold: "bg-amber-100 text-amber-800 border-amber-200",
-  pending: "bg-sand-50 text-sand-600 border-sand-200",
+  pending: "bg-tan-50 text-tan-600 border-tan-200",
   awaiting_payment: "bg-purple-100 text-purple-800 border-purple-200",
   confirmed: "bg-green-100 text-green-800 border-green-200",
   completed: "bg-ocean-50 text-ocean border-ocean-200",

@@ -27,7 +27,7 @@ export function SidebarUserCard({ collapsed }: SidebarUserCardProps) {
   return (
     <Link
       href="/dashboard"
-      className="block border-t border-luxborder p-3 cursor-pointer transition-colors duration-200 hover:bg-[rgba(255,255,255,0.03)]"
+      className="block border-t border-khaki/40 p-3 cursor-pointer transition-colors duration-200 hover:bg-tan/40 dark:border-white/10 dark:hover:bg-[rgba(255,255,255,0.05)]"
     >
       <div
         className={`flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}
@@ -35,7 +35,7 @@ export function SidebarUserCard({ collapsed }: SidebarUserCardProps) {
       >
         {/* Initials avatar */}
         <span
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-luxgold text-[11px] font-bold text-luxury-base"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-chill text-[11px] font-bold text-white"
           aria-hidden="true"
         >
           {initials}
@@ -43,10 +43,10 @@ export function SidebarUserCard({ collapsed }: SidebarUserCardProps) {
 
         {!collapsed && (
           <div className="min-w-0 flex-1">
-            <p className="truncate font-sans text-[13px] font-medium text-luxtext">
+            <p className="truncate font-sans text-[13px] font-medium text-ocean-deep dark:text-white">
               {displayName}
             </p>
-            <p className="font-sans text-[11px] text-luxtext-muted">
+            <p className="font-sans text-[11px] text-ocean/70 dark:text-blue-chill-300">
               Diamond Member
             </p>
           </div>

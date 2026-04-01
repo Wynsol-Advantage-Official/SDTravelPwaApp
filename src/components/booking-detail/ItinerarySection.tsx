@@ -48,8 +48,8 @@ export function ItinerarySection({ itinerary, tourDate }: ItinerarySectionProps)
     <section>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="font-serif text-2xl font-bold text-charcoal">Itinerary</h2>
-          <p className="mt-1 text-sm text-charcoal/50">
+          <h2 className="font-sans text-2xl font-bold text-ocean-deep">Itinerary</h2>
+          <p className="mt-1 text-sm text-ocean-deep/50">
             {totalDays} {totalDays === 1 ? "day" : "days"} of adventure
           </p>
         </div>
@@ -64,7 +64,7 @@ export function ItinerarySection({ itinerary, tourDate }: ItinerarySectionProps)
             )}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg border border-charcoal/10 bg-white px-4 py-2.5 text-sm font-medium text-charcoal transition-colors hover:border-gold hover:text-gold"
+            className="inline-flex items-center gap-2 rounded-lg border border-ocean-deep/10 bg-white px-4 py-2.5 text-sm font-medium text-ocean-deep transition-colors hover:border-blue-chill hover:text-blue-chill"
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
@@ -83,15 +83,15 @@ export function ItinerarySection({ itinerary, tourDate }: ItinerarySectionProps)
             return (
               <div
                 key={day._id}
-                className="flex min-w-18 shrink-0 flex-col items-center rounded-lg border border-charcoal/10 bg-white px-3 py-2"
+                className="flex min-w-18 shrink-0 flex-col items-center rounded-lg border border-ocean-deep/10 bg-white px-3 py-2"
               >
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-charcoal/40">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-ocean-deep/40">
                   {date.toLocaleDateString("en-US", { weekday: "short" })}
                 </span>
-                <span className="text-lg font-bold text-charcoal">
+                <span className="text-lg font-bold text-ocean-deep">
                   {date.getDate()}
                 </span>
-                <span className="text-[10px] text-charcoal/50">
+                <span className="text-[10px] text-ocean-deep/50">
                   {date.toLocaleDateString("en-US", { month: "short" })}
                 </span>
               </div>

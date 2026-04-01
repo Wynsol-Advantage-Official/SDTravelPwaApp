@@ -17,8 +17,8 @@ export function DestinationGallery({ images, title }: DestinationGalleryProps) {
 
   return (
     <section>
-      <h2 className="font-serif text-2xl font-bold text-charcoal">Gallery</h2>
-      <p className="mt-1 text-sm text-charcoal/50">Images from {title}</p>
+      <h2 className="font-sans text-2xl font-bold text-ocean-deep">Gallery</h2>
+      <p className="mt-1 text-sm text-ocean-deep/50">Images from {title}</p>
 
       {/* Grid */}
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
@@ -27,7 +27,7 @@ export function DestinationGallery({ images, title }: DestinationGalleryProps) {
             key={`${img.src}-${i}`}
             type="button"
             onClick={() => setSelectedIndex(i)}
-            className="group relative aspect-4/3 overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+            className="group relative aspect-4/3 overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-ocean"
           >
             <Image
               src={img.src}
@@ -36,7 +36,7 @@ export function DestinationGallery({ images, title }: DestinationGalleryProps) {
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
-            <div className="absolute inset-0 bg-charcoal/0 transition-colors group-hover:bg-charcoal/20" />
+            <div className="absolute inset-0 bg-ocean-deep/0 transition-colors group-hover:bg-ocean-deep/20" />
           </button>
         ))}
       </div>
@@ -48,7 +48,7 @@ export function DestinationGallery({ images, title }: DestinationGalleryProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal/90 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-ocean-deep/90 backdrop-blur-sm"
             onClick={() => setSelectedIndex(null)}
           >
             <motion.div

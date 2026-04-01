@@ -26,7 +26,7 @@ export function DashboardNav() {
   })
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-luxborder bg-luxury-card3 md:top-14" aria-label="Dashboard">
+    <nav className="sticky top-0 z-50 border-b border-khaki/30 bg-white dark:border-white/10 dark:bg-ocean-deep md:top-14" aria-label="Dashboard">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4">
         <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
           {LINKS.map(({ href, label, icon }) => {
@@ -38,8 +38,8 @@ export function DashboardNav() {
                 className={[
                   "flex shrink-0 items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors",
                   active
-                    ? "border-luxgold text-luxgold"
-                    : "border-transparent text-luxtext-muted hover:text-luxtext",
+                    ? "border-ocean text-ocean dark:border-blue-chill dark:text-blue-chill"
+                    : "border-transparent text-ocean-deep/50 hover:text-ocean-deep dark:text-white/60 dark:hover:text-white",
                 ].join(" ")}
               >
                 <span className="text-xs">{icon}</span>
@@ -56,8 +56,8 @@ export function DashboardNav() {
           className={[
             "shrink-0 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors",
             isMockMode
-              ? "bg-luxgold-dim text-luxgold"
-              : "bg-luxury-card text-luxtext-subtle hover:text-luxtext-muted",
+              ? "bg-blue-chill/10 text-blue-chill"
+              : "bg-tan-50 text-ocean-deep/50 hover:text-ocean-deep/70 dark:bg-ocean-card dark:text-white/40 dark:hover:text-white/60",
           ].join(" ")}
           title={isMockMode ? "Using mock data" : "Using live data"}
         >

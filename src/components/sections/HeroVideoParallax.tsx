@@ -127,7 +127,7 @@ export function HeroVideoParallax({ content }: HeroVideoParallaxProps) {
   }, [parallaxMaxOffset, parallaxStrength]);
 
   return (
-    <section className="relative min-h-dvh overflow-hidden bg-charcoal">
+    <section className="relative min-h-dvh overflow-hidden bg-ocean-deep">
       <div
         className="absolute inset-0 will-change-transform"
         style={{ transform: `translateY(${parallaxY}px)` }}
@@ -162,12 +162,12 @@ export function HeroVideoParallax({ content }: HeroVideoParallaxProps) {
         />
       </div>
 
-      <div className="absolute inset-0 bg-linear-to-b from-charcoal/70 via-charcoal/40 to-charcoal/80" />
-      <div className="absolute inset-0 bg-charcoal/20" />
+      <div className="absolute inset-0 bg-linear-to-b from-ocean-deep/70 via-ocean-deep/40 to-ocean-deep/80" />
+      <div className="absolute inset-0 bg-ocean-deep/20" />
 
       {showLoadingHint && mediaState === "loading" ? (
         <div className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center px-6">
-          <p className="rounded-sm border border-diamond/20 bg-charcoal/55 px-4 py-2 text-[10px] font-medium uppercase tracking-[0.22em] text-diamond/80">
+          <p className="rounded-sm border border-white/20 bg-ocean/55 px-4 py-2 text-[10px] font-medium uppercase tracking-[0.22em] text-white/70">
             Loading video preview
           </p>
         </div>
@@ -175,22 +175,22 @@ export function HeroVideoParallax({ content }: HeroVideoParallaxProps) {
 
       <div className="relative z-10 mx-auto flex min-h-dvh max-w-4xl items-center px-6 text-center">
         <div className="w-full">
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-gold">
+          <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-ocean">
             {content.eyebrow}
           </p>
 
-          <h1 className="font-serif text-5xl font-bold leading-tight text-diamond sm:text-6xl lg:text-7xl">
+          <h1 className="font-sans text-5xl font-bold leading-tight text-white sm:text-6xl lg:text-7xl">
             {content.headline}
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-diamond/80 sm:text-lg">
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
             {content.subhead}
           </p>
 
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               href={content.primaryCta.href}
-              className="inline-flex h-14 items-center rounded-sm bg-gold px-8 text-sm font-semibold uppercase tracking-wider text-charcoal transition-colors hover:bg-gold/90 focus-visible:ring-2 focus-visible:ring-gold"
+              className="inline-flex h-14 items-center rounded-sm bg-ocean px-8 text-sm font-semibold uppercase tracking-wider text-ocean-deep transition-colors hover:bg-ocean/90 focus-visible:ring-2 focus-visible:ring-ocean"
             >
               {content.primaryCta.label}
             </Link>
@@ -198,7 +198,7 @@ export function HeroVideoParallax({ content }: HeroVideoParallaxProps) {
             {content.secondaryCta ? (
               <Link
                 href={content.secondaryCta.href}
-                className="inline-flex h-14 items-center rounded-sm border border-diamond/30 px-8 text-sm font-semibold uppercase tracking-wider text-diamond transition-colors hover:border-gold hover:text-gold focus-visible:ring-2 focus-visible:ring-gold"
+                className="inline-flex h-14 items-center rounded-sm border border-ocean/30 px-8 text-sm font-semibold uppercase tracking-wider text-white transition-colors hover:border-blue-chill hover:text-blue-chill focus-visible:ring-2 focus-visible:ring-ocean"
               >
                 {content.secondaryCta.label}
               </Link>
@@ -206,7 +206,7 @@ export function HeroVideoParallax({ content }: HeroVideoParallaxProps) {
           </div>
 
           {mediaState === "fallback" && content.fallbackNote ? (
-            <p className="mt-5 text-xs uppercase tracking-[0.2em] text-diamond/70">
+            <p className="mt-5 text-xs uppercase tracking-[0.2em] text-white/70">
               {content.fallbackNote}
             </p>
           ) : null}

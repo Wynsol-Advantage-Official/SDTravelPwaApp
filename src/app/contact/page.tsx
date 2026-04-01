@@ -55,22 +55,22 @@ const CONTACT_CHANNELS = [
 
 export default function ContactPage() {
   return (
-    <main className="min-h-dvh bg-luxury-base">
+    <main className="min-h-dvh bg-tan-50 dark:bg-ocean-deep">
       {/* ── Hero Header ──────────────────────────────────────────────────── */}
-      <section className="bg-luxury-card3 px-6 pb-16 pt-24 text-center">
+      <section className="bg-tan-100 px-6 pb-16 pt-24 text-center dark:bg-ocean-deep">
         <FadeSlide>
           <FadeSlideChild>
-            <p className="mb-3 text-xs font-medium uppercase tracking-[0.3em] text-luxgold">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.3em] text-blue-chill">
               Get In Touch
             </p>
           </FadeSlideChild>
           <FadeSlideChild>
-            <h1 className="font-serif text-4xl font-bold text-luxtext sm:text-5xl">
+            <h1 className="font-sans text-4xl font-bold text-ocean-deep dark:text-white sm:text-5xl">
               Contact Us
             </h1>
           </FadeSlideChild>
           <FadeSlideChild>
-            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-luxtext-muted">
+            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-ocean-deep/60 dark:text-white/60">
               Have a question, need help with a booking, or ready to start
               planning your dream journey? Our concierge team is here to help.
             </p>
@@ -84,23 +84,23 @@ export default function ContactPage() {
           {CONTACT_CHANNELS.map((ch) => (
             <div
               key={ch.label}
-              className="flex flex-col items-center rounded-lg border border-luxborder bg-luxury-card p-8 text-center shadow-sm"
+              className="flex flex-col items-center rounded-lg border border-khaki/30 bg-white p-8 text-center shadow-sm dark:border-white/10 dark:bg-ocean-card"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-luxgold-dim text-luxgold">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-chill/10 text-blue-chill">
                 {ch.icon}
               </div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-luxtext-subtle">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-ocean-deep/40 dark:text-white/40">
                 {ch.label}
               </h3>
               {ch.href ? (
                 <Link
                   href={ch.href}
-                  className="mt-1 text-sm font-medium text-luxgold-light transition-colors hover:text-luxgold"
+                  className="mt-1 text-sm font-medium text-blue-chill-300 transition-colors hover:text-blue-chill"
                 >
                   {ch.value}
                 </Link>
               ) : (
-                <p className="mt-1 text-sm font-medium text-luxtext">
+                <p className="mt-1 text-sm font-medium text-ocean-deep dark:text-white">
                   {ch.value}
                 </p>
               )}
@@ -112,12 +112,12 @@ export default function ContactPage() {
         <div className="mx-auto max-w-xl">
           <FadeSlide className="mb-10 text-center">
             <FadeSlideChild>
-              <h2 className="font-serif text-2xl font-bold text-luxtext sm:text-3xl">
+              <h2 className="font-sans text-2xl font-bold text-ocean-deep dark:text-white sm:text-3xl">
                 Send Us a Message
               </h2>
             </FadeSlideChild>
             <FadeSlideChild>
-              <p className="mt-3 text-sm leading-relaxed text-luxtext-muted">
+              <p className="mt-3 text-sm leading-relaxed text-ocean-deep/60 dark:text-white/60">
                 Fill out the form below and our team will get back to you within
                 24 hours.
               </p>

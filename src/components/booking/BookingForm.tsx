@@ -37,18 +37,18 @@ function OptionCard({
       onClick={onClick}
       className={[
         "flex w-full items-center gap-4 rounded-lg border-2 px-5 py-4 text-left transition-all duration-200",
-        selected ? "border-gold bg-gold/5 shadow-sm" : "border-sand/30 bg-white hover:border-sand hover:shadow-sm",
+        selected ? "border-ocean bg-ocean/5 shadow-sm" : "border-tan/30 bg-white hover:border-tan hover:shadow-sm",
       ].join(" ")}
     >
       <span className={[
         "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
-        selected ? "bg-gold text-charcoal" : "bg-diamond text-charcoal/50",
+        selected ? "bg-ocean text-ocean-deep" : "bg-white text-ocean-deep/50",
       ].join(" ")}>{icon}</span>
       <span>
-        <span className="block font-semibold text-charcoal">{label}</span>
-        {sublabel && <span className="block text-sm text-charcoal/50">{sublabel}</span>}
+        <span className="block font-semibold text-ocean-deep">{label}</span>
+        {sublabel && <span className="block text-sm text-ocean-deep/50">{sublabel}</span>}
       </span>
-      {selected && <CheckCircle2 className="ml-auto h-5 w-5 shrink-0 text-gold" />}
+      {selected && <CheckCircle2 className="ml-auto h-5 w-5 shrink-0 text-ocean" />}
     </button>
   )
 }
@@ -86,11 +86,11 @@ export function BookingForm({
   // ── Airbnb pickup field ──────────────────────────────────────────────────
   const [rentalAddress, setRentalAddress] = useState("")
 
-  if (authLoading) return <div className="py-12 text-center text-charcoal/50">Loading…</div>
+  if (authLoading) return <div className="py-12 text-center text-ocean-deep/50">Loading…</div>
   if (!user)
     return (
       <div className="py-12 text-center">
-        <p className="mb-4 font-serif text-xl text-charcoal">Sign in to book this diamond</p>
+        <p className="mb-4 font-sans text-xl text-ocean-deep">Sign in to book this diamond</p>
         <Button href="/dashboard">Sign In</Button>
       </div>
     )
@@ -99,17 +99,17 @@ export function BookingForm({
   if (state.step === "processing")
     return (
       <div className="py-12 text-center">
-        <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-gold border-t-transparent" />
-        <p className="text-charcoal/70">Processing your booking…</p>
+        <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-ocean border-t-transparent" />
+        <p className="text-ocean-deep/70">Processing your booking…</p>
       </div>
     )
 
   if (state.step === "confirmed")
     return (
       <div className="py-12 text-center">
-        <div className="mb-4 text-4xl text-gold">◆</div>
-        <h2 className="font-serif text-2xl font-bold text-charcoal">Booking Confirmed!</h2>
-        <p className="mt-2 text-charcoal/70">
+        <div className="mb-4 text-4xl text-ocean">◆</div>
+        <h2 className="font-sans text-2xl font-bold text-ocean-deep">Booking Confirmed!</h2>
+        <p className="mt-2 text-ocean-deep/70">
           Reference: <code className="font-mono text-sm text-ocean">{state.bookingId}</code>
         </p>
         <div className="mt-6 flex justify-center gap-3">
@@ -122,15 +122,15 @@ export function BookingForm({
   if (state.step === "hold")
     return (
       <div className="py-12 text-center">
-        <div className="mb-4 text-4xl text-gold">◇</div>
-        <h2 className="font-serif text-2xl font-bold text-charcoal">Your Interest Has Been Noted!</h2>
-        <p className="mt-3 max-w-sm mx-auto text-charcoal/70">
+        <div className="mb-4 text-4xl text-ocean">◇</div>
+        <h2 className="font-sans text-2xl font-bold text-ocean-deep">Your Interest Has Been Noted!</h2>
+        <p className="mt-3 max-w-sm mx-auto text-ocean-deep/70">
           We&apos;ve placed a concierge hold on{" "}
-          <span className="font-semibold text-charcoal">{tourTitle}</span>. A Sand Diamonds
+          <span className="font-semibold text-ocean-deep">{tourTitle}</span>. A Sand Diamonds
           travel specialist will contact you within 24 hours to confirm your transfer and
           complete the booking.
         </p>
-        <p className="mt-2 text-xs text-charcoal/40">
+        <p className="mt-2 text-xs text-ocean-deep/40">
           Reference: <code className="font-mono text-ocean">{state.bookingId}</code>
         </p>
         <div className="mt-6 flex justify-center gap-3">
@@ -143,7 +143,7 @@ export function BookingForm({
   if (state.step === "error")
     return (
       <div className="py-12 text-center">
-        <h2 className="font-serif text-2xl font-bold text-charcoal">Something Went Wrong</h2>
+        <h2 className="font-sans text-2xl font-bold text-ocean-deep">Something Went Wrong</h2>
         <p className="mt-2 text-sm text-red-600">{state.error}</p>
         <div className="mt-6"><Button onClick={reset}>Try Again</Button></div>
       </div>
@@ -205,8 +205,8 @@ export function BookingForm({
 
   // ── Field styles ─────────────────────────────────────────────────────────
   const inputCls =
-    "mt-1 h-11 w-full rounded-lg border border-sand/30 bg-white px-4 text-sm text-charcoal placeholder:text-charcoal/30 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
-  const labelCls = "block text-xs font-semibold uppercase tracking-wide text-charcoal/50"
+    "mt-1 h-11 w-full rounded-lg border border-tan/30 bg-white px-4 text-sm text-ocean-deep placeholder:text-ocean-deep/30 focus:border-ocean focus:outline-none focus:ring-1 focus:ring-ocean"
+  const labelCls = "block text-xs font-semibold uppercase tracking-wide text-ocean-deep/50"
 
   return (
     <div className="space-y-8">
@@ -259,7 +259,7 @@ export function BookingForm({
 
       {/* ── Section 3a: Flight details (if flying) ────────────────────── */}
       {arrivalChoice === true && (
-        <section className="rounded-xl border border-sand/20 bg-diamond/30 p-5 space-y-4">
+        <section className="rounded-xl border border-tan/20 bg-white/30 p-5 space-y-4">
           <p className={labelCls}>Flight details — we&apos;ll arrange your airport transfer</p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
@@ -350,7 +350,7 @@ export function BookingForm({
 
       {/* ── Section 3b-i: Resort pickup details ───────────────────────── */}
       {arrivalChoice === false && accomChoice === "resort" && (
-        <section className="rounded-xl border border-sand/20 bg-diamond/30 p-5 space-y-4">
+        <section className="rounded-xl border border-tan/20 bg-white/30 p-5 space-y-4">
           <p className={labelCls}>Hotel / Resort pickup details</p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
@@ -389,7 +389,7 @@ export function BookingForm({
 
       {/* ── Section 3b-ii: Airbnb pickup details ──────────────────────── */}
       {arrivalChoice === false && accomChoice === "airbnb" && (
-        <section className="rounded-xl border border-sand/20 bg-diamond/30 p-5 space-y-4">
+        <section className="rounded-xl border border-tan/20 bg-white/30 p-5 space-y-4">
           <p className={labelCls}>Rental address — we&apos;ll pick you up here</p>
           <div>
             <label className={labelCls}>Full address</label>

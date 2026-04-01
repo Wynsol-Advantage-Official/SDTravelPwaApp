@@ -58,8 +58,8 @@ function StarRating({ count }: { count: number }) {
           key={i}
           className={`h-4 w-4 ${
             i < count
-              ? "fill-luxgold text-luxgold"
-              : "fill-transparent text-luxtext-subtle"
+              ? "fill-luxgold text-blue-chill"
+              : "fill-transparent text-ocean-deep/25 dark:text-white/40"
           }`}
           aria-hidden="true"
         />
@@ -77,7 +77,7 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
     <BentoCard variant="default" hoverable className="relative flex flex-col p-[18px]">
       {/* Decorative oversized quote mark */}
       <span
-        className="pointer-events-none absolute left-4 top-3 select-none font-display text-[80px] leading-none text-luxgold/10"
+        className="pointer-events-none absolute left-4 top-3 select-none font-display text-[80px] leading-none text-ocean/10 dark:text-blue-chill/10"
         aria-hidden="true"
       >
         &ldquo;
@@ -90,13 +90,13 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
 
       {/* Quote text — editorial serif tone */}
       <blockquote className="relative z-10 flex-1">
-        <p className="font-display text-[18px] leading-[1.5] text-luxtext md:text-[22px] md:leading-[1.45]">
+        <p className="font-display text-[18px] leading-[1.5] text-ocean-deep dark:text-white md:text-[22px] md:leading-[1.45]">
           {testimonial.quote}
         </p>
       </blockquote>
 
       {/* Footer: avatar + name + role */}
-      <footer className="relative z-10 mt-5 flex items-center gap-3 border-t border-luxborder pt-4">
+      <footer className="relative z-10 mt-5 flex items-center gap-3 border-t border-khaki/30 pt-4 dark:border-white/10">
         <Image
           src={testimonial.avatar}
           alt={testimonial.name}
@@ -105,10 +105,10 @@ function TestimonialCard({ testimonial }: { testimonial: TestimonialItem }) {
           className="h-[40px] w-[40px] shrink-0 rounded-full object-cover"
         />
         <div className="min-w-0">
-          <h4 className="truncate font-sans text-[14px] font-semibold text-luxtext">
+            <h4 className="truncate font-sans text-[14px] font-semibold text-ocean-deep dark:text-white">
             {testimonial.name}
           </h4>
-          <p className="truncate font-sans text-[12px] text-luxtext-muted">
+            <p className="truncate font-sans text-[12px] text-ocean-deep/55 dark:text-white/60">
             {testimonial.role}
           </p>
         </div>
@@ -127,10 +127,10 @@ function EmptyState() {
       variant="default"
       className="col-span-full flex flex-col items-center justify-center p-10 text-center"
     >
-      <h3 className="font-serif text-[20px] text-luxtext">
+      <h3 className="font-sans text-[20px] text-ocean-deep dark:text-white">
         Guest stories coming soon
       </h3>
-      <p className="mt-2 max-w-[42ch] font-sans text-[13px] leading-[1.55] text-luxtext-muted">
+      <p className="mt-2 max-w-[42ch] font-sans text-[13px] leading-[1.55] text-ocean-deep/60 dark:text-white/60">
         We are gathering testimonials from our most recent diamond journeys.
         Check back shortly for curated guest experiences.
       </p>
@@ -150,12 +150,12 @@ export function LuxuryTestimonials() {
       {/* ── Section header ─────────────────────────────────────────── */}
       <Reveal>
         <div className="mb-6">
-          <p className="font-sans text-[9px] uppercase tracking-[0.14em] text-luxgold">
+          <p className="font-sans text-[9px] uppercase tracking-[0.14em] text-ocean dark:text-blue-chill">
             Guest Experiences
           </p>
-          <h2 id="luxury-testimonials-heading" className="mt-1 font-serif text-[22px] text-luxtext">
+          <h2 id="luxury-testimonials-heading" className="mt-1 font-sans text-[22px] text-ocean-deep transition-colors duration-300 dark:text-white">
             What Our{" "}
-            <em className="italic text-luxgold-light">Travelers</em> Say
+            <em className="italic text-ocean dark:text-blue-chill-300">Travelers</em> Say
           </h2>
         </div>
       </Reveal>

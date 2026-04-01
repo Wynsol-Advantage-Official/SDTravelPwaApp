@@ -29,7 +29,7 @@ export function MobileNav({ links, onClose }: MobileNavProps) {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="fixed inset-0 z-40 bg-charcoal/60 backdrop-blur-sm md:hidden"
+        className="fixed inset-0 z-40 bg-ocean-deep/40 backdrop-blur-sm md:hidden"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -40,7 +40,7 @@ export function MobileNav({ links, onClose }: MobileNavProps) {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="fixed inset-y-0 right-0 z-50 flex w-72 flex-col bg-charcoal px-6 pb-8 pt-20 md:hidden"
+        className="fixed inset-y-0 right-0 z-50 flex w-72 flex-col bg-white px-6 pb-8 pt-20 md:hidden dark:bg-ocean-deep"
         aria-label="Mobile navigation"
       >
         <ul className="space-y-6">
@@ -49,7 +49,7 @@ export function MobileNav({ links, onClose }: MobileNavProps) {
               <Link
                 href={href}
                 onClick={onClose}
-                className="block font-serif text-xl text-diamond transition-colors hover:text-gold"
+                className="block font-sans text-xl text-ocean-deep transition-colors hover:text-ocean dark:text-white dark:hover:text-blue-chill-300"
               >
                 {label}
               </Link>
@@ -61,7 +61,7 @@ export function MobileNav({ links, onClose }: MobileNavProps) {
           <Link
             href="/tours"
             onClick={onClose}
-            className="flex h-12 w-full items-center justify-center rounded-sm bg-gold text-sm font-semibold uppercase tracking-wider text-charcoal transition-colors hover:bg-gold-400"
+            className="flex h-12 w-full items-center justify-center rounded-sm bg-ocean text-sm font-semibold uppercase tracking-wider text-white transition-colors hover:bg-blue-chill"
           >
             Book Now
           </Link>

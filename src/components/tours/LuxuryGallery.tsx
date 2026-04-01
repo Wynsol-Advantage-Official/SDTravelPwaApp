@@ -47,7 +47,7 @@ export function LuxuryGallery({ images, tourTitle }: LuxuryGalleryProps) {
     <>
       {/* ── Gallery Grid ──────────────────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-4 py-12">
-        <h2 className="mb-8 text-center font-serif text-3xl font-bold text-charcoal sm:text-4xl">
+        <h2 className="mb-8 text-center font-sans text-3xl font-bold text-ocean-deep sm:text-4xl">
           Gallery
         </h2>
 
@@ -61,7 +61,7 @@ export function LuxuryGallery({ images, tourTitle }: LuxuryGalleryProps) {
                 key={`gallery-${index}`}
                 type="button"
                 onClick={() => openLightbox(index)}
-                className={`group relative overflow-hidden rounded-sm focus-visible:ring-2 focus-visible:ring-gold ${
+                className={`group relative overflow-hidden rounded-sm focus-visible:ring-2 focus-visible:ring-ocean ${
                   isHero ? "col-span-2 row-span-2" : ""
                 }`}
                 aria-label={`View ${image.alt || `${tourTitle} photo ${index + 1}`}`}
@@ -80,7 +80,7 @@ export function LuxuryGallery({ images, tourTitle }: LuxuryGalleryProps) {
                     // Priority on first image for LCP
                     priority={index === 0}
                   />
-                  <div className="absolute inset-0 bg-charcoal/0 transition-colors duration-300 group-hover:bg-charcoal/20" />
+                  <div className="absolute inset-0 bg-ocean-deep/0 transition-colors duration-300 group-hover:bg-ocean-deep/20" />
                 </div>
               </button>
             );
@@ -96,7 +96,7 @@ export function LuxuryGallery({ images, tourTitle }: LuxuryGalleryProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal/95 p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-ocean-deep/95 p-4"
             onClick={closeLightbox}
             role="dialog"
             aria-modal="true"
@@ -106,7 +106,7 @@ export function LuxuryGallery({ images, tourTitle }: LuxuryGalleryProps) {
             <button
               type="button"
               onClick={closeLightbox}
-              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-diamond/10 text-diamond backdrop-blur-sm transition-colors hover:bg-diamond/20"
+              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
               aria-label="Close lightbox"
             >
               ✕
@@ -121,7 +121,7 @@ export function LuxuryGallery({ images, tourTitle }: LuxuryGalleryProps) {
                     e.stopPropagation();
                     goPrev();
                   }}
-                  className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-diamond/10 text-xl text-diamond backdrop-blur-sm transition-colors hover:bg-diamond/20"
+                  className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-xl text-white backdrop-blur-sm transition-colors hover:bg-white/20"
                   aria-label="Previous image"
                 >
                   ‹
@@ -132,7 +132,7 @@ export function LuxuryGallery({ images, tourTitle }: LuxuryGalleryProps) {
                     e.stopPropagation();
                     goNext();
                   }}
-                  className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-diamond/10 text-xl text-diamond backdrop-blur-sm transition-colors hover:bg-diamond/20"
+                  className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-xl text-white backdrop-blur-sm transition-colors hover:bg-white/20"
                   aria-label="Next image"
                 >
                   ›
@@ -163,7 +163,7 @@ export function LuxuryGallery({ images, tourTitle }: LuxuryGalleryProps) {
               />
 
               {/* Counter */}
-              <p className="mt-3 text-center text-sm text-diamond/60">
+              <p className="mt-3 text-center text-sm text-ocean-deep/60">
                 {lightboxIndex + 1} / {images.length}
               </p>
             </motion.div>

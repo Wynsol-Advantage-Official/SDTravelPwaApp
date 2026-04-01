@@ -80,7 +80,7 @@ export function ParallaxBand({
 
   return (
     <section
-      className={`relative isolate h-[20vh] min-h-32 overflow-hidden bg-charcoal/95 ${className}`}
+      className={`relative isolate h-[20vh] min-h-32 overflow-hidden bg-ocean-deep/95 ${className}`}
       aria-hidden={children ? undefined : "true"}
     >
       <div
@@ -88,7 +88,7 @@ export function ParallaxBand({
         data-testid="parallax-band-layer"
         style={{
           background:
-            "radial-gradient(120% 120% at 10% 10%, rgba(212,175,55,0.18), transparent 55%), radial-gradient(100% 100% at 80% 70%, rgba(194,169,120,0.12), transparent 60%), linear-gradient(180deg, rgba(26,26,46,0.95) 0%, rgba(26,26,46,1) 100%)",
+            "radial-gradient(120% 120% at 10% 10%, rgba(18,130,165,0.18), transparent 55%), radial-gradient(100% 100% at 80% 70%, rgba(242,226,191,0.12), transparent 60%), linear-gradient(180deg, rgba(4,55,80,0.95) 0%, rgba(4,55,80,1) 100%)",
           transform: `translateY(${isParallaxActive ? translateY : 0}px)`,
           willChange: "transform",
         }}

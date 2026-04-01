@@ -40,7 +40,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal/70 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ocean-deep/70 p-4 backdrop-blur-sm"
           onClick={(e) => {
             if (e.target === overlayRef.current) onClose()
           }}
@@ -59,14 +59,14 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full text-charcoal/50 transition-colors hover:text-charcoal"
+              className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full text-ocean-deep/50 transition-colors hover:text-ocean-deep dark:text-white/50 dark:hover:text-white"
               aria-label="Close dialog"
             >
               ✕
             </button>
 
             {title && (
-              <h2 className="mb-4 font-serif text-xl font-semibold text-charcoal">
+              <h2 className="mb-4 font-sans text-xl font-semibold text-ocean-deep dark:text-white">
                 {title}
               </h2>
             )}

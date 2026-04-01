@@ -267,16 +267,16 @@ export function ConciergeInbox() {
 
   // ── Render ──────────────────────────────────────────────────────────────
   return (
-    <div className="flex h-[calc(100dvh-16rem)] overflow-hidden rounded-2xl border border-charcoal/5 bg-white shadow-sm">
+    <div className="flex h-[calc(100dvh-16rem)] overflow-hidden rounded-2xl border border-ocean-deep/5 bg-white shadow-sm">
       {/* ── Sidebar: Room List ─────────────────────────────────────────── */}
       <div
         className={[
-          "flex w-full flex-col border-r border-charcoal/5 md:w-80 lg:w-96",
+          "flex w-full flex-col border-r border-ocean-deep/5 md:w-80 lg:w-96",
           selectedRoomId ? "hidden md:flex" : "flex",
         ].join(" ")}
       >
         {/* Filter tabs */}
-        <div className="flex items-center gap-1 border-b border-charcoal/5 px-3 py-2">
+        <div className="flex items-center gap-1 border-b border-ocean-deep/5 px-3 py-2">
           {ROOM_FILTERS.map(({ label, value, icon }) => (
             <button
               key={value}
@@ -284,8 +284,8 @@ export function ConciergeInbox() {
               className={[
                 "flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-all",
                 statusFilter === value
-                  ? "bg-gold/10 text-gold"
-                  : "text-charcoal/40 hover:bg-charcoal/5 hover:text-charcoal/70",
+                  ? "bg-ocean/10 text-ocean"
+                  : "text-ocean-deep/40 hover:bg-ocean/5 hover:text-ocean-deep/70",
               ].join(" ")}
             >
               {icon}
@@ -293,7 +293,7 @@ export function ConciergeInbox() {
             </button>
           ))}
           {totalUnread > 0 && (
-            <span className="ml-auto rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold text-white">
+            <span className="ml-auto rounded-full bg-ocean px-2 py-0.5 text-[10px] font-bold text-white">
               {totalUnread}
             </span>
           )}
@@ -303,13 +303,13 @@ export function ConciergeInbox() {
         <div className="flex-1 overflow-y-auto">
           {roomsLoading ? (
             <div className="flex h-full items-center justify-center">
-              <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-gold border-t-transparent" />
+              <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-ocean border-t-transparent" />
             </div>
           ) : rooms.length === 0 ? (
             <div className="flex h-full items-center justify-center p-6">
               <div className="text-center">
-                <MessageSquare className="mx-auto mb-2 h-8 w-8 text-charcoal/15" />
-                <p className="text-sm text-charcoal/40">No conversations yet</p>
+                <MessageSquare className="mx-auto mb-2 h-8 w-8 text-ocean-deep/15" />
+                <p className="text-sm text-ocean-deep/40">No conversations yet</p>
               </div>
             </div>
           ) : (
@@ -321,27 +321,27 @@ export function ConciergeInbox() {
                   key={room._id}
                   onClick={() => setSelectedRoomId(room._id)}
                   className={[
-                    "flex w-full items-start gap-3 border-b border-charcoal/5 px-4 py-3 text-left transition-colors",
+                    "flex w-full items-start gap-3 border-b border-ocean-deep/5 px-4 py-3 text-left transition-colors",
                     isSelected
-                      ? "bg-gold/5"
-                      : "hover:bg-charcoal/2",
+                      ? "bg-ocean/5"
+                      : "hover:bg-ocean-deep/2",
                   ].join(" ")}
                 >
                   {/* Avatar circle */}
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-charcoal/10 text-sm font-bold text-charcoal/60">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ocean-deep/10 text-sm font-bold text-ocean-deep/60">
                     {clientName(room.clientUid).charAt(0).toUpperCase()}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="truncate text-sm font-semibold text-charcoal">
+                      <span className="truncate text-sm font-semibold text-ocean-deep">
                         {clientName(room.clientUid)}
                       </span>
-                      <span className="ml-2 shrink-0 text-[10px] text-charcoal/35">
+                      <span className="ml-2 shrink-0 text-[10px] text-ocean-deep/35">
                         {timeAgo(room.lastMessageAt)}
                       </span>
                     </div>
                     {(room.tourSlug || room.tourId) && (
-                      <p className="truncate text-[11px] font-medium text-gold/70">
+                      <p className="truncate text-[11px] font-medium text-ocean/70">
                         {room.tourSlug
                           ? room.tourSlug.replace(/-/g, " ")
                           : `Tour: ${room.tourId}`}
@@ -352,23 +352,23 @@ export function ConciergeInbox() {
                       <span className={[
                         "inline-flex items-center rounded px-1 py-px text-[9px] font-semibold uppercase tracking-wider",
                         room._id.startsWith("booking_")
-                          ? "bg-gold/10 text-gold"
-                          : "bg-charcoal/5 text-charcoal/40",
+                          ? "bg-ocean/10 text-ocean"
+                          : "bg-ocean/5 text-ocean-deep/40",
                       ].join(" ")}>
                         {room._id.startsWith("booking_") ? "Booking" : "General"}
                       </span>
                       {room.tourId && (
-                        <span className="truncate text-[9px] text-charcoal/30" title={`tourId: ${room.tourId}`}>
+                        <span className="truncate text-[9px] text-ocean-deep/30" title={`tourId: ${room.tourId}`}>
                           {room.tourId}
                         </span>
                       )}
                     </div>
-                    <p className="mt-0.5 truncate text-xs text-charcoal/40">
+                    <p className="mt-0.5 truncate text-xs text-ocean-deep/40">
                       {lastMessagePreview(room._id)}
                     </p>
                   </div>
                   {unread > 0 && (
-                    <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-white">
+                    <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-ocean text-[10px] font-bold text-white">
                       {unread}
                     </span>
                   )}
@@ -389,27 +389,27 @@ export function ConciergeInbox() {
         {selectedRoom ? (
           <>
             {/* Room header */}
-            <div className="flex items-center gap-3 border-b border-charcoal/5 px-4 py-3">
+            <div className="flex items-center gap-3 border-b border-ocean-deep/5 px-4 py-3">
               <button
                 onClick={() => setSelectedRoomId(null)}
-                className="rounded-lg p-1.5 text-charcoal/40 transition-colors hover:bg-charcoal/5 hover:text-charcoal md:hidden"
+                className="rounded-lg p-1.5 text-ocean-deep/40 transition-colors hover:bg-ocean/5 hover:text-ocean-deep md:hidden"
                 aria-label="Back to inbox"
               >
                 <ArrowLeft className="h-5 w-5" />
               </button>
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-charcoal/10 text-sm font-bold text-charcoal/60">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ocean-deep/10 text-sm font-bold text-ocean-deep/60">
                 {clientName(selectedRoom.clientUid).charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-charcoal">
+                <p className="truncate text-sm font-semibold text-ocean-deep">
                   {clientName(selectedRoom.clientUid)}
                 </p>
                 {!isMockMode && clientEmails[selectedRoom.clientUid] && (
-                  <p className="truncate text-[10px] text-charcoal/30">
+                  <p className="truncate text-[10px] text-ocean-deep/30">
                     {clientEmails[selectedRoom.clientUid]}
                   </p>
                 )}
-                <p className="text-[11px] text-charcoal/40">
+                <p className="text-[11px] text-ocean-deep/40">
                   {selectedRoom.tourSlug
                     ? selectedRoom.tourSlug.replace(/-/g, " ")
                     : selectedRoom.tourId
@@ -422,7 +422,7 @@ export function ConciergeInbox() {
                         ? "text-green-600"
                         : selectedRoom.status === "resolved"
                           ? "text-blue-600"
-                          : "text-charcoal/30"
+                          : "text-ocean-deep/30"
                     }
                   >
                     {selectedRoom.status}
@@ -444,7 +444,7 @@ export function ConciergeInbox() {
                 {selectedRoom.status === "resolved" && (
                   <button
                     onClick={() => handleStatusChange(selectedRoom._id, "archived")}
-                    className="rounded-lg border border-charcoal/10 bg-charcoal/5 px-3 py-1 text-[11px] font-semibold text-charcoal/60 transition-colors hover:bg-charcoal/10"
+                    className="rounded-lg border border-ocean-deep/10 bg-ocean/5 px-3 py-1 text-[11px] font-semibold text-ocean-deep/60 transition-colors hover:bg-ocean-deep/10"
                     title="Archive"
                   >
                     <Archive className="mr-1 inline h-3 w-3" />
@@ -454,7 +454,7 @@ export function ConciergeInbox() {
                 {selectedRoom.status !== "active" && (
                   <button
                     onClick={() => handleStatusChange(selectedRoom._id, "active")}
-                    className="rounded-lg border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-semibold text-gold transition-colors hover:bg-gold/20"
+                    className="rounded-lg border border-ocean/30 bg-ocean/10 px-3 py-1 text-[11px] font-semibold text-ocean transition-colors hover:bg-ocean/20"
                     title="Reopen"
                   >
                     Reopen
@@ -464,14 +464,14 @@ export function ConciergeInbox() {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto overscroll-contain bg-[#f8f7f4] p-3 md:p-4">
+            <div className="flex-1 overflow-y-auto overscroll-contain bg-[#f2e2bf] p-3 md:p-4">
               {messagesLoading ? (
                 <div className="flex h-full items-center justify-center">
-                  <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-gold border-t-transparent" />
+                  <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-ocean border-t-transparent" />
                 </div>
               ) : messages.length === 0 ? (
                 <div className="flex h-full items-center justify-center">
-                  <p className="text-sm text-charcoal/40">No messages yet — start the conversation.</p>
+                  <p className="text-sm text-ocean-deep/40">No messages yet — start the conversation.</p>
                 </div>
               ) : (
                 <div className="space-y-1.5">
@@ -488,7 +488,7 @@ export function ConciergeInbox() {
             </div>
 
             {/* Compose */}
-            <div className="border-t border-charcoal/5 bg-white px-3 py-2" style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}>
+            <div className="border-t border-ocean-deep/5 bg-white px-3 py-2" style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}>
               <div className="flex items-end gap-2">
                 <input
                   type="text"
@@ -501,13 +501,13 @@ export function ConciergeInbox() {
                     }
                   }}
                   placeholder="Type a reply…"
-                  className="flex-1 rounded-full border border-charcoal/10 bg-charcoal/2 px-4 py-2.5 text-sm text-charcoal placeholder:text-charcoal/30 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30"
+                  className="flex-1 rounded-full border border-ocean-deep/10 bg-ocean-deep/2 px-4 py-2.5 text-sm text-ocean-deep placeholder:text-ocean-deep/30 focus:border-ocean focus:outline-none focus:ring-1 focus:ring-ocean/30"
                   maxLength={2000}
                 />
                 <button
                   onClick={handleSend}
                   disabled={!draft.trim()}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gold text-white transition-all hover:bg-gold/90 active:scale-95 disabled:opacity-40"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-ocean text-white transition-all hover:bg-ocean/90 active:scale-95 disabled:opacity-40"
                   aria-label="Send message"
                 >
                   <Send className="h-4 w-4" />
@@ -519,9 +519,9 @@ export function ConciergeInbox() {
           /* No room selected placeholder */
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
-              <MessageSquare className="mx-auto mb-3 h-12 w-12 text-charcoal/10" />
-              <p className="text-sm font-medium text-charcoal/40">Select a conversation</p>
-              <p className="mt-1 text-xs text-charcoal/25">
+              <MessageSquare className="mx-auto mb-3 h-12 w-12 text-ocean-deep/10" />
+              <p className="text-sm font-medium text-ocean-deep/40">Select a conversation</p>
+              <p className="mt-1 text-xs text-ocean-deep/25">
                 Pick a chat from the list to view and reply.
               </p>
             </div>

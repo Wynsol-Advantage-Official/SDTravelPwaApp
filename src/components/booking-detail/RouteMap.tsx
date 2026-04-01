@@ -48,12 +48,12 @@ export function RouteMap({ itinerary, destination }: RouteMapProps) {
 
   return (
     <section>
-      <h2 className="font-serif text-2xl font-bold text-charcoal">Route Map</h2>
+      <h2 className="font-sans text-2xl font-bold text-ocean-deep">Route Map</h2>
       {locationQuery !== "Travel Route" && (
-        <p className="mt-1 text-sm text-charcoal/50">{locationQuery}</p>
+        <p className="mt-1 text-sm text-ocean-deep/50">{locationQuery}</p>
       )}
 
-      <div className="mt-4 overflow-hidden rounded-xl border border-charcoal/10">
+      <div className="mt-4 overflow-hidden rounded-xl border border-ocean-deep/10">
         <iframe
           title="Tour route map"
           src={embedUrl}
@@ -69,7 +69,7 @@ export function RouteMap({ itinerary, destination }: RouteMapProps) {
 
       {destination && (
         <div className="mt-3 flex items-center gap-2">
-          <svg className="h-4 w-4 text-charcoal/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <svg className="h-4 w-4 text-ocean-deep/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
           </svg>

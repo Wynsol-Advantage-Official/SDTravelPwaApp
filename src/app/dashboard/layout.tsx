@@ -12,7 +12,7 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-dvh flex-col bg-luxury-base">
+    <div className="flex min-h-dvh flex-col bg-tan-50 transition-colors duration-300 dark:bg-luxury-base">
       <DashboardNav />
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-10 sm:px-6">{children}</div>
     </div>

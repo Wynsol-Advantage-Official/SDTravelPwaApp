@@ -11,9 +11,9 @@ function LogoShell({ logo }: { logo: PartnerLogoItem }) {
   const [imageMissing, setImageMissing] = useState(!logo.logoSrc);
 
   return (
-    <div className="flex h-20 items-center justify-center rounded-sm border border-diamond/15 bg-charcoal/60 px-4">
+    <div className="flex h-20 items-center justify-center rounded-sm border border-khaki/30 bg-white px-4 dark:border-ocean/15 dark:bg-ocean-deep/60">
       {imageMissing ? (
-        <span className="text-center text-xs font-semibold uppercase tracking-[0.16em] text-diamond/80">
+        <span className="text-center text-xs font-semibold uppercase tracking-[0.16em] text-ocean-deep/60 dark:text-ocean-deep/80">
           {logo.name}
         </span>
       ) : (
@@ -33,19 +33,19 @@ export function PartnerLogosSection({ items }: PartnerLogosSectionProps) {
   const validItems = useMemo(() => items.filter((item) => item.name.trim().length > 0), [items]);
 
   return (
-    <section className="bg-charcoal py-20">
+    <section className="bg-tan-50 py-20 dark:bg-ocean-deep">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
-          <p className="mb-2 text-xs font-medium uppercase tracking-[0.3em] text-gold">
+          <p className="mb-2 text-xs font-medium uppercase tracking-[0.3em] text-ocean">
             Trusted by Global Partners
           </p>
-          <h2 className="font-serif text-3xl font-bold text-diamond sm:text-4xl">
+          <h2 className="font-sans text-3xl font-bold text-ocean-deep dark:text-white sm:text-4xl">
             Preferred Collaborators
           </h2>
         </div>
 
         {validItems.length === 0 ? (
-          <p className="text-center text-sm text-diamond/75">
+          <p className="text-center text-sm text-ocean-deep/60 dark:text-white/75">
             Partner lineup is being refreshed.
           </p>
         ) : (

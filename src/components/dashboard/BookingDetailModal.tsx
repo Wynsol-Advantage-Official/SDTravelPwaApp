@@ -13,7 +13,7 @@ import type { EnrichedBooking, BookingStatus } from "@/types/booking"
 
 const STATUS_BADGE: Record<BookingStatus, string> = {
   hold: "bg-amber-100 text-amber-800 border-amber-200",
-  pending: "bg-sand-50 text-sand-600 border-sand-200",
+  pending: "bg-tan-50 text-tan-600 border-tan-200",
   awaiting_payment: "bg-purple-100 text-purple-800 border-purple-200",
   confirmed: "bg-green-100 text-green-800 border-green-200",
   completed: "bg-ocean-50 text-ocean border-ocean-200",
@@ -72,7 +72,7 @@ function getTourGradient(title: string): string {
     return "from-sky-500 via-blue-600 to-indigo-800"
   if (t.includes("mountain") || t.includes("peak"))
     return "from-slate-500 via-gray-700 to-zinc-800"
-  return "from-sand via-gold to-sand-600"
+  return "from-ocean/30 via-blue-chill/40 to-ocean-deep"
 }
 
 function getInitials(name?: string, uid?: string): string {
@@ -182,7 +182,7 @@ export function BookingDetailModal({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="fixed inset-0 z-50 bg-charcoal/60 backdrop-blur-sm"
+        className="fixed inset-0 z-50 bg-ocean-deep/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
@@ -196,7 +196,7 @@ export function BookingDetailModal({
         className="fixed inset-4 z-50 mx-auto my-auto flex max-h-[90vh] max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:inset-8 lg:flex-row"
       >
         {/* ── Left Column: Details ──────────────────────────────────────── */}
-        <div className="relative flex w-full flex-col overflow-y-auto border-b border-charcoal/5 lg:w-1/2 lg:border-b-0 lg:border-r">
+        <div className="relative flex w-full flex-col overflow-y-auto border-b border-ocean-deep/5 lg:w-1/2 lg:border-b-0 lg:border-r">
           {/* Tour hero */}
           <div className="relative h-44 w-full shrink-0 overflow-hidden">
             {booking.tourHeroImage ? (
@@ -221,7 +221,7 @@ export function BookingDetailModal({
                   {STATUS_ICON[booking.status]} {STATUS_LABEL[booking.status]}
                 </span>
               </div>
-              <h2 className="mt-1 font-serif text-xl font-bold text-white drop-shadow">
+              <h2 className="mt-1 font-sans text-xl font-bold text-white drop-shadow">
                 {booking.tourTitle}
               </h2>
             </div>
@@ -237,28 +237,28 @@ export function BookingDetailModal({
           </div>
 
           {/* User summary + avatar */}
-          <div className="flex items-center gap-3 border-b border-charcoal/5 px-5 py-4">
+          <div className="flex items-center gap-3 border-b border-ocean-deep/5 px-5 py-4">
             {booking.userAvatar ? (
               <img
                 src={booking.userAvatar}
                 alt={booking.userName ?? "User"}
-                className="h-12 w-12 rounded-full object-cover ring-2 ring-gold/40"
+                className="h-12 w-12 rounded-full object-cover ring-2 ring-ocean/40"
               />
             ) : (
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-gold to-sand text-sm font-bold text-white ring-2 ring-gold/40">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-ocean/20 to-tan text-sm font-bold text-ocean-deep ring-2 ring-ocean/40">
                 {initials}
               </div>
             )}
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-charcoal">
+              <p className="truncate text-sm font-semibold text-ocean-deep">
                 {booking.userName ?? "Unknown User"}
               </p>
-              <p className="truncate text-xs text-charcoal/50">
+              <p className="truncate text-xs text-ocean-deep/50">
                 {booking.userEmail ?? booking.uid}
               </p>
             </div>
             <div className="ml-auto text-right">
-              <div className="font-serif text-lg font-bold text-charcoal">
+              <div className="font-sans text-lg font-bold text-ocean-deep">
                 {formatPrice(booking.totalPrice, booking.currency)}
               </div>
               {booking.userSubmittedPrice != null &&
@@ -272,16 +272,16 @@ export function BookingDetailModal({
 
           {/* Detail list */}
           <div className="flex-1 overflow-y-auto px-5 py-4">
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-charcoal/40">
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-ocean-deep/40">
               Booking Details
             </h3>
             <dl className="space-y-2.5">
               {detailRows.map(({ label, value }) => (
                 <div key={label} className="flex items-start justify-between gap-4">
-                  <dt className="shrink-0 text-xs font-medium text-charcoal/50">
+                  <dt className="shrink-0 text-xs font-medium text-ocean-deep/50">
                     {label}
                   </dt>
-                  <dd className="text-right text-xs font-medium text-charcoal break-all">
+                  <dd className="text-right text-xs font-medium text-ocean-deep break-all">
                     {value}
                   </dd>
                 </div>
@@ -290,7 +290,7 @@ export function BookingDetailModal({
 
             {/* Action buttons */}
             {actions.length > 0 && (
-              <div className="mt-6 border-t border-charcoal/5 pt-4">
+              <div className="mt-6 border-t border-ocean-deep/5 pt-4">
                 <div className="flex flex-wrap gap-2">
                   {actions.map(({ label, to, style }) => (
                     <button
@@ -321,7 +321,7 @@ export function BookingDetailModal({
                       <div className="absolute inset-0 rounded-l-2xl bg-black/20 backdrop-blur-sm" />
                       <div className="relative w-full max-w-md rounded-2xl bg-white/95 p-4 shadow-2xl">
                         <div className="flex items-center justify-between gap-3">
-                          <div className="min-w-0 text-sm text-charcoal">
+                          <div className="min-w-0 text-sm text-ocean-deep">
                             Confirm <span className="font-semibold">{pendingAction.label}</span>?
                           </div>
                           <div className="flex items-center gap-2">
@@ -357,7 +357,7 @@ export function BookingDetailModal({
           </div>
 
           {/* Link to full booking detail page */}
-          <div className="shrink-0 border-t border-charcoal/5 px-5 py-3">
+          <div className="shrink-0 border-t border-ocean-deep/5 px-5 py-3">
             <a
               href={`/my-bookings/${booking._id}`}
               className="flex items-center gap-1.5 text-xs font-semibold text-ocean hover:text-ocean/80 transition-colors"
@@ -373,9 +373,9 @@ export function BookingDetailModal({
         {/* ── Right Column: Booking Chat ───────────────────────────────── */}
         <div className="flex w-full flex-col lg:w-1/2">
           {/* Chat header */}
-          <div className="shrink-0 border-b border-charcoal/5 px-5 py-3">
-            <h3 className="text-sm font-semibold text-charcoal">Booking Chat</h3>
-            <p className="text-[11px] text-charcoal/40">
+          <div className="shrink-0 border-b border-ocean-deep/5 px-5 py-3">
+            <h3 className="text-sm font-semibold text-ocean-deep">Booking Chat</h3>
+            <p className="text-[11px] text-ocean-deep/40">
               Messages between Traveler &amp; Concierge
             </p>
           </div>
@@ -385,15 +385,15 @@ export function BookingDetailModal({
             {chatLoading ? (
               <div className="flex h-full items-center justify-center">
                 <div className="text-center">
-                  <div className="mx-auto mb-2 h-5 w-5 animate-spin rounded-full border-2 border-gold border-t-transparent" />
-                  <p className="text-xs text-charcoal/40">Loading chat…</p>
+                  <div className="mx-auto mb-2 h-5 w-5 animate-spin rounded-full border-2 border-ocean border-t-transparent" />
+                  <p className="text-xs text-ocean-deep/40">Loading chat…</p>
                 </div>
               </div>
             ) : messages.length === 0 ? (
               <div className="flex h-full items-center justify-center">
                 <div className="text-center">
-                  <div className="mb-2 text-2xl text-charcoal/15">💬</div>
-                  <p className="text-xs text-charcoal/40">
+                  <div className="mb-2 text-2xl text-ocean-deep/15">💬</div>
+                  <p className="text-xs text-ocean-deep/40">
                     No messages yet. Start the conversation.
                   </p>
                 </div>
@@ -406,8 +406,8 @@ export function BookingDetailModal({
                     <p
                       className={`mb-0.5 text-[10px] font-semibold ${
                         msg.senderRole === "agent"
-                          ? "text-right text-gold-600"
-                          : "text-charcoal/40"
+                          ? "text-right text-ocean-600"
+                          : "text-ocean-deep/40"
                       }`}
                     >
                       {msg.senderRole === "agent" ? "Concierge" : "Traveler"}
@@ -424,7 +424,7 @@ export function BookingDetailModal({
           </div>
 
           {/* Chat input */}
-          <div className="shrink-0 border-t border-charcoal/5 p-4">
+          <div className="shrink-0 border-t border-ocean-deep/5 p-4">
             <div className="flex items-center gap-2">
               <input
                 type="text"
@@ -437,12 +437,12 @@ export function BookingDetailModal({
                     handleSend()
                   }
                 }}
-                className="flex-1 rounded-xl border border-charcoal/10 bg-diamond px-4 py-2.5 text-sm text-charcoal placeholder:text-charcoal/30 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/50"
+                className="flex-1 rounded-xl border border-ocean-deep/10 bg-white px-4 py-2.5 text-sm text-ocean-deep placeholder:text-ocean-deep/30 focus:border-ocean focus:outline-none focus:ring-1 focus:ring-ocean/50"
               />
               <button
                 onClick={handleSend}
                 disabled={!chatInput.trim()}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold text-white transition-colors hover:bg-gold-500 disabled:bg-charcoal/10 disabled:text-charcoal/30"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-ocean text-white transition-colors hover:bg-ocean-500 disabled:bg-ocean-deep/10 disabled:text-ocean-deep/30"
                 aria-label="Send message"
               >
                 <svg

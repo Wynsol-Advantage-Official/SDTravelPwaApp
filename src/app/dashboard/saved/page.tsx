@@ -33,26 +33,26 @@ function SavedContent() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="font-serif text-2xl font-bold text-charcoal">
+        <h1 className="font-sans text-2xl font-bold text-ocean-deep">
           Saved Diamonds
         </h1>
-        <span className="text-sm text-charcoal/50">
+        <span className="text-sm text-ocean-deep/50">
           {saved.length} tour{saved.length !== 1 ? "s" : ""} saved
         </span>
       </div>
 
       {isLoading ? (
         <div className="py-20 text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-gold border-t-transparent" />
-          <p className="text-charcoal/50">Loading your saved diamonds…</p>
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-ocean border-t-transparent" />
+          <p className="text-ocean-deep/50">Loading your saved diamonds…</p>
         </div>
       ) : saved.length === 0 ? (
         <div className="py-12 text-center">
-          <div className="mb-4 text-4xl text-gold/30">♦</div>
-          <p className="text-charcoal/50">
+          <div className="mb-4 text-4xl text-ocean/30">♦</div>
+          <p className="text-ocean-deep/50">
             You haven&apos;t saved any tours yet.
           </p>
-          <p className="mt-1 text-xs text-charcoal/40">
+          <p className="mt-1 text-xs text-ocean-deep/40">
             Browse our tours and tap the diamond icon to save your favorites.
           </p>
           <Button href="/tours" className="mt-6">
@@ -64,7 +64,7 @@ function SavedContent() {
           {saved.map((diamond) => (
             <div
               key={diamond.tourSlug}
-              className="group overflow-hidden rounded-sm border border-sand/20 bg-white transition-shadow hover:shadow-md"
+              className="group overflow-hidden rounded-sm border border-tan/20 bg-white transition-shadow hover:shadow-md"
             >
               <div className="relative aspect-[4/3]">
                 <Image
@@ -75,23 +75,23 @@ function SavedContent() {
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 {/* Saved badge */}
-                <div className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-gold text-sm text-charcoal">
+                <div className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-ocean text-sm text-ocean-deep">
                   ♦
                 </div>
               </div>
               <div className="p-4">
                 <Link
                   href={`/tours/${diamond.tourSlug}`}
-                  className="font-serif text-lg font-semibold text-charcoal transition-colors group-hover:text-ocean"
+                  className="font-sans text-lg font-semibold text-ocean-deep transition-colors group-hover:text-ocean"
                 >
                   {diamond.tourTitle}
                 </Link>
                 {diamond.notes && (
-                  <p className="mt-1 text-xs text-charcoal/50">
+                  <p className="mt-1 text-xs text-ocean-deep/50">
                     &ldquo;{diamond.notes}&rdquo;
                   </p>
                 )}
-                <p className="mt-2 text-[10px] text-charcoal/30">
+                <p className="mt-2 text-[10px] text-ocean-deep/30">
                   Saved {new Date(diamond.savedAt).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",

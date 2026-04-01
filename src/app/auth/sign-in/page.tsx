@@ -75,23 +75,23 @@ export default function SignInPage() {
       {/* Brand */}
       <div className="text-center">
         <Link href="/" className="inline-block">
-          <span className="font-serif text-3xl font-bold text-gold">
+          <span className="font-sans text-3xl font-bold text-ocean">
             {BRAND.name}
           </span>
         </Link>
-        <p className="mt-2 text-sm text-diamond/50">
+        <p className="mt-2 text-sm text-ocean-deep/50 dark:text-white/50">
           Sign in to your travel dashboard
         </p>
       </div>
 
       {/* Card */}
-      <div className="rounded-sm border border-diamond/10 bg-white/5 p-8 backdrop-blur-sm">
+      <div className="rounded-sm border border-khaki/20 bg-white p-8 backdrop-blur-sm dark:border-ocean/10 dark:bg-white/5">
         {/* Google SSO */}
         <button
           type="button"
           onClick={handleGoogleSignIn}
           disabled={submitting}
-          className="flex w-full items-center justify-center gap-3 rounded-sm border border-diamond/20 bg-white px-4 py-3 text-sm font-medium text-charcoal transition-colors hover:bg-diamond disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-3 rounded-sm border border-white/20 bg-white px-4 py-3 text-sm font-medium text-ocean-deep transition-colors hover:bg-white disabled:opacity-50"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -117,10 +117,10 @@ export default function SignInPage() {
         {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-diamond/10" />
+            <div className="w-full border-t border-ocean/10" />
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-charcoal px-3 text-xs uppercase tracking-wider text-diamond/30">
+            <span className="bg-white px-3 text-xs uppercase tracking-wider text-ocean-deep/40 dark:bg-ocean-deep dark:text-white/30">
               or sign in with email
             </span>
           </div>
@@ -131,7 +131,7 @@ export default function SignInPage() {
           <div>
             <label
               htmlFor="email"
-              className="mb-1 block text-xs font-medium uppercase tracking-wider text-diamond/50"
+              className="mb-1 block text-xs font-medium uppercase tracking-wider text-ocean-deep/50 dark:text-white/50"
             >
               Email
             </label>
@@ -142,7 +142,7 @@ export default function SignInPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
-              className="h-12 w-full rounded-sm border border-diamond/15 bg-white/5 px-4 text-sm text-diamond placeholder:text-diamond/30 focus:border-gold focus:ring-1 focus:ring-gold"
+              className="h-12 w-full rounded-sm border border-khaki/30 bg-white px-4 text-sm text-ocean-deep placeholder:text-ocean-deep/30 dark:border-ocean/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30 focus:border-ocean focus:ring-1 focus:ring-ocean"
               placeholder="you@example.com"
             />
           </div>
@@ -150,7 +150,7 @@ export default function SignInPage() {
           <div>
             <label
               htmlFor="password"
-              className="mb-1 block text-xs font-medium uppercase tracking-wider text-diamond/50"
+              className="mb-1 block text-xs font-medium uppercase tracking-wider text-ocean-deep/50 dark:text-white/50"
             >
               Password
             </label>
@@ -162,7 +162,7 @@ export default function SignInPage() {
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               minLength={6}
-              className="h-12 w-full rounded-sm border border-diamond/15 bg-white/5 px-4 text-sm text-diamond placeholder:text-diamond/30 focus:border-gold focus:ring-1 focus:ring-gold"
+              className="h-12 w-full rounded-sm border border-khaki/30 bg-white px-4 text-sm text-ocean-deep placeholder:text-ocean-deep/30 dark:border-ocean/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30 focus:border-ocean focus:ring-1 focus:ring-ocean"
               placeholder="••••••••"
             />
           </div>
@@ -187,11 +187,11 @@ export default function SignInPage() {
       </div>
 
       {/* Footer links */}
-      <p className="text-center text-sm text-diamond/40">
+      <p className="text-center text-sm text-ocean-deep/50 dark:text-white/50">
         Don&apos;t have an account?{" "}
         <Link
           href="/auth/sign-up"
-          className="font-medium text-gold transition-colors hover:text-gold/80"
+          className="font-medium text-ocean transition-colors hover:text-blue-chill/80"
         >
           Create one
         </Link>

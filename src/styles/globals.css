@@ -7,72 +7,82 @@
 /* ─── Tailwind v4 Config Import ─────────────────────────────────────────────── */
 @config "../../tailwind.config.ts";
 
-/* ─── daisyUI Sand Diamonds colour overrides (applied globally + per-theme) ─ */
-/*     Overrides daisyUI's light theme vars with our brand palette.            */
+/* ─── daisyUI Sand Diamonds Light theme (brand book colours) ────────────────── */
 :root,
 [data-theme="sanddiamonds"] {
-  --color-primary:           oklch(72% 0.13 65);   /* gold  #D4AF37 */
-  --color-primary-content:   oklch(14% 0.03 265);  /* charcoal */
-  --color-secondary:         oklch(44% 0.11 230);  /* ocean #006994 */
-  --color-secondary-content: oklch(97% 0.004 100); /* diamond */
-  --color-accent:            oklch(70% 0.07 65);   /* sand  #C2A978 */
-  --color-accent-content:    oklch(14% 0.03 265);
-  --color-neutral:           oklch(14% 0.03 265);  /* charcoal #1A1A2E */
-  --color-neutral-content:   oklch(97% 0.004 100);
-  --color-base-100:          oklch(97% 0.004 100); /* diamond #F5F5F0 */
-  --color-base-200:          oklch(93% 0.008 80);
-  --color-base-300:          oklch(90% 0.012 76);
-  --color-base-content:      oklch(14% 0.03 265);
-  --color-info:              oklch(44% 0.11 230);
+  --color-primary:           oklch(44% 0.10 230);  /* ocean  #076a95 */
+  --color-primary-content:   oklch(100% 0 0);      /* white */
+  --color-secondary:         oklch(52% 0.10 230);  /* blue-chill #1282a5 */
+  --color-secondary-content: oklch(100% 0 0);      /* white */
+  --color-accent:            oklch(86% 0.05 75);   /* khaki #f1d3b2 */
+  --color-accent-content:    oklch(30% 0.08 230);  /* ocean-deep */
+  --color-neutral:           oklch(30% 0.08 230);  /* ocean-deep #043750 */
+  --color-neutral-content:   oklch(100% 0 0);      /* white */
+  --color-base-100:          oklch(100% 0 0);      /* white #ffffff */
+  --color-base-200:          oklch(93% 0.03 80);   /* tan #f2e2bf */
+  --color-base-300:          oklch(88% 0.04 75);   /* khaki #f1d3b2 */
+  --color-base-content:      oklch(30% 0.08 230);  /* ocean-deep #043750 */
+  --color-info:              oklch(52% 0.10 230);  /* blue-chill */
   --color-success:           oklch(54% 0.16 142);
-  --color-warning:           oklch(72% 0.13 65);
+  --color-warning:           oklch(78% 0.10 75);   /* khaki-warm */
   --color-error:             oklch(53% 0.20 27);
 }
 
-/* ─── daisyUI Sand Diamonds Dark theme ──────────────────────────────────────── */
-/*     Maps dark luxury tokens to daisyUI theme variables.                      */
+/* ─── daisyUI Sand Diamonds Dark theme (Ocean-based) ────────────────────────── */
 [data-theme="sanddiamonds-dark"] {
-  --color-primary:           oklch(72% 0.10 80);   /* luxgold #C9A84C */
-  --color-primary-content:   oklch(7% 0.01 0);     /* near-black #0D0D0D */
-  --color-secondary:         oklch(77% 0.08 80);   /* luxgold light #E4C97E */
-  --color-secondary-content: oklch(7% 0.01 0);
-  --color-accent:            oklch(72% 0.10 80);   /* luxgold */
-  --color-accent-content:    oklch(7% 0.01 0);
-  --color-neutral:           oklch(12% 0.005 0);   /* luxury card #141414 */
-  --color-neutral-content:   oklch(94% 0.01 80);   /* luxtext #F0EDE6 */
-  --color-base-100:          oklch(7% 0.01 0);     /* luxury base #0D0D0D */
-  --color-base-200:          oklch(10% 0.005 0);   /* luxury card3 #111111 */
-  --color-base-300:          oklch(12% 0.005 0);   /* luxury card #141414 */
-  --color-base-content:      oklch(94% 0.01 80);   /* luxtext #F0EDE6 */
-  --color-info:              oklch(44% 0.11 230);
+  --color-primary:           oklch(52% 0.10 230);  /* blue-chill #1282a5 */
+  --color-primary-content:   oklch(100% 0 0);      /* white */
+  --color-secondary:         oklch(93% 0.03 80);   /* tan #f2e2bf */
+  --color-secondary-content: oklch(30% 0.08 230);  /* ocean-deep */
+  --color-accent:            oklch(86% 0.05 75);   /* khaki #f1d3b2 */
+  --color-accent-content:    oklch(30% 0.08 230);  /* ocean-deep */
+  --color-neutral:           oklch(35% 0.07 230);  /* ocean-card #05476a */
+  --color-neutral-content:   oklch(100% 0 0);      /* white */
+  --color-base-100:          oklch(27% 0.07 230);  /* ocean-deep #043750 */
+  --color-base-200:          oklch(32% 0.07 230);  /* ocean-card-darker #04304a */
+  --color-base-300:          oklch(35% 0.07 230);  /* ocean-card #05476a */
+  --color-base-content:      oklch(100% 0 0);      /* white */
+  --color-info:              oklch(52% 0.10 230);
   --color-success:           oklch(54% 0.16 142);
-  --color-warning:           oklch(72% 0.13 65);
+  --color-warning:           oklch(78% 0.10 75);
   --color-error:             oklch(53% 0.20 27);
 }
 
 /* ─── Base Layer ─────────────────────────────────────────────────────────────── */
 @layer base {
   :root {
-    /* Luxury palette as CSS custom properties (for non-Tailwind use cases) */
-    --color-sand: #c2a978;
-    --color-gold: #d4af37;
-    --color-ocean: #006994;
-    --color-diamond: #f5f5f0;
-    --color-charcoal: #1a1a2e;
+    /* Brand book palette as CSS custom properties */
+    --brand-white: #ffffff;
+    --brand-tan: #f2e2bf;
+    --brand-khaki: #f1d3b2;
+    --brand-blue-chill: #1282a5;
+    --brand-ocean: #076a95;
 
-    /* ─── Dark Luxury Tokens ─────────────────────────────────────────────── */
-    --lux-gold: #C9A84C;
-    --lux-gold-light: #E4C97E;
-    --lux-gold-dim: rgba(201,168,76,0.15);
-    --lux-bg-base: #0D0D0D;
-    --lux-bg-card: #141414;
-    --lux-bg-card2: #1A1A1A;
-    --lux-bg-card3: #111111;
-    --lux-border: rgba(255,255,255,0.07);
-    --lux-border-gold: rgba(201,168,76,0.25);
-    --lux-text: #F0EDE6;
-    --lux-text-muted: #7A7570;
-    --lux-text-subtle: #4A4540;
+    /* Dark theme surface derivations from Ocean */
+    --brand-ocean-deep: #043750;
+    --brand-ocean-card: #05476a;
+    --brand-ocean-card2: #065882;
+
+    /* ─── Backward-compat aliases (mapped to brand) ──────────────── */
+    --color-sand: #f2e2bf;
+    --color-gold: #076a95;
+    --color-ocean: #076a95;
+    --color-diamond: #ffffff;
+    --color-charcoal: #043750;
+    --lux-gold: #1282a5;
+    --lux-gold-light: #40abcf;
+    --lux-gold-dim: rgba(7,106,149,0.12);
+
+    /* Light-mode surface tokens (warm white → tan → khaki; ocean as accent) */
+    --lux-bg-base:   #fefcf6;                   /* tan-50 */
+    --lux-bg-card:   #ffffff;                   /* white */
+    --lux-bg-card2:  #fdf8eb;                   /* tan-100 */
+    --lux-bg-card3:  #f9efd5;                   /* tan-200 */
+    --lux-border:     rgba(241,211,178,0.55);   /* khaki/light */
+    --lux-border-gold: rgba(7,106,149,0.22);    /* ocean/accent */
+    --lux-text:       #043750;                  /* ocean-deep */
+    --lux-text-muted: #076a95;                  /* ocean */
+    --lux-text-subtle: #1282a5;                 /* blue-chill */
 
     /* ─── Card Transition Primitive ──────────────────────────────────────── */
     --card-radius: 14px;
@@ -92,28 +102,44 @@
     min-height: 100dvh;
   }
 
-  /* Focus ring — accessible and on-brand (gold-accented) */
+  /* Focus ring — accessible and on-brand (Blue Chill) */
   :focus-visible {
-    outline: 2px solid var(--lux-gold);
+    outline: 2px solid var(--brand-blue-chill);
     outline-offset: 2px;
   }
 
   /* Selection color */
   ::selection {
-    background-color: var(--color-sand);
-    color: var(--color-charcoal);
+    background-color: var(--brand-tan);
+    color: var(--brand-ocean-deep);
+  }
+
+  /* Dark-mode surface token overrides (ocean depths as surfaces; tan/white as accents) */
+  .dark {
+    --lux-gold-dim:     rgba(18,130,165,0.15);
+    --lux-bg-base:      #043750;
+    --lux-bg-card:      #05476a;
+    --lux-bg-card2:     #065882;
+    --lux-bg-card3:     #04304a;
+    --lux-border:       rgba(255,255,255,0.10);
+    --lux-border-gold:  rgba(18,130,165,0.30);
+    --lux-text:         #ffffff;
+    --lux-text-muted:   #bddeed;
+    --lux-text-subtle:  #7abddb;
   }
 }
 
-/* ─── Dark Luxury Card Primitives ────────────────────────────────────────── */
+/* ─── Brand Card Primitives ──────────────────────────────────────────────── */
 @layer components {
-  .lux-card {
+  .lux-card,
+  .brand-card {
     border-radius: var(--card-radius);
     border: 1px solid var(--lux-border);
     transition: var(--card-transition);
   }
 
-  .lux-card:hover {
+  .lux-card:hover,
+  .brand-card:hover {
     border-color: var(--lux-border-gold);
   }
 

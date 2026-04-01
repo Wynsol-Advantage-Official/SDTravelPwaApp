@@ -64,14 +64,14 @@ function DashboardContent() {
       {/* ── Welcome Header ──────────────────────────────────────────── */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-serif text-3xl font-bold text-luxtext">
+          <h1 className="font-sans text-3xl font-bold text-ocean-deep dark:text-white">
             Welcome back, {displayName}
           </h1>
-          <p className="mt-1 text-sm text-luxtext-muted">{email}</p>
+          <p className="mt-1 text-sm text-ocean-deep/60 dark:text-white/60">{email}</p>
         </div>
         <button
           onClick={signOut}
-          className="text-sm text-luxtext-subtle transition-colors hover:text-luxtext"
+          className="text-sm text-ocean-deep/40 transition-colors hover:text-ocean-deep dark:text-white/40 dark:hover:text-white"
         >
           Sign Out
         </button>
@@ -107,18 +107,18 @@ function DashboardContent() {
       {/* ── Upcoming Trips Preview ──────────────────────────────────── */}
       <section>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-serif text-xl font-semibold text-luxtext">
+          <h2 className="font-sans text-xl font-semibold text-ocean-deep dark:text-white">
             Upcoming Trips
           </h2>
           <Link
             href="/dashboard/bookings"
-            className="text-xs font-medium text-luxgold-light transition-colors hover:text-luxgold"
+            className="text-xs font-medium text-ocean transition-colors hover:text-blue-chill dark:text-blue-chill-300 dark:hover:text-blue-chill"
           >
             View All
           </Link>
         </div>
         {loading ? (
-          <p className="py-8 text-center text-sm text-luxtext-subtle">
+          <p className="py-8 text-center text-sm text-ocean-deep/40 dark:text-white/40">
             Loading trips…
           </p>
         ) : upcoming.length > 0 ? (
@@ -128,8 +128,8 @@ function DashboardContent() {
             ))}
           </div>
         ) : (
-          <div className="rounded-sm border border-luxborder bg-luxury-card px-6 py-10 text-center">
-            <p className="text-luxtext-subtle">No upcoming trips yet.</p>
+          <div className="rounded-sm border border-khaki/40 bg-white px-6 py-10 text-center dark:border-white/10 dark:bg-ocean-card">
+            <p className="text-ocean-deep/40 dark:text-white/40">No upcoming trips yet.</p>
             <Button href="/tours" size="sm" className="mt-4">
               Explore Tours
             </Button>
@@ -141,7 +141,7 @@ function DashboardContent() {
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Quick Access */}
         <div className="space-y-3 lg:col-span-1">
-          <h2 className="font-serif text-xl font-semibold text-luxtext">
+          <h2 className="font-sans text-xl font-semibold text-ocean-deep dark:text-white">
             Quick Access
           </h2>
           <QuickAccessCard
@@ -172,29 +172,29 @@ function DashboardContent() {
 
         {/* Activity Feed */}
         <div className="lg:col-span-2">
-          <h2 className="mb-3 font-serif text-xl font-semibold text-luxtext">
+          <h2 className="mb-3 font-sans text-xl font-semibold text-ocean-deep dark:text-white">
             Recent Activity
           </h2>
           {activity.length > 0 ? (
-            <div className="divide-y divide-luxborder rounded-sm border border-luxborder bg-luxury-card">
+            <div className="divide-y divide-khaki/30 rounded-sm border border-khaki/40 bg-white dark:divide-luxborder dark:border-white/10 dark:bg-ocean-card">
               {activity.map((item) => (
                 <Link
                   key={item.id}
                   href={item.link ?? "/dashboard"}
-                  className="flex items-start gap-3 px-5 py-4 transition-colors hover:bg-luxury-card2/40"
+                  className="flex items-start gap-3 px-5 py-4 transition-colors hover:bg-tan/40 dark:hover:bg-ocean-card2/40"
                 >
-                  <span className="mt-0.5 text-base text-luxgold">
+                  <span className="mt-0.5 text-base text-blue-chill">
                     {ACTIVITY_ICONS[item.type] ?? "·"}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-luxtext">
+                    <p className="text-sm font-medium text-ocean-deep dark:text-white">
                       {item.title}
                     </p>
-                    <p className="mt-0.5 truncate text-xs text-luxtext-subtle">
+                    <p className="mt-0.5 truncate text-xs text-ocean-deep/40 dark:text-white/40">
                       {item.description}
                     </p>
                   </div>
-                  <time className="shrink-0 text-[10px] text-luxtext-subtle">
+                  <time className="shrink-0 text-[10px] text-ocean-deep/40 dark:text-white/40">
                     {new Date(item.timestamp).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -204,8 +204,8 @@ function DashboardContent() {
               ))}
             </div>
           ) : (
-            <div className="rounded-sm border border-luxborder bg-luxury-card px-6 py-10 text-center">
-              <p className="text-sm text-luxtext-subtle">
+            <div className="rounded-sm border border-khaki/40 bg-white px-6 py-10 text-center dark:border-white/10 dark:bg-ocean-card">
+              <p className="text-sm text-white/40">
                 {isMockMode
                   ? "No activity to display."
                   : "Activity will appear here once you start using your account."}
@@ -234,14 +234,14 @@ function StatCard({
   href?: string
 }) {
   const inner = (
-    <div className="rounded-sm border border-luxborder bg-luxury-card p-5 transition-shadow hover:shadow-md">
+    <div className="rounded-sm border border-khaki/40 bg-white p-5 transition-shadow hover:shadow-md dark:border-white/10 dark:bg-ocean-card">
       <div className="flex items-center justify-between">
-        <span className="text-xl text-luxgold">{icon}</span>
+        <span className="text-xl text-blue-chill">{icon}</span>
       </div>
-      <p className="mt-3 font-serif text-2xl font-bold text-luxtext">
+      <p className="mt-3 font-sans text-2xl font-bold text-ocean-deep dark:text-white">
         {value}
       </p>
-      <p className="mt-0.5 text-xs text-luxtext-subtle">{label}</p>
+      <p className="mt-0.5 text-xs text-ocean-deep/40 dark:text-white/40">{label}</p>
     </div>
   )
 
@@ -265,14 +265,14 @@ function QuickAccessCard({
   return (
     <Link
       href={href}
-      className="group flex items-center gap-4 rounded-sm border border-luxborder bg-luxury-card p-4 transition-shadow hover:shadow-md"
+      className="group flex items-center gap-4 rounded-sm border border-khaki/40 bg-white p-4 transition-shadow hover:shadow-md dark:border-white/10 dark:bg-ocean-card"
     >
-      <span className="text-xl text-luxgold">{icon}</span>
+      <span className="text-xl text-blue-chill">{icon}</span>
       <div>
-        <p className="text-sm font-semibold text-luxtext group-hover:text-luxgold-light">
+        <p className="text-sm font-semibold text-ocean-deep group-hover:text-blue-chill dark:text-white dark:group-hover:text-blue-chill-300">
           {title}
         </p>
-        <p className="text-xs text-luxtext-subtle">{subtitle}</p>
+        <p className="text-xs text-ocean-deep/40 dark:text-white/40">{subtitle}</p>
       </div>
     </Link>
   )

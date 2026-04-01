@@ -41,14 +41,14 @@ const STATUS_MAP: Record<BookingStatus, StatusConfig> = {
   hold: {
     label: "Concierge Review",
     icon: <Diamond className="h-4 w-4" />,
-    glow: "shadow-[0_0_20px_rgba(212,175,55,0.3)]",
-    badge: "bg-gold/20 border-gold/30",
-    text: "text-gold-300",
+    glow: "shadow-[0_0_20px_rgba(18,130,165,0.3)]",
+    badge: "bg-ocean/20 border-ocean/30",
+    text: "text-ocean-300",
   },
   pending: {
     label: "Pending",
     icon: <Hourglass className="h-4 w-4" />,
-    glow: "shadow-[0_0_20px_rgba(212,175,55,0.25)]",
+    glow: "shadow-[0_0_20px_rgba(18,130,165,0.25)]",
     badge: "bg-amber-500/20 border-amber-400/30",
     text: "text-amber-300",
   },
@@ -124,10 +124,10 @@ export default function MyBookingsPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-charcoal">
+    <div className="relative min-h-screen overflow-hidden bg-tan-50 dark:bg-ocean-deep">
       {/* ── Ambient background ─────────────────────────────────────────── */}
       <div className="pointer-events-none fixed inset-0">
-        <div className="absolute -left-40 -top-40 h-150 w-150 rounded-full bg-gold/5 blur-3xl" />
+        <div className="absolute -left-40 -top-40 h-150 w-150 rounded-full bg-ocean/5 blur-3xl" />
         <div className="absolute -bottom-40 -right-40 h-125 w-125 rounded-full bg-ocean/8 blur-3xl" />
         <div className="absolute left-1/2 top-1/3 h-100 w-100 -translate-x-1/2 rounded-full bg-purple-900/5 blur-3xl" />
       </div>
@@ -174,14 +174,14 @@ function GlassHeader({ user, bookingCount }: { user: User; bookingCount: number 
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }}
-      className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-md sm:p-10"
+      className="rounded-2xl border border-khaki/30 bg-white/80 p-8 backdrop-blur-md dark:border-white/10 dark:bg-white/5 sm:p-10"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-medium uppercase tracking-widest text-gold/80">
+          <p className="text-sm font-medium uppercase tracking-widest text-ocean/80">
             Your Journeys
           </p>
-          <h1 className="mt-2 font-serif text-3xl font-bold text-white sm:text-4xl">
+          <h1 className="mt-2 font-sans text-3xl font-bold text-ocean-deep dark:text-white sm:text-4xl">
             Welcome back, {firstName}
           </h1>
           <p className="mt-2 text-sm text-slate-400">
@@ -193,8 +193,8 @@ function GlassHeader({ user, bookingCount }: { user: User; bookingCount: number 
 
         {/* Decorative diamond */}
         <div className="hidden shrink-0 sm:block">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-gold/20 bg-gold/10 backdrop-blur-sm">
-            <Compass className="h-8 w-8 text-gold" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-ocean/20 bg-ocean/10 backdrop-blur-sm">
+            <Compass className="h-8 w-8 text-ocean" />
           </div>
         </div>
       </div>
@@ -215,8 +215,8 @@ function BookingCard({ booking }: { booking: Booking }) {
   return (
     <div
       className={[
-        "group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.07] backdrop-blur-md transition-all duration-500",
-        "hover:border-white/20 hover:bg-white/10",
+        "group relative overflow-hidden rounded-2xl border border-khaki/30 bg-white/80 backdrop-blur-md transition-all duration-500 dark:border-white/10 dark:bg-white/[0.07]",
+        "hover:border-ocean/20 hover:bg-white/90 dark:hover:border-white/20 dark:hover:bg-white/10",
         status.glow,
       ].join(" ")}
     >
@@ -230,7 +230,7 @@ function BookingCard({ booking }: { booking: Booking }) {
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-linear-to-t from-charcoal via-charcoal/40 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-ocean-deep via-ocean-deep/40 to-transparent" />
 
         {/* Status badge — floats over image */}
         <div className="absolute right-3 top-3">
@@ -245,7 +245,7 @@ function BookingCard({ booking }: { booking: Booking }) {
         {/* Data source chip */}
         {booking.dataSource && (
           <div className="absolute left-3 top-3">
-            <span className="rounded-full bg-charcoal/60 px-2 py-0.5 text-[10px] font-medium tracking-wider text-white/60 backdrop-blur-sm">
+            <span className="rounded-full bg-ocean-deep/60 px-2 py-0.5 text-[10px] font-medium tracking-wider text-white/60 backdrop-blur-sm">
               {booking.dataSource}
             </span>
           </div>
@@ -255,7 +255,7 @@ function BookingCard({ booking }: { booking: Booking }) {
         <div className="absolute bottom-0 left-0 right-0 p-5">
           <Link
             href={tourLink}
-            className="font-serif text-xl font-bold leading-snug text-white transition-colors hover:text-gold"
+            className="font-sans text-xl font-bold leading-snug text-white transition-colors hover:text-blue-chill"
           >
             {booking.tourTitle}
           </Link>
@@ -270,7 +270,7 @@ function BookingCard({ booking }: { booking: Booking }) {
             <CalendarDays className="h-4 w-4 text-slate-500" />
             <span className="text-sm">{dateDisplay}</span>
           </div>
-          <div className="font-serif text-lg font-bold text-white">
+          <div className="font-sans text-lg font-bold text-ocean-deep dark:text-white">
             {formatPrice(booking.totalPrice, booking.currency)}
           </div>
         </div>
@@ -295,13 +295,13 @@ function BookingCard({ booking }: { booking: Booking }) {
 
         {/* ── Concierge Message ──────────────────────────────────────── */}
         {isConcierge && (
-          <div className="rounded-xl border border-gold/15 bg-gold/5 p-4">
+          <div className="rounded-xl border border-ocean/15 bg-ocean/5 p-4">
             <div className="flex gap-3">
               <div className="mt-0.5 shrink-0">
-                <Diamond className="h-4 w-4 text-gold" />
+                <Diamond className="h-4 w-4 text-ocean" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-gold/90">
+                <p className="text-xs font-semibold text-ocean/90">
                   Concierge Message
                 </p>
                 <p className="mt-1 text-xs leading-relaxed text-slate-400">
@@ -316,7 +316,7 @@ function BookingCard({ booking }: { booking: Booking }) {
         {/* ── View details link ─────────────────────────────────────── */}
         <Link
           href={`/my-bookings/${booking._id}`}
-          className="group/link flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold/70 transition-colors hover:text-gold"
+          className="group/link flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-ocean/70 transition-colors hover:text-blue-chill"
         >
           View Booking Details
           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
@@ -338,10 +338,10 @@ function EmptyState() {
       transition={{ duration: 0.6, delay: 0.2 }}
       className="mt-20 flex flex-col items-center text-center"
     >
-      <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-full border border-white/10 bg-white/5 backdrop-blur-md">
-        <Compass className="h-12 w-12 text-gold/60" />
+      <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-full border border-khaki/30 bg-white/60 backdrop-blur-md dark:border-white/10 dark:bg-white/5">
+        <Compass className="h-12 w-12 text-ocean/60" />
       </div>
-      <h2 className="font-serif text-3xl font-bold text-white">
+      <h2 className="font-sans text-3xl font-bold text-ocean-deep dark:text-white">
         Start Your Journey
       </h2>
       <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-400">
@@ -350,7 +350,7 @@ function EmptyState() {
       </p>
       <Link
         href="/tours"
-        className="mt-8 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-8 py-3 text-sm font-semibold uppercase tracking-wider text-gold transition-all hover:border-gold/50 hover:bg-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.15)]"
+        className="mt-8 inline-flex items-center gap-2 rounded-full border border-ocean/30 bg-ocean/10 px-8 py-3 text-sm font-semibold uppercase tracking-wider text-ocean transition-all hover:border-blue-chill/50 hover:bg-ocean/20 hover:shadow-[0_0_30px_rgba(18,130,165,0.15)]"
       >
         <Sparkles className="h-4 w-4" />
         Explore Tours
@@ -365,9 +365,9 @@ function EmptyState() {
 
 function FullPageLoader() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-charcoal">
+    <div className="flex min-h-screen items-center justify-center bg-tan-50 dark:bg-ocean-deep">
       <div className="text-center">
-        <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-gold/30 border-t-gold" />
+        <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-ocean/30 border-t-ocean" />
         <p className="text-sm text-slate-500">Loading your experiences…</p>
       </div>
     </div>

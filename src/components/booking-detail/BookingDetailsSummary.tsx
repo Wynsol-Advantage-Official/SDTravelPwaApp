@@ -48,19 +48,19 @@ export function BookingDetailsSummary({ booking }: BookingDetailsSummaryProps) {
 
   return (
     <section>
-      <h2 className="font-serif text-2xl font-bold text-charcoal">Booking Details</h2>
+      <h2 className="font-sans text-2xl font-bold text-ocean-deep">Booking Details</h2>
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {details.map(({ label, value, icon }) => (
           <div
             key={label}
-            className="flex items-start gap-3 rounded-lg border border-charcoal/5 bg-white p-4"
+            className="flex items-start gap-3 rounded-lg border border-ocean-deep/5 bg-white p-4"
           >
             <span className="mt-0.5 text-lg">{icon}</span>
             <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-wider text-charcoal/50">
+              <p className="text-xs font-semibold uppercase tracking-wider text-ocean-deep/50">
                 {label}
               </p>
-              <p className="mt-0.5 break-all text-sm font-medium text-charcoal">
+              <p className="mt-0.5 break-all text-sm font-medium text-ocean-deep">
                 {value}
               </p>
             </div>
@@ -69,11 +69,11 @@ export function BookingDetailsSummary({ booking }: BookingDetailsSummaryProps) {
       </div>
 
       {booking.specialRequests && (
-        <div className="mt-4 rounded-lg border border-gold/20 bg-gold/5 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-charcoal/50">
+        <div className="mt-4 rounded-lg border border-ocean/20 bg-ocean/5 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-ocean-deep/50">
             Special Requests
           </p>
-          <p className="mt-1 text-sm text-charcoal/80">{booking.specialRequests}</p>
+          <p className="mt-1 text-sm text-ocean-deep/80">{booking.specialRequests}</p>
         </div>
       )}
     </section>

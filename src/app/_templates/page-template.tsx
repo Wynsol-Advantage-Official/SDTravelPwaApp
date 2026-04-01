@@ -24,19 +24,19 @@ function TemplateContent() {
 
   return (
     <div className="space-y-8">
-      <h1 className="font-serif text-2xl font-bold text-charcoal">
+      <h1 className="font-sans text-2xl font-bold text-ocean-deep">
         Page Title
       </h1>
 
       {/* Loading state */}
       {/* {loading ? (
         <div className="py-20 text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-gold border-t-transparent" />
-          <p className="text-charcoal/50">Loading…</p>
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-ocean border-t-transparent" />
+          <p className="text-ocean-deep/50">Loading…</p>
         </div>
       ) : ( */}
         <div>
-          <p className="text-charcoal/60">Your content here.</p>
+          <p className="text-ocean-deep/60">Your content here.</p>
         </div>
       {/* )} */}
     </div>

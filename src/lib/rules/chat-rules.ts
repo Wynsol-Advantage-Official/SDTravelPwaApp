@@ -31,7 +31,7 @@ export const ROOM_STATUS_ACTIONS: Record<ChatRoom["status"], RoomStatusAction[]>
     {
       label: "Archive",
       to: "archived",
-      style: "bg-charcoal/60 hover:bg-charcoal/80 text-white",
+      style: "bg-ocean-deep/60 hover:bg-ocean-deep/80 text-white",
     },
   ],
   resolved: [
@@ -43,7 +43,7 @@ export const ROOM_STATUS_ACTIONS: Record<ChatRoom["status"], RoomStatusAction[]>
     {
       label: "Archive",
       to: "archived",
-      style: "bg-charcoal/60 hover:bg-charcoal/80 text-white",
+      style: "bg-ocean-deep/60 hover:bg-ocean-deep/80 text-white",
     },
   ],
   archived: [

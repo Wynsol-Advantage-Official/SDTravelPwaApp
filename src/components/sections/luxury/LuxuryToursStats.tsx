@@ -49,10 +49,10 @@ function TourCard({
       href={`/tours/${tour.slug}`}
       className={[
         "group relative flex flex-col overflow-hidden",
-        "rounded-[14px] border border-luxborder bg-luxury-card",
+        "rounded-[14px] border border-khaki/30 bg-white dark:border-white/10 dark:bg-ocean-card",
         "transition-[transform,border-color] duration-[220ms] ease-out",
-        "hover:-translate-y-[2px] hover:border-luxborder-gold",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-luxgold focus-visible:ring-offset-2 focus-visible:ring-offset-luxury-base",
+        "hover:-translate-y-[2px] hover:border-ocean/40 dark:hover:border-blue-chill/30",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-chill focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-ocean-deep",
         minHeight,
         className,
       ]
@@ -71,17 +71,17 @@ function TourCard({
         />
 
         <div
-          className="absolute inset-0 bg-gradient-to-t from-luxury-base/80 via-luxury-base/30 to-transparent"
+          className="absolute inset-0 bg-gradient-to-t from-ocean-deep/80 via-ocean-deep/30 to-transparent"
           aria-hidden="true"
         />
 
         {/* Price badge */}
-        <span className="absolute right-3 top-3 rounded-[8px] bg-luxury-base/80 px-2.5 py-1 font-sans text-[12px] font-semibold text-luxgold-light backdrop-blur-sm">
+        <span className="absolute right-3 top-3 rounded-[8px] bg-ocean-deep/80 px-2.5 py-1 font-sans text-[12px] font-semibold text-blue-chill-300 backdrop-blur-sm">
           From {price}
         </span>
 
         {/* Destination tag */}
-        <span className="absolute left-3 top-3 rounded-[8px] border border-luxborder-gold bg-luxgold-dim px-2.5 py-0.5 font-sans text-[9px] font-semibold uppercase tracking-[0.14em] text-luxgold-light">
+        <span className="absolute left-3 top-3 rounded-[8px] border border-blue-chill/30 bg-blue-chill/10 px-2.5 py-0.5 font-sans text-[9px] font-semibold uppercase tracking-[0.14em] text-blue-chill-300">
           {tour.destination.name}
         </span>
 
@@ -89,12 +89,12 @@ function TourCard({
 
       {/* Content overlay — covers entire card, justifies content to bottom */}
       <div className="absolute inset-0 z-10 flex flex-col justify-end p-[18px]">
-        <h3 className={`font-serif font-bold text-luxtext ${titleSize}`}>
+        <h3 className={`font-sans font-bold text-white ${titleSize}`}>
           {tour.title}
         </h3>
 
         {featured && (
-          <p className={`mt-1 font-sans text-[13px] text-luxtext-muted ${descClamp}`}>
+          <p className={`mt-1 font-sans text-[13px] text-white/60 ${descClamp}`}>
             {tour.summary || tour.description}
           </p>
         )}
@@ -105,7 +105,7 @@ function TourCard({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-[6px] border border-luxborder/60 bg-luxury-base/50 px-2 py-0.5 font-sans text-[9px] font-semibold uppercase tracking-[0.12em] text-luxtext-muted backdrop-blur-sm"
+                className="rounded-[6px] border border-white/10 bg-ocean-deep/50 px-2 py-0.5 font-sans text-[9px] font-semibold uppercase tracking-[0.12em] text-white/60 backdrop-blur-sm"
               >
                 {tag}
               </span>
@@ -115,11 +115,11 @@ function TourCard({
 
         {/* Metadata row */}
         <div className="mt-2 flex items-center justify-between">
-          <div className="inline-flex items-center gap-1.5 font-sans text-[11px] text-luxtext-muted">
+          <div className="inline-flex items-center gap-1.5 font-sans text-[11px] text-white/60">
             <Clock className="h-3.5 w-3.5" aria-hidden="true" />
             {duration}
           </div>
-          <span className="inline-flex items-center gap-1 font-sans text-[12px] font-semibold text-luxgold-light transition-colors group-hover:text-luxgold">
+          <span className="inline-flex items-center gap-1 font-sans text-[12px] font-semibold text-blue-chill-300 transition-colors group-hover:text-blue-chill">
             View Details <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </span>
         </div>
@@ -149,17 +149,17 @@ function EmptyState() {
       variant="default"
       className="col-span-full flex flex-col items-center justify-center p-10 text-center"
     >
-      <h3 className="font-serif text-[20px] text-luxtext">
+      <h3 className="font-sans text-[20px] text-ocean-deep dark:text-white">
         Tours are being refreshed
       </h3>
-      <p className="mt-2 max-w-[42ch] font-sans text-[13px] leading-[1.55] text-luxtext-muted">
+      <p className="mt-2 max-w-[42ch] font-sans text-[13px] leading-[1.55] text-ocean-deep/60 dark:text-white/60">
         Our concierge team is curating new tours for you. In the meantime,
         browse our destinations or reach out.
       </p>
       <div className="mt-4 flex gap-3">
         <Link
           href="/tours"
-          className="inline-flex items-center gap-2 rounded-[8px] bg-luxgold px-4 py-2 text-[12px] font-semibold uppercase text-luxury-base transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-luxgold-light"
+          className="inline-flex items-center gap-2 rounded-[8px] bg-ocean px-4 py-2 text-[12px] font-semibold uppercase text-ocean-deep transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-blue-chill"
         >
           Browse Tours
         </Link>
@@ -182,16 +182,16 @@ export async function LuxuryToursStats() {
       <Reveal>
         <div className="mb-6 flex items-end justify-between">
           <div>
-            <p className="font-sans text-[9px] uppercase tracking-[0.14em] text-luxgold">
+            <p className="font-sans text-[9px] uppercase tracking-[0.14em] text-ocean dark:text-blue-chill">
               Handpicked Experiences
             </p>
-            <h2 id="luxury-tours-stats-heading" className="mt-1 font-serif text-[22px] text-luxtext">
-              Luxury <em className="italic text-luxgold-light">Tours</em>
+            <h2 id="luxury-tours-stats-heading" className="mt-1 font-sans text-[22px] text-ocean-deep transition-colors duration-300 dark:text-white">
+              Luxury <em className="italic text-ocean dark:text-blue-chill-300">Tours</em>
             </h2>
           </div>
           <Link
             href="/tours"
-            className="inline-flex items-center gap-1.5 font-sans text-[12px] font-semibold uppercase tracking-[0.1em] text-luxgold-light transition-colors hover:text-luxgold"
+            className="inline-flex items-center gap-1.5 font-sans text-[12px] font-semibold uppercase tracking-[0.1em] text-ocean transition-colors hover:text-ocean-deep dark:text-blue-chill-300 dark:hover:text-blue-chill"
           >
             View all tours{" "}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

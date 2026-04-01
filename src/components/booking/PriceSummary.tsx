@@ -18,31 +18,31 @@ export function PriceSummary({
   const total = guests * pricePerPerson
 
   return (
-    <div className="rounded-sm border border-sand/30 bg-diamond p-5">
-      <h3 className="font-serif text-lg font-semibold text-charcoal">
+    <div className="rounded-sm border border-tan/30 bg-white p-5">
+      <h3 className="font-sans text-lg font-semibold text-ocean-deep">
         Price Summary
       </h3>
 
       <dl className="mt-4 space-y-2 text-sm">
         <div className="flex justify-between">
-          <dt className="text-charcoal/60">Tour</dt>
-          <dd className="font-medium text-charcoal">{tourTitle}</dd>
+          <dt className="text-ocean-deep/60">Tour</dt>
+          <dd className="font-medium text-ocean-deep">{tourTitle}</dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-charcoal/60">Guests</dt>
-          <dd className="font-medium text-charcoal">{guests}</dd>
+          <dt className="text-ocean-deep/60">Guests</dt>
+          <dd className="font-medium text-ocean-deep">{guests}</dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-charcoal/60">Price per person</dt>
-          <dd className="font-medium text-charcoal">
+          <dt className="text-ocean-deep/60">Price per person</dt>
+          <dd className="font-medium text-ocean-deep">
             {formatPrice(pricePerPerson, currency)}
           </dd>
         </div>
 
-        <div className="border-t border-sand/20 pt-2">
+        <div className="border-t border-tan/20 pt-2">
           <div className="flex justify-between">
-            <dt className="font-semibold text-charcoal">Total</dt>
-            <dd className="font-serif text-xl font-bold text-gold">
+            <dt className="font-semibold text-ocean-deep">Total</dt>
+            <dd className="font-sans text-xl font-bold text-ocean">
               {formatPrice(total, currency)}
             </dd>
           </div>

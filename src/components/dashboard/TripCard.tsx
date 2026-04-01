@@ -10,7 +10,7 @@ interface TripCardProps {
 
 const statusColors: Record<string, string> = {
   hold: "bg-amber-900/30 text-amber-400",
-  pending: "bg-luxgold-dim text-luxgold",
+  pending: "bg-blue-chill/10 text-blue-chill",
   awaiting_payment: "bg-purple-900/30 text-purple-400",
   confirmed: "bg-green-900/30 text-green-400",
   completed: "bg-ocean/10 text-ocean-300",
@@ -19,15 +19,15 @@ const statusColors: Record<string, string> = {
 
 export function TripCard({ booking }: TripCardProps) {
   return (
-    <div className="flex flex-col gap-3 rounded-sm border border-luxborder bg-luxury-card p-5 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 rounded-sm border border-khaki/40 bg-white p-5 transition-colors dark:border-white/10 dark:bg-ocean-card sm:flex-row sm:items-center sm:justify-between">
       <div className="space-y-1">
         <Link
           href={`/tours/${booking.tourSlug ?? booking.tourId ?? ""}`}
-          className="font-serif text-lg font-semibold text-luxtext transition-colors hover:text-luxgold-light"
+          className="font-sans text-lg font-semibold text-ocean-deep transition-colors hover:text-blue-chill dark:text-white dark:hover:text-blue-chill-300"
         >
           {booking.tourTitle}
         </Link>
-        <p className="text-sm text-luxtext-muted">
+        <p className="text-sm text-ocean-deep/60 dark:text-white/60">
           {booking.dates
             ? `${formatDateRange(new Date(booking.dates.start), new Date(booking.dates.end))} · `
             : booking.tourDate
@@ -43,7 +43,7 @@ export function TripCard({ booking }: TripCardProps) {
       </div>
 
       <div className="flex items-center gap-4">
-        <span className="font-serif text-lg font-bold text-luxtext">
+        <span className="font-sans text-lg font-bold text-ocean-deep dark:text-white">
           {formatPrice(booking.totalPrice, booking.currency)}
         </span>
         <span

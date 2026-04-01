@@ -70,9 +70,9 @@ export default async function DestinationRegionPage({
   }
 
   return (
-    <main className="min-h-dvh bg-diamond">
+    <main className="min-h-dvh bg-white">
       {/* ── Full-bleed hero ──────────────────────────────────────── */}
-      <section className="hero relative min-h-[75vh] items-end overflow-hidden bg-charcoal">
+      <section className="hero relative min-h-[75vh] items-end overflow-hidden bg-ocean-deep">
         {hasHero ? (
           <Image
             src={dest.heroImage.src}
@@ -83,16 +83,16 @@ export default async function DestinationRegionPage({
             className="object-cover opacity-70"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-charcoal via-ocean/40 to-charcoal" />
+          <div className="absolute inset-0 bg-gradient-to-br from-ocean-deep via-ocean/40 to-ocean-deep" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ocean-deep via-ocean-deep/20 to-transparent" />
 
         <FadeSlide className="hero-content relative z-10 mx-auto w-full max-w-7xl self-end px-6 pb-16">
           <div className="w-full">
           <div className="mb-4">
             <Link
               href="/destinations"
-              className="btn btn-ghost btn-sm text-diamond/60 hover:text-gold"
+              className="btn btn-ghost btn-sm text-white/60 hover:text-blue-chill"
             >
               ← All Destinations
             </Link>
@@ -103,12 +103,12 @@ export default async function DestinationRegionPage({
             </div>
           </FadeSlideChild>
           <FadeSlideChild>
-            <h1 className="font-serif text-5xl font-bold text-diamond sm:text-6xl lg:text-7xl">
+            <h1 className="font-sans text-5xl font-bold text-white sm:text-6xl lg:text-7xl">
               {dest.name}
             </h1>
           </FadeSlideChild>
           <FadeSlideChild>
-            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-diamond/75">
+            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/75">
               {dest.description || demo.tagline}
             </p>
           </FadeSlideChild>
@@ -131,19 +131,19 @@ export default async function DestinationRegionPage({
                   sizes="(max-width: 768px) 100vw, 66vw"
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-ocean-deep/60 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 p-6">
-                  <p className="font-serif text-xl font-semibold text-diamond">
+                  <p className="font-sans text-xl font-semibold text-white">
                     {dest.name} Gallery
                   </p>
-                  <p className="mt-1 text-sm text-diamond/70">
+                  <p className="mt-1 text-sm text-white/70">
                     {galleryImgs.length} photo{galleryImgs.length !== 1 ? "s" : ""} from our collection
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="flex h-80 items-center justify-center rounded-2xl bg-sand/10 md:h-[480px]">
-                <MapPin className="h-12 w-12 text-charcoal/20" />
+              <div className="flex h-80 items-center justify-center rounded-2xl bg-tan/10 md:h-[480px]">
+                <MapPin className="h-12 w-12 text-ocean-deep/20" />
               </div>
             )}
           </div>
@@ -152,16 +152,16 @@ export default async function DestinationRegionPage({
           <div className="card bg-base-100 shadow-sm">
             <div className="card-body">
               <div className="mb-1 flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/15">
-                  <Sun className="h-4 w-4 text-gold" />
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ocean/15">
+                  <Sun className="h-4 w-4 text-ocean" />
                 </span>
                 <span className="badge badge-ghost text-xs uppercase tracking-wider">Climate</span>
               </div>
-              <h3 className="card-title font-serif text-lg">Best Time to Visit</h3>
-              <p className="text-sm leading-relaxed text-charcoal/70">
+              <h3 className="card-title font-sans text-lg">Best Time to Visit</h3>
+              <p className="text-sm leading-relaxed text-ocean-deep/70">
                 {dest.climate || demo.policies}
               </p>
-              <div className="mt-2 flex items-center gap-2 text-xs text-charcoal/40">
+              <div className="mt-2 flex items-center gap-2 text-xs text-ocean-deep/40">
                 <Wind className="h-3.5 w-3.5" /> Verified by our concierge team
               </div>
             </div>
@@ -176,11 +176,11 @@ export default async function DestinationRegionPage({
                 </span>
                 <span className="badge badge-ghost text-xs uppercase tracking-wider">Highlights</span>
               </div>
-              <h3 className="card-title font-serif text-lg">Must Experiences</h3>
+              <h3 className="card-title font-sans text-lg">Must Experiences</h3>
               <ul className="space-y-2">
                 {[demo.highlight1, demo.highlight2, demo.highlight3].map((h, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-charcoal/75">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
+                  <li key={i} className="flex items-start gap-2 text-sm text-ocean-deep/75">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-ocean" />
                     {h}
                   </li>
                 ))}
@@ -214,17 +214,17 @@ export default async function DestinationRegionPage({
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <div className="mb-10 flex items-end justify-between">
           <div>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.25em] text-gold">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.25em] text-ocean">
               Discover
             </p>
-            <h2 className="font-serif text-3xl font-bold text-charcoal">
+            <h2 className="font-sans text-3xl font-bold text-ocean-deep">
               Tours in {dest.name}
             </h2>
           </div>
           {regionTours.length > 3 && (
             <Link
               href="/tours"
-              className="hidden items-center gap-1.5 text-sm font-semibold text-ocean hover:text-gold sm:flex"
+              className="hidden items-center gap-1.5 text-sm font-semibold text-ocean hover:text-blue-chill sm:flex"
             >
               All tours <ArrowRight className="h-4 w-4" />
             </Link>
@@ -238,14 +238,14 @@ export default async function DestinationRegionPage({
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-charcoal/20 py-20 text-center">
-            <MapPin className="mx-auto mb-3 h-8 w-8 text-charcoal/20" />
-            <p className="font-serif text-lg text-charcoal/50">
+          <div className="rounded-2xl border border-dashed border-ocean-deep/20 py-20 text-center">
+            <MapPin className="mx-auto mb-3 h-8 w-8 text-ocean-deep/20" />
+            <p className="font-sans text-lg text-ocean-deep/50">
               Tours for {dest.name} are coming soon.
             </p>
             <Link
               href="/tours"
-              className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ocean hover:text-gold"
+              className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ocean hover:text-blue-chill"
             >
               Browse all tours <ArrowRight className="h-4 w-4" />
             </Link>
@@ -254,14 +254,14 @@ export default async function DestinationRegionPage({
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────────── */}
-      <section className="border-t border-charcoal/10 bg-charcoal py-16 text-center">
-        <div className="badge badge-outline mb-4 border-gold/40 uppercase tracking-[0.3em] text-gold">
+      <section className="border-t border-ocean-deep/10 bg-ocean-deep py-16 text-center">
+        <div className="badge badge-outline mb-4 border-ocean/40 uppercase tracking-[0.3em] text-ocean">
           Bespoke Travel
         </div>
-        <h2 className="font-serif text-3xl font-bold text-diamond">
+        <h2 className="font-sans text-3xl font-bold text-white">
           Ready to explore {dest.name}?
         </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm text-diamond/60">
+        <p className="mx-auto mt-3 max-w-md text-sm text-ocean-deep/60">
           Our concierge team will craft a bespoke itinerary tailored exactly to you.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">

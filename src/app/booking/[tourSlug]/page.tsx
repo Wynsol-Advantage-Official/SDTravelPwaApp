@@ -45,22 +45,22 @@ export default async function BookingPage({ params }: BookingPageProps) {
   const { tour } = result
 
   return (
-    <main className="min-h-dvh bg-diamond">
+    <main className="min-h-dvh bg-white">
       {/* Header bar */}
-      <section className="bg-charcoal px-6 pb-10 pt-8">
+      <section className="bg-ocean-deep px-6 pb-10 pt-8">
         <div className="mx-auto max-w-3xl">
           <FadeSlide>
             <FadeSlideChild>
               <nav aria-label="Breadcrumb" className="mb-4">
-                <ol className="flex items-center gap-2 text-xs text-diamond/60">
+                <ol className="flex items-center gap-2 text-xs text-white/60">
                   <li>
-                    <Link href="/" className="hover:text-gold transition-colors">
+                    <Link href="/" className="hover:text-blue-chill transition-colors">
                       Home
                     </Link>
                   </li>
                   <li aria-hidden="true">/</li>
                   <li>
-                    <Link href="/tours" className="hover:text-gold transition-colors">
+                    <Link href="/tours" className="hover:text-blue-chill transition-colors">
                       Tours
                     </Link>
                   </li>
@@ -68,25 +68,25 @@ export default async function BookingPage({ params }: BookingPageProps) {
                   <li>
                     <Link
                       href={`/tours/${tour.slug}`}
-                      className="hover:text-gold transition-colors"
+                      className="hover:text-blue-chill transition-colors"
                     >
                       {tour.title}
                     </Link>
                   </li>
                   <li aria-hidden="true">/</li>
-                  <li className="text-diamond">Book</li>
+                  <li className="text-white">Book</li>
                 </ol>
               </nav>
             </FadeSlideChild>
             <FadeSlideChild>
-              <h1 className="font-serif text-3xl font-bold text-diamond sm:text-4xl">
+              <h1 className="font-sans text-3xl font-bold text-white sm:text-4xl">
                 Book {tour.title}
               </h1>
             </FadeSlideChild>
             <FadeSlideChild>
-              <p className="mt-2 text-sm text-diamond/70">
+              <p className="mt-2 text-sm text-white/70">
                 From{" "}
-                <span className="font-semibold text-gold">
+                <span className="font-semibold text-ocean">
                   {formatPrice(tour.startingPrice, tour.currency)}
                 </span>{" "}
                 per person · {tour.duration} days

@@ -45,41 +45,41 @@ export default async function Page({ params }: PageProps) {
         <div className="grid grid-cols-1 gap-0 md:grid-cols-3">
           {/* Left: Large hero + details */}
           <div className="col-span-1 md:col-span-2">
-            <div className="relative h-96 w-full bg-sand/10">
+            <div className="relative h-96 w-full bg-tan/10">
               {hero ? (
                 <Image src={hero.src} alt={hero.alt || acc.name} fill className="object-cover" />
               ) : (
                 <div className="flex h-full items-center justify-center">
-                  <span className="text-charcoal/50">No image available</span>
+                  <span className="text-ocean-deep/50">No image available</span>
                 </div>
               )}
             </div>
 
             <div className="p-6">
-              <h1 className="mb-2 font-serif text-3xl font-bold text-charcoal">{acc.name}</h1>
-              <p className="mb-3 text-sm text-charcoal/60">{acc.location ?? demo.tagline}</p>
+              <h1 className="mb-2 font-sans text-3xl font-bold text-ocean-deep">{acc.name}</h1>
+              <p className="mb-3 text-sm text-ocean-deep/60">{acc.location ?? demo.tagline}</p>
 
               <div className="mb-4 flex items-center gap-4">
                 {acc.rating > 0 && (
-                  <div className="text-sm font-medium text-charcoal">
+                  <div className="text-sm font-medium text-ocean-deep">
                     Rating: <span className="font-semibold">{acc.rating.toFixed(1)}</span>
                   </div>
                 )}
-                <div className="text-sm text-charcoal">Host: <span className="font-semibold">{demo.host}</span></div>
+                <div className="text-sm text-ocean-deep">Host: <span className="font-semibold">{demo.host}</span></div>
                 {acc.pricePerNight > 0 && (
-                  <div className="text-sm text-charcoal">Price from <span className="font-semibold">{acc.currency} {acc.pricePerNight}</span>/night</div>
+                  <div className="text-sm text-ocean-deep">Price from <span className="font-semibold">{acc.currency} {acc.pricePerNight}</span>/night</div>
                 )}
               </div>
 
               {acc.description ? (
-                <div className="prose prose-sm mb-4 max-w-none text-charcoal/80" dangerouslySetInnerHTML={{ __html: acc.description }} />
+                <div className="prose prose-sm mb-4 max-w-none text-ocean-deep/80" dangerouslySetInnerHTML={{ __html: acc.description }} />
               ) : (
-                <p className="mb-4 text-charcoal/75">{demo.policies}</p>
+                <p className="mb-4 text-ocean-deep/75">{demo.policies}</p>
               )}
 
               <div className="mt-4 flex gap-3">
                 <a href={`tel:${demo.contact}`} className="inline-flex items-center gap-2 rounded-md bg-ocean/10 px-4 py-2 text-sm font-semibold text-ocean">Call Host</a>
-                <a href={`mailto:info@example.com`} className="inline-flex items-center gap-2 rounded-md border border-ocean/10 px-4 py-2 text-sm font-semibold text-charcoal">Message</a>
+                <a href={`mailto:info@example.com`} className="inline-flex items-center gap-2 rounded-md border border-ocean/10 px-4 py-2 text-sm font-semibold text-ocean-deep">Message</a>
               </div>
             </div>
           </div>
@@ -88,13 +88,13 @@ export default async function Page({ params }: PageProps) {
           <aside className="col-span-1 border-l border-white/5 bg-white p-4">
             <div className="mb-3 rounded-lg border border-white/10 bg-white/5 p-4 shadow-sm">
               <h4 className="mb-1 text-xs font-semibold uppercase text-ocean">Why you'll love it</h4>
-              <p className="text-sm text-charcoal/75">{demo.tagline}</p>
+              <p className="text-sm text-ocean-deep/75">{demo.tagline}</p>
             </div>
 
             <div className="grid grid-rows-3 gap-3">
               <div className="rounded-lg border border-white/10 bg-white/5 p-3">
-                <h5 className="mb-1 text-xs font-semibold text-charcoal/90">Highlights</h5>
-                <ul className="text-sm text-charcoal/70 list-inside list-disc">
+                <h5 className="mb-1 text-xs font-semibold text-ocean-deep/90">Highlights</h5>
+                <ul className="text-sm text-ocean-deep/70 list-inside list-disc">
                   {demo.highlights.map((h, i) => (
                     <li key={i}>{h}</li>
                   ))}
@@ -102,8 +102,8 @@ export default async function Page({ params }: PageProps) {
               </div>
 
               <div className="rounded-lg border border-white/10 bg-white/5 p-3">
-                <h5 className="mb-1 text-xs font-semibold text-charcoal/90">Policies</h5>
-                <p className="text-sm text-charcoal/70 line-clamp-3">{demo.policies}</p>
+                <h5 className="mb-1 text-xs font-semibold text-ocean-deep/90">Policies</h5>
+                <p className="text-sm text-ocean-deep/70 line-clamp-3">{demo.policies}</p>
               </div>
 
               <div className="rounded-lg overflow-hidden">
@@ -119,8 +119,8 @@ export default async function Page({ params }: PageProps) {
                     )}
                   </div>
                 ) : (
-                  <div className="flex h-28 items-center justify-center bg-sand/10">
-                    <span className="text-charcoal/50">No additional photos</span>
+                  <div className="flex h-28 items-center justify-center bg-tan/10">
+                    <span className="text-ocean-deep/50">No additional photos</span>
                   </div>
                 )}
               </div>

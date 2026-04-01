@@ -5,9 +5,9 @@ import { motion } from "framer-motion"
 import { Home, Heart, Calendar, MessageCircle } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 
-const ACTIVE_COLOR = "#D4AF37"
-const INACTIVE_COLOR = "#F5F5F099"
-const NAV_BG = "#1A1A2E"
+const ACTIVE_COLOR = "#1282a5"
+const INACTIVE_COLOR = "#076a9599"
+const NAV_BG = "#043750"
 const SIGN_IN_ROUTE = "/auth/sign-in"
 
 interface Tab {

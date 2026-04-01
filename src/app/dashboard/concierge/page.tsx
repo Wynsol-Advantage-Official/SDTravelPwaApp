@@ -38,7 +38,7 @@ const STATUS_FILTERS: { label: string; value: BookingStatus | "all" }[] = [
 
 const STAT_CONFIG = [
   { key: "hold" as const, label: "Holds", icon: "◇", color: "text-amber-600", bg: "bg-amber-50 border-amber-100" },
-  { key: "pending" as const, label: "Pending", icon: "◈", color: "text-sand-500", bg: "bg-sand-50 border-sand-100" },
+  { key: "pending" as const, label: "Pending", icon: "◈", color: "text-tan-500", bg: "bg-tan-50 border-tan-100" },
   { key: "awaiting_payment" as const, label: "Awaiting Pay", icon: "⧫", color: "text-purple-600", bg: "bg-purple-50 border-purple-100" },
   { key: "confirmed" as const, label: "Confirmed", icon: "✓", color: "text-green-600", bg: "bg-green-50 border-green-100" },
 ]
@@ -174,15 +174,15 @@ function ConciergeContent() {
 
   // ── Render ──────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-charcoal-50/40">
+    <div className="min-h-screen bg-ocean-deep-50/40">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h1 className="font-serif text-3xl font-bold text-charcoal">
+            <h1 className="font-sans text-3xl font-bold text-ocean-deep">
               Concierge Dashboard
             </h1>
-            <p className="mt-1 text-sm text-charcoal/50">
+            <p className="mt-1 text-sm text-ocean-deep/50">
               Manage bookings, chat channels, and concierge operations.
             </p>
           </div>
@@ -191,12 +191,12 @@ function ConciergeContent() {
               <button
                 onClick={fetchBookings}
                 disabled={loading}
-                className="rounded-xl border border-charcoal/10 bg-white px-4 py-2 text-xs font-semibold text-charcoal/70 shadow-sm transition-all hover:border-gold hover:text-gold hover:shadow disabled:opacity-50"
+                className="rounded-xl border border-ocean-deep/10 bg-white px-4 py-2 text-xs font-semibold text-ocean-deep/70 shadow-sm transition-all hover:border-blue-chill hover:text-blue-chill hover:shadow disabled:opacity-50"
               >
                 ↻ Refresh
               </button>
               {lastRefreshed && (
-                <span className="text-[10px] text-charcoal/35">
+                <span className="text-[10px] text-ocean-deep/35">
                   Updated {lastRefreshed.toLocaleTimeString()}
                 </span>
               )}
@@ -205,14 +205,14 @@ function ConciergeContent() {
         </div>
 
         {/* ── Tab bar ────────────────────────────────────────────────────── */}
-        <div className="mb-6 flex gap-1 rounded-xl bg-charcoal/[0.04] p-1">
+        <div className="mb-6 flex gap-1 rounded-xl bg-ocean-deep/[0.04] p-1">
           <button
             onClick={() => setActiveTab("bookings")}
             className={[
               "flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all",
               activeTab === "bookings"
-                ? "bg-white text-charcoal shadow-sm"
-                : "text-charcoal/40 hover:text-charcoal/70",
+                ? "bg-white text-ocean-deep shadow-sm"
+                : "text-ocean-deep/40 hover:text-ocean-deep/70",
             ].join(" ")}
           >
             ◇ Bookings
@@ -222,8 +222,8 @@ function ConciergeContent() {
             className={[
               "flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all",
               activeTab === "inbox"
-                ? "bg-white text-charcoal shadow-sm"
-                : "text-charcoal/40 hover:text-charcoal/70",
+                ? "bg-white text-ocean-deep shadow-sm"
+                : "text-ocean-deep/40 hover:text-ocean-deep/70",
             ].join(" ")}
           >
             ✉ Inbox
@@ -252,11 +252,11 @@ function ConciergeContent() {
             >
               <div className="flex items-center gap-2">
                 <span className={`text-lg ${color}`}>{icon}</span>
-                <span className="text-2xl font-bold text-charcoal">
+                <span className="text-2xl font-bold text-ocean-deep">
                   {statCounts[key] ?? 0}
                 </span>
               </div>
-              <p className="mt-1 text-xs font-medium text-charcoal/50">{label}</p>
+              <p className="mt-1 text-xs font-medium text-ocean-deep/50">{label}</p>
             </div>
           ))}
         </div>
@@ -270,8 +270,8 @@ function ConciergeContent() {
               className={[
                 "rounded-full px-4 py-1.5 text-xs font-semibold transition-all",
                 filter === value
-                  ? "bg-gold text-white shadow-sm"
-                  : "bg-white text-charcoal/50 shadow-sm ring-1 ring-charcoal/5 hover:ring-gold/30 hover:text-charcoal",
+                  ? "bg-ocean text-white shadow-sm"
+                  : "bg-white text-ocean-deep/50 shadow-sm ring-1 ring-charcoal/5 hover:ring-ocean/30 hover:text-ocean-deep",
               ].join(" ")}
             >
               {label}
@@ -288,15 +288,15 @@ function ConciergeContent() {
         {loading ? (
           <div className="flex items-center justify-center py-24">
             <div className="text-center">
-              <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-[3px] border-gold border-t-transparent" />
-              <p className="text-sm text-charcoal/40">Loading bookings…</p>
+              <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-[3px] border-ocean border-t-transparent" />
+              <p className="text-sm text-ocean-deep/40">Loading bookings…</p>
             </div>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="flex items-center justify-center rounded-2xl border border-dashed border-charcoal/10 bg-white/50 py-20">
+          <div className="flex items-center justify-center rounded-2xl border border-dashed border-ocean-deep/10 bg-white/50 py-20">
             <div className="text-center">
-              <div className="mb-3 text-4xl text-charcoal/15">◇</div>
-              <p className="text-sm text-charcoal/40">
+              <div className="mb-3 text-4xl text-ocean-deep/15">◇</div>
+              <p className="text-sm text-ocean-deep/40">
                 {filter === "all"
                   ? "No bookings yet."
                   : `No ${filter.replace("_", " ")} bookings.`}

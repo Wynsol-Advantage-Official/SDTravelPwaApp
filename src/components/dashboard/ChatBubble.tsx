@@ -27,19 +27,19 @@ export function ChatBubble({ message, isOwn, hideTime }: ChatBubbleProps) {
         className={[
           "relative max-w-[80%] px-3.5 py-2 text-sm leading-relaxed",
           isOwn
-            ? "rounded-2xl rounded-br-sm bg-gold text-charcoal"
-            : "rounded-2xl rounded-bl-sm bg-charcoal/5 text-charcoal",
+            ? "rounded-2xl rounded-br-sm bg-ocean text-ocean-deep"
+            : "rounded-2xl rounded-bl-sm bg-ocean/5 text-ocean-deep",
         ].join(" ")}
       >
         <p className="whitespace-pre-wrap wrap-break-word">{message.text}</p>
         {!hideTime && timeStr && (
           <div className={`mt-0.5 flex items-center gap-1 ${isOwn ? "justify-end" : "justify-start"}`}>
-            <span className={`text-[10px] leading-none ${isOwn ? "text-charcoal/40" : "text-charcoal/30"}`}>
+            <span className={`text-[10px] leading-none ${isOwn ? "text-ocean-deep/40" : "text-ocean-deep/30"}`}>
               {timeStr}
             </span>
             {isOwn && (
               <svg
-                className={`h-3 w-3 ${message.read ? "text-charcoal/50" : "text-charcoal/25"}`}
+                className={`h-3 w-3 ${message.read ? "text-ocean-deep/50" : "text-ocean-deep/25"}`}
                 viewBox="0 0 16 16"
                 fill="none"
                 stroke="currentColor"

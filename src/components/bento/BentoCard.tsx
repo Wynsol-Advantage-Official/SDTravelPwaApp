@@ -12,10 +12,10 @@ export interface BentoCardProps {
 }
 
 const variantClasses: Record<NonNullable<BentoCardProps["variant"]>, string> = {
-  default: "bg-luxury-card border border-luxborder",
-  gold: "bg-luxgold-dim border border-luxborder-gold",
-  hero: "bg-gradient-to-br from-luxury-card3 to-luxury-base",
-  stat: "bg-luxury-card2 border border-luxborder",
+  default: "bg-white border border-khaki/30 dark:bg-ocean-card dark:border-luxborder",
+  gold: "bg-ocean/6 border border-ocean/20 dark:bg-blue-chill/10 dark:border-blue-chill/25",
+  hero: "bg-gradient-to-br from-ocean-deep to-ocean dark:from-ocean-900 dark:to-ocean-deep",
+  stat: "bg-tan/50 border border-khaki/30 dark:bg-ocean-card2 dark:border-luxborder",
 };
 
 export function BentoCard({
@@ -35,7 +35,7 @@ export function BentoCard({
         "rounded-[14px] overflow-hidden relative",
         variantClasses[variant],
         hoverable
-          ? "transition-[transform,border-color] duration-[220ms] ease-out hover:-translate-y-[2px] hover:border-luxborder-gold"
+          ? "transition-[transform,border-color] duration-[220ms] ease-out hover:-translate-y-[2px] hover:border-blue-chill/30"
           : "",
         className,
       ]

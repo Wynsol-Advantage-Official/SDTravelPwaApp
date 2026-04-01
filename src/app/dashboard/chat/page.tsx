@@ -92,46 +92,46 @@ function ChatContent() {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       {/* ── Native-style header ──────────────────────── */}
-      <div className="flex items-center gap-3 border-b border-charcoal/5 bg-white px-4 py-3 md:rounded-t-2xl">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gold text-sm font-bold text-charcoal">
+      <div className="flex items-center gap-3 border-b border-ocean-deep/5 bg-white px-4 py-3 md:rounded-t-2xl">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-ocean text-sm font-bold text-ocean-deep">
           SD
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-charcoal">
+          <p className="text-sm font-semibold text-ocean-deep">
             Diamond Concierge
           </p>
-          <p className="text-[11px] text-charcoal/40">
+          <p className="text-[11px] text-ocean-deep/40">
             {tourSlug
               ? tourSlug.replace(/-/g, " ")
               : "We typically reply within a few hours"}
           </p>
         </div>
-        <span className="rounded-full bg-charcoal/5 px-2 py-0.5 text-[10px] text-charcoal/40">
+        <span className="rounded-full bg-ocean/5 px-2 py-0.5 text-[10px] text-ocean-deep/40">
           {messages.length} msg{messages.length !== 1 ? "s" : ""}
         </span>
       </div>
 
       {/* ── Messages ─────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto overscroll-contain bg-[#f8f7f4] px-3 py-4 md:px-4">
+      <div className="flex-1 overflow-y-auto overscroll-contain bg-[#f2e2bf] px-3 py-4 md:px-4">
         {loading ? (
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
-              <div className="mx-auto mb-3 h-6 w-6 animate-spin rounded-full border-2 border-gold border-t-transparent" />
-              <p className="text-sm text-charcoal/40">Loading messages…</p>
+              <div className="mx-auto mb-3 h-6 w-6 animate-spin rounded-full border-2 border-ocean border-t-transparent" />
+              <p className="text-sm text-ocean-deep/40">Loading messages…</p>
             </div>
           </div>
         ) : messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <div className="max-w-xs text-center">
-              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gold/10">
-                <svg className="h-7 w-7 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-ocean/10">
+                <svg className="h-7 w-7 text-ocean" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
                 </svg>
               </div>
-              <p className="text-sm font-medium text-charcoal/60">
+              <p className="text-sm font-medium text-ocean-deep/60">
                 Start the conversation
               </p>
-              <p className="mt-1 text-xs text-charcoal/30">
+              <p className="mt-1 text-xs text-ocean-deep/30">
                 Ask about tours, custom itineraries, or special requests.
               </p>
             </div>
@@ -151,7 +151,7 @@ function ChatContent() {
       </div>
 
       {/* ── Native-style input area ──────────────────── */}
-      <div className="border-t border-charcoal/5 bg-white px-3 py-2 md:rounded-b-2xl" style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}>
+      <div className="border-t border-ocean-deep/5 bg-white px-3 py-2 md:rounded-b-2xl" style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}>
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -166,13 +166,13 @@ function ChatContent() {
               onChange={(e) => setDraft(e.target.value)}
               placeholder="Type a message…"
               maxLength={2000}
-              className="w-full rounded-full border border-charcoal/10 bg-charcoal/2 px-4 py-2.5 pr-4 text-sm text-charcoal placeholder:text-charcoal/30 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30"
+              className="w-full rounded-full border border-ocean-deep/10 bg-ocean-deep/2 px-4 py-2.5 pr-4 text-sm text-ocean-deep placeholder:text-ocean-deep/30 focus:border-ocean focus:outline-none focus:ring-1 focus:ring-ocean/30"
             />
           </div>
           <button
             type="submit"
             disabled={!draft.trim()}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold text-charcoal transition-all hover:bg-gold/90 active:scale-95 disabled:opacity-40"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ocean text-ocean-deep transition-all hover:bg-ocean/90 active:scale-95 disabled:opacity-40"
             aria-label="Send message"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

@@ -33,7 +33,7 @@ export function WhatsIncluded({ included, excluded }: WhatsIncludedProps) {
 
   return (
     <section>
-      <h2 className="font-serif text-2xl font-bold text-charcoal">
+      <h2 className="font-sans text-2xl font-bold text-ocean-deep">
         What&apos;s Included
       </h2>
 
@@ -49,9 +49,9 @@ export function WhatsIncluded({ included, excluded }: WhatsIncludedProps) {
                   </svg>
                 </span>
                 <div>
-                  <p className="text-sm font-medium text-charcoal">{item.text}</p>
+                  <p className="text-sm font-medium text-ocean-deep">{item.text}</p>
                   {item.note && (
-                    <p className="text-xs text-charcoal/50">{item.note}</p>
+                    <p className="text-xs text-ocean-deep/50">{item.note}</p>
                   )}
                 </div>
               </div>
@@ -64,15 +64,15 @@ export function WhatsIncluded({ included, excluded }: WhatsIncludedProps) {
           <div className="space-y-3">
             {excludedItems.map((item, i) => (
               <div key={i} className="flex items-start gap-3">
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-charcoal/5">
-                  <svg className="h-3.5 w-3.5 text-charcoal/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ocean/5">
+                  <svg className="h-3.5 w-3.5 text-ocean-deep/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </span>
                 <div>
-                  <p className="text-sm font-medium text-charcoal">{item.text}</p>
+                  <p className="text-sm font-medium text-ocean-deep">{item.text}</p>
                   {item.note && (
-                    <p className="text-xs text-charcoal/50">{item.note}</p>
+                    <p className="text-xs text-ocean-deep/50">{item.note}</p>
                   )}
                 </div>
               </div>

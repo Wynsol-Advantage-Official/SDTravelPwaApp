@@ -16,17 +16,17 @@ export async function FeaturedTours() {
   if (tours.length === 0) return null;
 
   return (
-    <section className="bg-diamond px-4 py-20 sm:px-6 lg:px-8">
+    <section className="bg-white px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Section header */}
         <div className="mb-12 text-center">
-          <p className="mb-2 text-xs font-medium uppercase tracking-[0.3em] text-gold">
+          <p className="mb-2 text-xs font-medium uppercase tracking-[0.3em] text-ocean">
             Handpicked for You
           </p>
-          <h2 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl">
+          <h2 className="font-sans text-3xl font-bold text-ocean-deep sm:text-4xl">
             Featured Diamonds
           </h2>
-          <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-charcoal/60">
+          <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-ocean-deep/60">
             Our most sought-after journeys — curated for travelers who expect
             nothing less than extraordinary.
           </p>
@@ -47,7 +47,7 @@ export async function FeaturedTours() {
         <div className="mt-12 text-center">
           <Link
             href="/tours"
-            className="inline-flex h-12 items-center rounded-sm border border-charcoal/20 px-8 text-sm font-semibold uppercase tracking-wider text-charcoal transition-colors hover:border-gold hover:text-gold"
+            className="inline-flex h-12 items-center rounded-sm border border-ocean-deep/20 px-8 text-sm font-semibold uppercase tracking-wider text-ocean-deep transition-colors hover:border-blue-chill hover:text-blue-chill"
           >
             View All Tours
           </Link>

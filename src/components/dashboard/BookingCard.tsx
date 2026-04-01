@@ -58,7 +58,7 @@ export function BookingCard({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }}
-      className="relative group cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-charcoal/5 transition-shadow hover:shadow-lg hover:ring-gold/30"
+      className="relative group cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-ocean-deep/5 transition-shadow hover:shadow-lg hover:ring-ocean/30"
       onClick={() => onOpenDetail(booking)}
     >
       {/* Hero image / gradient */}
@@ -90,7 +90,7 @@ export function BookingCard({
         {/* Price tag overlay */}
         <div className="absolute right-3 top-3">
           <div className="rounded-lg bg-white/90 px-3 py-1.5 text-right backdrop-blur-sm">
-            <div className="font-serif text-lg font-bold text-charcoal">
+            <div className="font-sans text-lg font-bold text-ocean-deep">
               {formatPrice(booking.totalPrice, booking.currency)}
             </div>
             {booking.isCheckoutEnabled === false && (
@@ -103,7 +103,7 @@ export function BookingCard({
 
         {/* Tour title overlay */}
         <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/70 via-black/30 to-transparent px-4 pb-3 pt-8">
-          <h3 className="font-serif text-lg font-bold leading-tight text-white drop-shadow-sm">
+          <h3 className="font-sans text-lg font-bold leading-tight text-white drop-shadow-sm">
             {booking.tourTitle}
           </h3>
         </div>
@@ -126,7 +126,7 @@ export function BookingCard({
 
             <div className="relative w-full max-w-sm rounded-2xl bg-white/95 p-4 shadow-2xl">
               <div className="flex items-center justify-between gap-3">
-                <div className="min-w-0 text-sm text-charcoal">
+                <div className="min-w-0 text-sm text-ocean-deep">
                   Confirm <span className="font-semibold">{pendingAction.label}</span>?
                 </div>
                 <div className="flex items-center gap-2">
@@ -167,18 +167,18 @@ export function BookingCard({
               <img
                 src={booking.userAvatar}
                 alt={booking.userName ?? "User"}
-                className="h-9 w-9 rounded-full object-cover ring-2 ring-gold/30"
+                className="h-9 w-9 rounded-full object-cover ring-2 ring-ocean/30"
               />
             ) : (
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-gold to-sand text-xs font-bold text-white ring-2 ring-gold/30">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-ocean/20 to-tan text-xs font-bold text-ocean-deep ring-2 ring-ocean/30">
                 {initials}
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-charcoal">
+              <p className="truncate text-sm font-semibold text-ocean-deep">
                 {booking.userName ?? booking.uid.slice(0, 16) + "…"}
               </p>
-              <p className="truncate text-xs text-charcoal/50">
+              <p className="truncate text-xs text-ocean-deep/50">
                 {booking.userCountry ?? booking.userEmail ?? "—"}
               </p>
             </div>
@@ -186,9 +186,9 @@ export function BookingCard({
         )}
 
         {/* Price detail */}
-        <div className="mt-3 flex items-baseline justify-between text-xs text-charcoal/60">
+        <div className="mt-3 flex items-baseline justify-between text-xs text-ocean-deep/60">
           <div>
-            <span className="font-medium text-charcoal/80">Price:</span>{" "}
+            <span className="font-medium text-ocean-deep/80">Price:</span>{" "}
             {formatPrice(booking.totalPrice, booking.currency)}
             {booking.userSubmittedPrice != null &&
               booking.userSubmittedPrice !== booking.totalPrice && (
@@ -198,31 +198,31 @@ export function BookingCard({
               )}
           </div>
           {booking.guests != null && (
-            <div className="flex items-center gap-1 text-charcoal/50">
+            <div className="flex items-center gap-1 text-ocean-deep/50">
               <span>👤</span>
-              <span className="font-semibold text-charcoal">{booking.guests}</span>
+              <span className="font-semibold text-ocean-deep">{booking.guests}</span>
               <span>{booking.guests === 1 ? "guest" : "guests"}</span>
             </div>
           )}
         </div>
 
         {/* Booking ID */}
-        <div className="mt-1.5 text-[11px] text-charcoal/40">
+        <div className="mt-1.5 text-[11px] text-ocean-deep/40">
           ID: <span className="font-mono">{booking._id.slice(0, 20)}</span>
         </div>
 
         {/* Duration from itinerary child count */}
         {(booking.itineraryDayCount ?? 0) > 0 && (
-          <div className="mt-1.5 flex items-center gap-1 text-[11px] text-charcoal/50">
+          <div className="mt-1.5 flex items-center gap-1 text-[11px] text-ocean-deep/50">
             <span>📅</span>
-            <span>Duration: <span className="font-semibold text-charcoal/70">{booking.itineraryDayCount} Days</span></span>
+            <span>Duration: <span className="font-semibold text-ocean-deep/70">{booking.itineraryDayCount} Days</span></span>
           </div>
         )}
 
         {/* Action buttons — prevent card click from opening modal */}
         {actions.length > 0 && (
           <div
-            className="mt-3 flex flex-wrap gap-1.5 border-t border-charcoal/5 pt-3"
+            className="mt-3 flex flex-wrap gap-1.5 border-t border-ocean-deep/5 pt-3"
             onClick={(e) => e.stopPropagation()}
           >
             {actions.map(({ label, to, style }) => (

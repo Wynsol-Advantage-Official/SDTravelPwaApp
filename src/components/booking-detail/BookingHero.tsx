@@ -7,7 +7,7 @@ import type { EnrichedBooking, BookingStatus } from "@/types/booking"
 
 const STATUS_CONFIG: Record<BookingStatus, { label: string; icon: string; className: string }> = {
   hold: { label: "On Hold", icon: "◇", className: "bg-amber-100 text-amber-800 border-amber-200" },
-  pending: { label: "Pending", icon: "◈", className: "bg-sand-50 text-sand-600 border-sand-200" },
+  pending: { label: "Pending", icon: "◈", className: "bg-tan-50 text-tan-600 border-tan-200" },
   awaiting_payment: { label: "Awaiting Payment", icon: "⧫", className: "bg-purple-100 text-purple-800 border-purple-200" },
   confirmed: { label: "Confirmed", icon: "✓", className: "bg-green-100 text-green-800 border-green-200" },
   completed: { label: "Completed", icon: "★", className: "bg-ocean-50 text-ocean border-ocean-200" },
@@ -44,9 +44,9 @@ export function BookingHero({ booking, heroImage, tourDuration }: BookingHeroPro
             sizes="100vw"
           />
         ) : (
-          <div className="h-full w-full bg-linear-to-br from-charcoal via-charcoal/90 to-ocean/30" />
+          <div className="h-full w-full bg-linear-to-br from-ocean-deep via-ocean-deep/90 to-ocean/30" />
         )}
-        <div className="absolute inset-0 bg-linear-to-t from-charcoal via-charcoal/60 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-ocean-deep via-ocean-deep/60 to-transparent" />
       </div>
 
       {/* Content overlay */}
@@ -54,16 +54,16 @@ export function BookingHero({ booking, heroImage, tourDuration }: BookingHeroPro
         <div className="mx-auto max-w-6xl">
           {/* Breadcrumb */}
           <nav aria-label="Breadcrumb" className="mb-4">
-            <ol className="flex items-center gap-2 text-xs text-diamond/60">
+            <ol className="flex items-center gap-2 text-xs text-white/60">
               <li>
-                <Link href="/dashboard" className="transition-colors hover:text-gold">Dashboard</Link>
+                <Link href="/dashboard" className="transition-colors hover:text-blue-chill">Dashboard</Link>
               </li>
               <li aria-hidden="true">/</li>
               <li>
-                <Link href="/dashboard/bookings" className="transition-colors hover:text-gold">Bookings</Link>
+                <Link href="/dashboard/bookings" className="transition-colors hover:text-blue-chill">Bookings</Link>
               </li>
               <li aria-hidden="true">/</li>
-              <li className="text-diamond">{booking.tourTitle}</li>
+              <li className="text-white">{booking.tourTitle}</li>
             </ol>
           </nav>
 
@@ -75,11 +75,11 @@ export function BookingHero({ booking, heroImage, tourDuration }: BookingHeroPro
                 {statusInfo.label}
               </span>
 
-              <h1 className="mt-3 font-serif text-3xl font-bold text-diamond sm:text-4xl lg:text-5xl">
+              <h1 className="mt-3 font-sans text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
                 {booking.tourTitle}
               </h1>
 
-              <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-diamond/70">
+              <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-white/70">
                 {booking.tourDate && (
                   <span className="flex items-center gap-1.5">
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -109,8 +109,8 @@ export function BookingHero({ booking, heroImage, tourDuration }: BookingHeroPro
 
             {/* Price */}
             <div className="text-right">
-              <p className="text-xs uppercase tracking-wider text-diamond/50">Total</p>
-              <p className="font-serif text-3xl font-bold text-gold">
+              <p className="text-xs uppercase tracking-wider text-white/50">Total</p>
+              <p className="font-sans text-3xl font-bold text-ocean">
                 {formatPrice(booking.totalPrice, booking.currency)}
               </p>
             </div>

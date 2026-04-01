@@ -51,8 +51,8 @@ export default function IOSInstallPrompt() {
             margin: "0 12px",
             padding: "20px",
             borderRadius: "16px",
-            background: "#1A1A2E",
-            border: "1px solid #D4AF3744",
+            background: "var(--color-ocean-deep)",
+            border: "1px solid var(--color-blue-chill, #1282a5)44",
             boxShadow: "0 -4px 24px rgba(0, 0, 0, 0.4)",
           }}
           role="dialog"
@@ -65,7 +65,7 @@ export default function IOSInstallPrompt() {
               height="28"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#D4AF37"
+              stroke="var(--color-blue-chill, #1282a5)"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -83,7 +83,7 @@ export default function IOSInstallPrompt() {
                   margin: "0 0 8px",
                   fontSize: "15px",
                   fontWeight: 600,
-                  color: "#F5F5F0",
+                  color: "#ffffff",
                 }}
               >
                 Install Sand Diamonds Travel
@@ -93,7 +93,7 @@ export default function IOSInstallPrompt() {
                   margin: 0,
                   fontSize: "13px",
                   lineHeight: 1.5,
-                  color: "#F5F5F0CC",
+                  color: "#ffffffCC",
                 }}
               >
                 Tap the{" "}
@@ -102,7 +102,7 @@ export default function IOSInstallPrompt() {
                   height="14"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#D4AF37"
+                  stroke="var(--color-blue-chill, #1282a5)"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -127,8 +127,8 @@ export default function IOSInstallPrompt() {
               padding: "10px",
               borderRadius: "10px",
               border: "none",
-              background: "#D4AF37",
-              color: "#1A1A2E",
+              background: "#1282a5",
+              color: "var(--color-ocean-deep)",
               fontSize: "14px",
               fontWeight: 600,
               cursor: "pointer",

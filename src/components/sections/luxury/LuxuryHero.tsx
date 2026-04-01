@@ -37,7 +37,7 @@ function HeroMainCard() {
     <BentoCard
       variant="hero"
       span={{ col: 1, row: 2 }}
-      className="relative flex flex-col justify-end p-5 overflow-hidden border border-luxborder"
+      className="relative flex flex-col justify-end p-5 overflow-hidden border border-white/10"
     >
       {/* Background image overlay */}
       <div
@@ -50,27 +50,27 @@ function HeroMainCard() {
       />
       {/* Gradient scrim for text legibility */}
       <div
-        className="absolute inset-0 bg-gradient-to-t from-luxgold-dim via-luxgold-dim/60 to-transparent "
+        className="absolute inset-0 bg-gradient-to-t from-luxgold-dim via-blue-chill-dim/60 to-transparent "
         aria-hidden="true"
       />
 
       <div className="relative z-10 flex flex-col gap-4">
         {/* Eyebrow */}
-        <span className="font-sans text-[9px] uppercase tracking-[0.14em] text-luxtext-muted">
+        <span className="font-sans text-[9px] uppercase tracking-[0.14em] text-white/60">
           Featured Collection 2026
         </span>
 
         {/* Headline */}
-        <h1 className="font-serif text-[38px] leading-tight max-w-[11ch] text-luxtext">
+        <h1 className="font-sans text-[38px] leading-tight max-w-[11ch] text-white">
           Where Every Journey Becomes a{" "}
-          <em className="italic text-luxgold-light">Diamond</em>
+          <em className="italic text-blue-chill-300">Diamond</em>
         </h1>
 
         {/* CTAs */}
         <div className="flex items-center gap-3 mt-2">
           <Link
             href="/tours"
-            className="inline-flex items-center gap-2 rounded-[8px] bg-luxgold px-4 py-2 text-[12px] font-semibold uppercase text-luxury-base transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-luxgold-light"
+            className="inline-flex items-center gap-2 rounded-[8px] bg-ocean px-4 py-2 text-[12px] font-semibold uppercase text-ocean-deep transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-blue-chill"
           >
             Explore Diamonds
           </Link>
@@ -100,8 +100,8 @@ function SearchCard() {
 
   return (
     <BentoCard variant="default" hoverable className="p-4 flex flex-col">
-      <h3 className="font-serif text-[18px] text-luxtext mb-3">
-        <Search className="inline-block w-4 h-4 mr-2 text-luxgold" aria-hidden="true" />
+      <h3 className="font-sans text-[18px] text-ocean-deep dark:text-white mb-3">
+        <Search className="inline-block w-4 h-4 mr-2 text-blue-chill" aria-hidden="true" />
         Search
       </h3>
 
@@ -109,61 +109,61 @@ function SearchCard() {
         <div className="grid grid-cols-2 gap-2">
           {/* From */}
           <label className="flex flex-col gap-1">
-            <span className="text-[10px] uppercase tracking-[0.14em] text-luxtext-muted font-sans">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-ocean-deep/55 dark:text-white/60 font-sans">
               From
             </span>
             <div className="relative">
-              <Plane className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-luxtext-subtle" aria-hidden="true" />
+              <Plane className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-ocean-deep/35 dark:text-white/40" aria-hidden="true" />
               <input
                 type="text"
                 placeholder="City"
                 value={from}
                 onChange={(e) => setFrom(e.target.value)}
-                className="w-full h-[36px] rounded-[8px] bg-luxury-card2 border border-luxborder pl-7 pr-2 text-[13px] text-luxtext placeholder:text-luxtext-subtle font-sans focus:border-luxborder-gold focus:outline-none focus:ring-1 focus:ring-luxgold/30"
+                className="w-full h-[36px] rounded-[8px] bg-white border border-khaki/30 pl-7 pr-2 text-[13px] text-ocean-deep placeholder:text-ocean-deep/40 font-sans focus:border-ocean/30 focus:outline-none focus:ring-1 focus:ring-ocean/30 dark:bg-ocean-card2 dark:border-white/10 dark:text-white dark:placeholder:text-white/40 dark:focus:border-blue-chill/30 dark:focus:ring-blue-chill/30"
               />
             </div>
           </label>
 
           {/* Destination */}
           <label className="flex flex-col gap-1">
-            <span className="text-[10px] uppercase tracking-[0.14em] text-luxtext-muted font-sans">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-ocean-deep/55 dark:text-white/60 font-sans">
               Destination
             </span>
             <div className="relative">
-              <MapPin className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-luxtext-subtle" aria-hidden="true" />
+              <MapPin className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-ocean-deep/35 dark:text-white/40" aria-hidden="true" />
               <input
                 type="text"
                 placeholder="Where to?"
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
-                className="w-full h-[36px] rounded-[8px] bg-luxury-card2 border border-luxborder pl-7 pr-2 text-[13px] text-luxtext placeholder:text-luxtext-subtle font-sans focus:border-luxborder-gold focus:outline-none focus:ring-1 focus:ring-luxgold/30"
+                className="w-full h-[36px] rounded-[8px] bg-white border border-khaki/30 pl-7 pr-2 text-[13px] text-ocean-deep placeholder:text-ocean-deep/40 font-sans focus:border-ocean/30 focus:outline-none focus:ring-1 focus:ring-ocean/30 dark:bg-ocean-card2 dark:border-white/10 dark:text-white dark:placeholder:text-white/40 dark:focus:border-blue-chill/30 dark:focus:ring-blue-chill/30"
               />
             </div>
           </label>
 
           {/* Departure date */}
           <label className="flex flex-col gap-1">
-            <span className="text-[10px] uppercase tracking-[0.14em] text-luxtext-muted font-sans">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-ocean-deep/55 dark:text-white/60 font-sans">
               Departure
             </span>
             <div className="relative">
-              <Calendar className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-luxtext-subtle" aria-hidden="true" />
+              <Calendar className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-ocean-deep/35 dark:text-white/40" aria-hidden="true" />
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full h-[36px] rounded-[8px] bg-luxury-card2 border border-luxborder pl-7 pr-2 text-[13px] text-luxtext placeholder:text-luxtext-subtle font-sans focus:border-luxborder-gold focus:outline-none focus:ring-1 focus:ring-luxgold/30"
+                className="w-full h-[36px] rounded-[8px] bg-white border border-khaki/30 pl-7 pr-2 text-[13px] text-ocean-deep placeholder:text-ocean-deep/40 font-sans focus:border-ocean/30 focus:outline-none focus:ring-1 focus:ring-ocean/30 dark:bg-ocean-card2 dark:border-white/10 dark:text-white dark:placeholder:text-white/40 dark:focus:border-blue-chill/30 dark:focus:ring-blue-chill/30"
               />
             </div>
           </label>
 
           {/* Guests */}
           <label className="flex flex-col gap-1">
-            <span className="text-[10px] uppercase tracking-[0.14em] text-luxtext-muted font-sans">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-ocean-deep/55 dark:text-white/60 font-sans">
               Guests
             </span>
             <div className="relative">
-              <Users className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-luxtext-subtle" aria-hidden="true" />
+              <Users className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-ocean-deep/35 dark:text-white/40" aria-hidden="true" />
               <input
                 type="number"
                 min={1}
@@ -171,7 +171,7 @@ function SearchCard() {
                 placeholder="2"
                 value={guests}
                 onChange={(e) => setGuests(e.target.value)}
-                className="w-full h-[36px] rounded-[8px] bg-luxury-card2 border border-luxborder pl-7 pr-2 text-[13px] text-luxtext placeholder:text-luxtext-subtle font-sans focus:border-luxborder-gold focus:outline-none focus:ring-1 focus:ring-luxgold/30"
+                className="w-full h-[36px] rounded-[8px] bg-white border border-khaki/30 pl-7 pr-2 text-[13px] text-ocean-deep placeholder:text-ocean-deep/40 font-sans focus:border-ocean/30 focus:outline-none focus:ring-1 focus:ring-ocean/30 dark:bg-ocean-card2 dark:border-white/10 dark:text-white dark:placeholder:text-white/40 dark:focus:border-blue-chill/30 dark:focus:ring-blue-chill/30"
               />
             </div>
           </label>
@@ -179,7 +179,7 @@ function SearchCard() {
 
         <button
           type="submit"
-          className="mt-auto w-full h-[36px] rounded-[8px] bg-luxgold text-luxury-base text-[12px] font-semibold uppercase font-sans transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-luxgold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-luxgold focus-visible:ring-offset-2 focus-visible:ring-offset-luxury-card"
+          className="mt-auto w-full h-[36px] rounded-[8px] bg-ocean text-white text-[12px] font-semibold uppercase font-sans transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-blue-chill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-chill focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-ocean-card"
         >
           <Search className="inline-block w-3.5 h-3.5 mr-1.5" aria-hidden="true" />
           Search
@@ -207,7 +207,7 @@ function QuickFilterCard() {
 
   return (
     <BentoCard variant="default" className="p-4 flex flex-col">
-      <h3 className="font-serif text-[16px] text-luxtext mb-3">Quick Filters</h3>
+      <h3 className="font-sans text-[16px] text-ocean-deep dark:text-white mb-3">Quick Filters</h3>
       <div className="flex flex-wrap gap-2">
         {FILTER_THEMES.map((theme) => {
           const isActive = active.has(theme);
@@ -218,10 +218,10 @@ function QuickFilterCard() {
               onClick={() => toggleTheme(theme)}
               className={[
                 "rounded-[8px] border px-3 py-1.5 text-[12px] font-sans transition-[background-color,border-color,color] duration-[220ms] ease-out",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-luxgold focus-visible:ring-offset-2 focus-visible:ring-offset-luxury-card",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-chill focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-ocean-card",
                 isActive
-                  ? "bg-luxgold-dim border-luxborder-gold text-luxgold-light"
-                  : "border-luxborder text-luxtext-muted hover:bg-luxgold-dim hover:border-luxborder-gold hover:text-luxgold-light",
+                  ? "bg-ocean/8 border-ocean/25 text-ocean dark:bg-blue-chill/10 dark:border-blue-chill/30 dark:text-blue-chill-300"
+                  : "border-khaki/30 text-ocean-deep/60 hover:bg-ocean/8 hover:border-ocean/25 hover:text-ocean dark:border-white/10 dark:text-white/60 dark:hover:bg-blue-chill/10 dark:hover:border-blue-chill/30 dark:hover:text-blue-chill-300",
               ].join(" ")}
               aria-pressed={isActive}
             >
@@ -239,14 +239,14 @@ function WeatherCard() {
   // TODO: Replace with live weather service integration
   return (
     <BentoCard variant="stat" className="p-4 flex flex-col items-center justify-center text-center flex-1">
-      <CloudSun className="w-7 h-7 text-luxgold mb-2" aria-hidden="true" />
-      <span className="font-display text-[32px] font-light leading-none text-luxgold-light">
+      <CloudSun className="w-7 h-7 text-blue-chill mb-2" aria-hidden="true" />
+      <span className="font-display text-[32px] font-light leading-none text-ocean dark:text-blue-chill-300">
         28°C
       </span>
-      <span className="mt-1 font-sans text-[11px] uppercase tracking-[0.16em] text-luxtext-muted">
+      <span className="mt-1 font-sans text-[11px] uppercase tracking-[0.16em] text-ocean-deep/55 dark:text-white/60">
         Kingston, Jamaica
       </span>
-      <span className="mt-0.5 font-sans text-[11px] text-luxtext-subtle">
+      <span className="mt-0.5 font-sans text-[11px] text-ocean-deep/40 dark:text-white/40">
         Partly Cloudy
       </span>
     </BentoCard>
@@ -263,17 +263,17 @@ function ConciergeCard() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
           </span>
-          <span className="font-sans text-[11px] uppercase tracking-[0.14em] text-luxtext-muted">
+          <span className="font-sans text-[11px] uppercase tracking-[0.14em] text-ocean-deep/55 dark:text-white/60">
             Concierge Online
           </span>
         </div>
-        <p className="font-sans text-[13px] text-luxtext leading-relaxed">
+        <p className="font-sans text-[13px] text-ocean-deep leading-relaxed dark:text-white">
           Your personal travel advisor is ready to help plan your next journey.
         </p>
       </div>
       <Link
         href="/dashboard/chat"
-        className="mt-3 inline-flex items-center justify-center gap-2 w-full rounded-[8px] border border-luxborder px-3 py-2 text-[12px] font-semibold uppercase text-luxtext font-sans transition-[transform,border-color,color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:border-luxborder-gold hover:text-luxgold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-luxgold focus-visible:ring-offset-2 focus-visible:ring-offset-luxury-card"
+        className="mt-3 inline-flex items-center justify-center gap-2 w-full rounded-[8px] border border-khaki/40 px-3 py-2 text-[12px] font-semibold uppercase text-ocean-deep font-sans transition-[transform,border-color,color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:border-ocean/30 hover:text-ocean focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-chill focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-white/10 dark:text-white dark:hover:border-blue-chill/30 dark:hover:text-blue-chill-300 dark:focus-visible:ring-offset-ocean-card"
       >
         <MessageCircle className="w-4 h-4" aria-hidden="true" />
         Chat Now

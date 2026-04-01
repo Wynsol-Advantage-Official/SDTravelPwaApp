@@ -31,13 +31,13 @@ export default function OfflineBanner() {
             left: 0,
             right: 0,
             zIndex: 100,
-            borderBottom: "1px solid #D4AF37",
-            borderLeft: "4px solid #D4AF37",
-            background: "#1A1A2E",
+            borderBottom: "1px solid var(--color-blue-chill)",
+            borderLeft: "4px solid var(--color-blue-chill)",
+            background: "var(--color-ocean-deep)",
             padding: "8px 16px",
             textAlign: "center",
             fontSize: "14px",
-            color: "#F5F5F0",
+            color: "#ffffff",
           }}
           role="status"
           aria-live="polite"

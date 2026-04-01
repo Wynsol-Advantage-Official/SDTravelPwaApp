@@ -179,7 +179,7 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
   }
 
   return (
-    <main className="min-h-dvh bg-diamond" data-theme="sanddiamonds">
+    <main className="min-h-dvh bg-white" data-theme="sanddiamonds">
       {/* ── Hero Gallery ─────────────────────────────────────────────── */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6">
@@ -207,7 +207,7 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                 return (
                   <div
                     key={`filler-${i}`}
-                    className={`relative hidden min-h-59 overflow-hidden md:block ${roundClass} bg-sand/10`}
+                    className={`relative hidden min-h-59 overflow-hidden md:block ${roundClass} bg-tan/10`}
                   />
                 )
               }
@@ -256,7 +256,7 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                     initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-charcoal px-2 py-1 text-xs text-diamond"
+                    className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-ocean-deep px-2 py-1 text-xs text-white"
                   >
                     Link copied!
                   </motion.span>
@@ -272,16 +272,16 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
         <div className="breadcrumbs text-sm">
           <ul>
             <li>
-              <Link href="/" className="text-charcoal/60 hover:text-ocean transition-colors">
+              <Link href="/" className="text-ocean-deep/60 hover:text-ocean transition-colors">
                 Home
               </Link>
             </li>
             <li>
-              <Link href="/tours" className="text-charcoal/60 hover:text-ocean transition-colors">
+              <Link href="/tours" className="text-ocean-deep/60 hover:text-ocean transition-colors">
                 Tours
               </Link>
             </li>
-            <li className="font-medium text-charcoal">{tour.title}</li>
+            <li className="font-medium text-ocean-deep">{tour.title}</li>
           </ul>
         </div>
       </nav>
@@ -296,7 +296,7 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }}
           >
-            <div className="flex items-center gap-2 text-sm text-charcoal/60">
+            <div className="flex items-center gap-2 text-sm text-ocean-deep/60">
               <MapPin className="h-4 w-4 text-ocean" />
               {tour.destination?.name && (
                 <span>
@@ -306,17 +306,17 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
               )}
             </div>
 
-            <h1 className="mt-2 font-serif text-3xl font-bold text-charcoal sm:text-4xl lg:text-5xl">
+            <h1 className="mt-2 font-sans text-3xl font-bold text-ocean-deep sm:text-4xl lg:text-5xl">
               {tour.title}
             </h1>
 
-            <p className="mt-4 text-base leading-relaxed text-charcoal/80 sm:text-lg">
+            <p className="mt-4 text-base leading-relaxed text-ocean-deep/80 sm:text-lg">
               {tour.summary}
             </p>
 
             {/* Quick stats badges */}
             <div className="mt-5 flex flex-wrap gap-3">
-              <div className="badge badge-lg gap-1.5 border-sand/40 bg-sand/10 text-charcoal">
+              <div className="badge badge-lg gap-1.5 border-tan/40 bg-tan/10 text-ocean-deep">
                 <Clock className="h-3.5 w-3.5" />
                 {tour.duration} Days
               </div>
@@ -324,8 +324,8 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                 <Users className="h-3.5 w-3.5" />
                 Small Group
               </div>
-              <div className="badge badge-lg gap-1.5 border-gold/40 bg-gold/10 text-charcoal">
-                <Star className="h-3.5 w-3.5 fill-gold text-gold" />
+              <div className="badge badge-lg gap-1.5 border-ocean/40 bg-ocean/10 text-ocean-deep">
+                <Star className="h-3.5 w-3.5 fill-gold text-ocean" />
                 5.0 Rated
               </div>
             </div>
@@ -337,8 +337,8 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
           <div className="alert alert-info mb-8 border border-ocean/20 bg-ocean/5">
             <Info className="h-5 w-5 shrink-0 text-ocean" />
             <div>
-              <h3 className="text-sm font-semibold text-charcoal">Travel Advisory</h3>
-              <p className="text-sm text-charcoal/70">
+              <h3 className="text-sm font-semibold text-ocean-deep">Travel Advisory</h3>
+              <p className="text-sm text-ocean-deep/70">
                 Valid passport required (6 months validity). Visa arrangements and travel
                 insurance are handled by your dedicated concierge as part of your package.
               </p>
@@ -351,8 +351,8 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="prose prose-lg max-w-none text-charcoal/80
-                prose-headings:font-serif prose-headings:text-charcoal
+              className="prose prose-lg max-w-none text-ocean-deep/80
+                prose-headings:font-sans prose-headings:text-ocean-deep
                 prose-a:text-ocean prose-a:no-underline hover:prose-a:underline"
               dangerouslySetInnerHTML={{ __html: tour.description }}
             />
@@ -367,17 +367,17 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
               transition={{ duration: 0.5 }}
               className="mt-12"
             >
-              <h2 className="mb-6 font-serif text-2xl font-bold text-charcoal">
+              <h2 className="mb-6 font-sans text-2xl font-bold text-ocean-deep">
                 Tour Highlights
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
                 {tour.highlights.map((h) => (
                   <div
                     key={h}
-                    className="flex items-start gap-3 rounded-xl border border-gold/20 bg-gold/5 p-4"
+                    className="flex items-start gap-3 rounded-xl border border-ocean/20 bg-ocean/5 p-4"
                   >
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                    <span className="text-sm leading-relaxed text-charcoal/85">{h}</span>
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-ocean" />
+                    <span className="text-sm leading-relaxed text-ocean-deep/85">{h}</span>
                   </div>
                 ))}
               </div>
@@ -393,7 +393,7 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
               transition={{ duration: 0.5 }}
               className="mt-12"
             >
-              <h2 className="mb-6 font-serif text-2xl font-bold text-charcoal">
+              <h2 className="mb-6 font-sans text-2xl font-bold text-ocean-deep">
                 What&apos;s Included
               </h2>
               <div className="grid gap-6 md:grid-cols-2">
@@ -434,17 +434,17 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
             transition={{ duration: 0.5 }}
             className="mt-12"
           >
-            <h2 className="mb-6 font-serif text-2xl font-bold text-charcoal">
+            <h2 className="mb-6 font-sans text-2xl font-bold text-ocean-deep">
               Meet Your Guides
             </h2>
             <div className="grid gap-4 sm:grid-cols-3">
               {MOCK_GUIDES.map((guide) => (
                 <div
                   key={guide.name}
-                  className="rounded-xl border border-sand/30 bg-white p-5 text-center shadow-sm transition-shadow hover:shadow-md"
+                  className="rounded-xl border border-tan/30 bg-white p-5 text-center shadow-sm transition-shadow hover:shadow-md"
                 >
                   <div className="avatar mx-auto mb-3">
-                    <div className="w-20 rounded-full ring ring-gold/40 ring-offset-2 ring-offset-diamond">
+                    <div className="w-20 rounded-full ring ring-ocean/40 ring-offset-2 ring-offset-diamond">
                       <Image
                         src={guide.avatar}
                         alt={guide.name}
@@ -454,13 +454,13 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                       />
                     </div>
                   </div>
-                  <h3 className="font-serif text-base font-semibold text-charcoal">
+                  <h3 className="font-sans text-base font-semibold text-ocean-deep">
                     {guide.name}
                   </h3>
-                  <p className="text-xs font-medium uppercase tracking-wider text-gold">
+                  <p className="text-xs font-medium uppercase tracking-wider text-ocean">
                     {guide.role}
                   </p>
-                  <p className="mt-2 text-xs leading-relaxed text-charcoal/60">
+                  <p className="mt-2 text-xs leading-relaxed text-ocean-deep/60">
                     {guide.bio}
                   </p>
                 </div>
@@ -476,10 +476,10 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
             transition={{ duration: 0.5 }}
             className="mt-12 mb-12"
           >
-            <h2 className="mb-6 font-serif text-2xl font-bold text-charcoal">
+            <h2 className="mb-6 font-sans text-2xl font-bold text-ocean-deep">
               Guest Reviews
             </h2>
-            <div className="relative overflow-hidden rounded-2xl border border-sand/30 bg-white p-6 shadow-sm sm:p-8">
+            <div className="relative overflow-hidden rounded-2xl border border-tan/30 bg-white p-6 shadow-sm sm:p-8">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={carouselIndex}
@@ -502,22 +502,22 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                       </div>
                     </div>
                     <div>
-                      <p className="font-semibold text-charcoal">
+                      <p className="font-semibold text-ocean-deep">
                         {MOCK_TESTIMONIALS[carouselIndex].name}
                       </p>
-                      <p className="text-xs text-charcoal/50">
+                      <p className="text-xs text-ocean-deep/50">
                         {MOCK_TESTIMONIALS[carouselIndex].date}
                       </p>
                     </div>
                     <div className="ml-auto flex gap-0.5">
                       {Array.from({ length: MOCK_TESTIMONIALS[carouselIndex].rating }).map(
                         (_, i) => (
-                          <Star key={i} className="h-4 w-4 fill-gold text-gold" />
+                          <Star key={i} className="h-4 w-4 fill-gold text-ocean" />
                         )
                       )}
                     </div>
                   </div>
-                  <p className="text-sm italic leading-relaxed text-charcoal/75">
+                  <p className="text-sm italic leading-relaxed text-ocean-deep/75">
                     &ldquo;{MOCK_TESTIMONIALS[carouselIndex].text}&rdquo;
                   </p>
                 </motion.div>
@@ -533,8 +533,8 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                       aria-label={`Show review ${i + 1}`}
                       className={`h-2 rounded-full transition-all ${
                         i === carouselIndex
-                          ? "w-6 bg-gold"
-                          : "w-2 bg-sand/40 hover:bg-sand/60"
+                          ? "w-6 bg-ocean"
+                          : "w-2 bg-tan/40 hover:bg-tan/60"
                       }`}
                     />
                   ))}
@@ -543,14 +543,14 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                   <button
                     onClick={prevTestimonial}
                     aria-label="Previous review"
-                    className="btn btn-circle btn-ghost btn-sm border border-sand/30"
+                    className="btn btn-circle btn-ghost btn-sm border border-tan/30"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
                   <button
                     onClick={nextTestimonial}
                     aria-label="Next review"
-                    className="btn btn-circle btn-ghost btn-sm border border-sand/30"
+                    className="btn btn-circle btn-ghost btn-sm border border-tan/30"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
@@ -568,10 +568,10 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
               transition={{ duration: 0.5 }}
               className="mt-12 mb-12"
             >
-              <h2 className="mb-2 font-serif text-2xl font-bold text-charcoal">
+              <h2 className="mb-2 font-sans text-2xl font-bold text-ocean-deep">
                 Where You&apos;ll Stay
               </h2>
-              <p className="mb-6 text-sm text-charcoal/55">
+              <p className="mb-6 text-sm text-ocean-deep/55">
                 {accommodations.length} propert{accommodations.length === 1 ? "y" : "ies"} on this tour
               </p>
 
@@ -609,8 +609,8 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                             className="object-cover transition-transform duration-500 hover:scale-105"
                           />
                         ) : (
-                          <div className="flex h-full items-center justify-center bg-sand/15">
-                            <MapPin className="h-8 w-8 text-sand/50" />
+                          <div className="flex h-full items-center justify-center bg-tan/15">
+                            <MapPin className="h-8 w-8 text-tan/50" />
                           </div>
                         )}
 
@@ -635,7 +635,7 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
 
                         {/* Type badge */}
                         {acc.type && (
-                          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-0.5 text-xs font-semibold text-charcoal backdrop-blur-sm">
+                          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-0.5 text-xs font-semibold text-ocean-deep backdrop-blur-sm">
                             {acc.type}
                           </span>
                         )}
@@ -644,30 +644,30 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                       {/* Card body */}
                       <div className="mt-3 space-y-1">
                         <div className="flex items-start justify-between gap-2">
-                          <p className="font-semibold leading-snug text-charcoal">{acc.name}</p>
+                          <p className="font-semibold leading-snug text-ocean-deep">{acc.name}</p>
                           {acc.rating > 0 && (
-                            <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-charcoal">
-                              <Star className="h-3.5 w-3.5 fill-gold text-gold" />
+                            <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-ocean-deep">
+                              <Star className="h-3.5 w-3.5 fill-gold text-ocean" />
                               {acc.rating.toFixed(1)}
                             </span>
                           )}
                         </div>
 
                         {acc.location && (
-                          <p className="text-sm text-charcoal/55">{acc.location}</p>
+                          <p className="text-sm text-ocean-deep/55">{acc.location}</p>
                         )}
 
                         <div className="flex items-center gap-2 pt-0.5 text-sm">
                           {acc.pricePerNight > 0 ? (
                             <>
-                              <span className="font-semibold text-charcoal">
+                              <span className="font-semibold text-ocean-deep">
                                 {formatPrice(acc.pricePerNight, acc.currency)}
                               </span>
-                              <span className="text-charcoal/50">night</span>
-                              <span className="text-charcoal/30">&middot;</span>
+                              <span className="text-ocean-deep/50">night</span>
+                              <span className="text-ocean-deep/30">&middot;</span>
                             </>
                           ) : null}
-                          <span className="text-charcoal/60">
+                          <span className="text-ocean-deep/60">
                             {acc.nights} night{acc.nights !== 1 ? "s" : ""}
                           </span>
                         </div>
@@ -678,7 +678,7 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                             {acc.amenities.slice(0, 3).map((a) => (
                               <span
                                 key={a}
-                                className="rounded-full border border-sand/30 bg-sand/10 px-2 py-0.5 text-xs text-charcoal/70"
+                                className="rounded-full border border-tan/30 bg-tan/10 px-2 py-0.5 text-xs text-ocean-deep/70"
                               >
                                 {a}
                               </span>
@@ -705,28 +705,28 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
               className="overflow-hidden rounded-2xl border border-white/40 bg-white/70 p-6 shadow-xl backdrop-blur-lg"
             >
               <div className="flex items-baseline gap-2">
-                <span className="font-serif text-3xl font-bold text-charcoal">
+                <span className="font-sans text-3xl font-bold text-ocean-deep">
                   {formatPrice(tour.startingPrice, tour.currency)}
                 </span>
-                <span className="text-sm text-charcoal/50">per person</span>
+                <span className="text-sm text-ocean-deep/50">per person</span>
               </div>
 
               <div className="divider my-3" />
 
               <div className="space-y-3 text-sm">
-                <div className="flex items-center gap-2 text-charcoal/70">
+                <div className="flex items-center gap-2 text-ocean-deep/70">
                   <Clock className="h-4 w-4 text-ocean" />
                   <span>{tour.duration} days / {tour.duration - 1} nights</span>
                 </div>
-                <div className="flex items-center gap-2 text-charcoal/70">
+                <div className="flex items-center gap-2 text-ocean-deep/70">
                   <MapPin className="h-4 w-4 text-ocean" />
                   <span>{tour.destination?.name ?? "Multiple destinations"}</span>
                 </div>
-                <div className="flex items-center gap-2 text-charcoal/70">
+                <div className="flex items-center gap-2 text-ocean-deep/70">
                   <Users className="h-4 w-4 text-ocean" />
                   <span>Max 12 guests per departure</span>
                 </div>
-                <div className="flex items-center gap-2 text-charcoal/70">
+                <div className="flex items-center gap-2 text-ocean-deep/70">
                   <Calendar className="h-4 w-4 text-ocean" />
                   <span>Next departure: Available on request</span>
                 </div>
@@ -737,18 +737,18 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
               {/* Reserve button */}
               <a
                 href={`/booking/${tour.slug}`}
-                className="btn btn-block border-0 bg-gold text-charcoal font-semibold uppercase tracking-wider hover:bg-gold/90 h-12"
+                className="btn btn-block border-0 bg-ocean text-ocean-deep font-semibold uppercase tracking-wider hover:bg-ocean/90 h-12"
               >
                 Reserve This Diamond
               </a>
 
               {/* Hold button */}
-              <button className="btn btn-outline btn-block mt-2 border-charcoal/20 text-charcoal hover:bg-charcoal hover:text-diamond h-12">
+              <button className="btn btn-outline btn-block mt-2 border-ocean-deep/20 text-ocean-deep hover:bg-ocean-deep hover:text-white h-12">
                 Hold for 48 Hours
               </button>
 
               {/* Trust indicators */}
-              <div className="mt-4 flex items-center gap-2 text-xs text-charcoal/50">
+              <div className="mt-4 flex items-center gap-2 text-xs text-ocean-deep/50">
                 <Shield className="h-3.5 w-3.5" />
                 <span>Free cancellation up to 30 days before departure</span>
               </div>
@@ -766,15 +766,15 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                   <MessageCircle className="h-5 w-5 text-ocean" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-charcoal">
+                  <p className="text-sm font-semibold text-ocean-deep">
                     Questions? Chat with us
                   </p>
-                  <p className="text-xs text-charcoal/50">
+                  <p className="text-xs text-ocean-deep/50">
                     Average response time: &lt; 2 hours
                   </p>
                 </div>
               </div>
-              <button className="btn btn-block border-0 bg-ocean text-diamond hover:bg-ocean/90 h-10 text-sm">
+              <button className="btn btn-block border-0 bg-ocean text-white hover:bg-ocean/90 h-10 text-sm">
                 Message Concierge
               </button>
             </motion.div>
@@ -784,32 +784,32 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.5 }}
-              className="rounded-2xl border border-sand/30 bg-white/60 p-5 backdrop-blur-sm"
+              className="rounded-2xl border border-tan/30 bg-white/60 p-5 backdrop-blur-sm"
             >
               <div className="flex items-center gap-3 mb-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gold/10">
-                  <Lock className="h-5 w-5 text-gold" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-ocean/10">
+                  <Lock className="h-5 w-5 text-ocean" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-charcoal">
+                  <p className="text-sm font-semibold text-ocean-deep">
                     Share &amp; Earn
                   </p>
-                  <p className="text-xs text-charcoal/50">
+                  <p className="text-xs text-ocean-deep/50">
                     Refer a friend and earn travel credits
                   </p>
                 </div>
               </div>
 
               <div className="tooltip tooltip-bottom w-full" data-tip="Sign in to unlock your personal referral link">
-                <div className="flex h-10 w-full items-center gap-2 rounded-lg border border-sand/30 bg-sand/10 px-3">
-                  <span className="flex-1 truncate text-xs text-charcoal/30">
+                <div className="flex h-10 w-full items-center gap-2 rounded-lg border border-tan/30 bg-tan/10 px-3">
+                  <span className="flex-1 truncate text-xs text-ocean-deep/30">
                     sanddiamondstravel.com/ref/••••••
                   </span>
-                  <Copy className="h-3.5 w-3.5 text-charcoal/20" />
+                  <Copy className="h-3.5 w-3.5 text-ocean-deep/20" />
                 </div>
               </div>
 
-              <p className="mt-2 text-center text-xs text-charcoal/40">
+              <p className="mt-2 text-center text-xs text-ocean-deep/40">
                 Sign in to unlock your referral link
               </p>
             </motion.div>
@@ -818,17 +818,17 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
       </div>
 
       {/* ── Mobile Fixed Bottom Bar ──────────────────────────────────── */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-sand/20 bg-white/90 p-3 backdrop-blur-lg lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-tan/20 bg-white/90 p-3 backdrop-blur-lg lg:hidden">
         <div className="mx-auto flex max-w-lg items-center gap-3">
           <div className="flex-1">
-            <p className="font-serif text-lg font-bold text-charcoal">
+            <p className="font-sans text-lg font-bold text-ocean-deep">
               {formatPrice(tour.startingPrice, tour.currency)}
             </p>
-            <p className="text-xs text-charcoal/50">per person · {tour.duration} days</p>
+            <p className="text-xs text-ocean-deep/50">per person · {tour.duration} days</p>
           </div>
           <a
             href={`/booking/${tour.slug}`}
-            className="btn border-0 bg-gold text-charcoal font-semibold uppercase tracking-wider hover:bg-gold/90 h-11 px-6"
+            className="btn border-0 bg-ocean text-ocean-deep font-semibold uppercase tracking-wider hover:bg-ocean/90 h-11 px-6"
           >
             Reserve
           </a>

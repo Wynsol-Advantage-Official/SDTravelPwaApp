@@ -30,10 +30,10 @@ function DestinationCard({
       href={`/destinations/${dest.slug}`}
       className={[
         "group relative flex flex-col justify-end overflow-hidden",
-        "rounded-[14px] border border-luxborder bg-luxury-card",
+        "rounded-[14px] border border-khaki/30 bg-white dark:border-white/10 dark:bg-ocean-card",
         "transition-[transform,border-color] duration-[220ms] ease-out",
-        "hover:-translate-y-[2px] hover:border-luxborder-gold",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-luxgold focus-visible:ring-offset-2 focus-visible:ring-offset-luxury-base",
+        "hover:-translate-y-[2px] hover:border-ocean/40 dark:hover:border-blue-chill/30",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-chill focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-ocean-deep",
         className,
       ]
         .filter(Boolean)
@@ -51,7 +51,7 @@ function DestinationCard({
 
       {/* Gradient scrim for text legibility */}
       <div
-        className="absolute inset-0 bg-gradient-to-t from-luxury-base/80 via-luxury-base/30 to-transparent"
+        className="absolute inset-0 bg-gradient-to-t from-ocean-deep/80 via-ocean-deep/30 to-transparent"
         aria-hidden="true"
       />
 
@@ -59,30 +59,30 @@ function DestinationCard({
       <div className="relative z-10 p-[18px]">
         {/* Featured badge */}
         {variant === "featured" && (
-          <span className="mb-2 inline-block rounded-[8px] border border-luxborder-gold bg-luxgold-dim px-2.5 py-0.5 font-sans text-[9px] font-semibold uppercase tracking-[0.14em] text-luxgold-light">
+          <span className="mb-2 inline-block rounded-[8px] border border-blue-chill/30 bg-blue-chill/10 px-2.5 py-0.5 font-sans text-[9px] font-semibold uppercase tracking-[0.14em] text-blue-chill-300">
             Featured
           </span>
         )}
 
         {/* Region eyebrow */}
-        <p className="font-sans text-[9px] uppercase tracking-[0.14em] text-luxgold-light">
+        <p className="font-sans text-[9px] uppercase tracking-[0.14em] text-blue-chill-300">
           {dest.region}
         </p>
 
         {/* Destination name */}
-        <h3 className={`mt-1 font-serif font-bold text-luxtext ${titleSize}`}>
+        <h3 className={`mt-1 font-sans font-bold text-white ${titleSize}`}>
           {dest.name}
         </h3>
 
         {/* Climate descriptor */}
         {dest.climate && (
-          <p className="mt-1 font-sans text-[13px] text-luxtext-muted">
+          <p className="mt-1 font-sans text-[13px] text-white/60">
             {dest.climate}
           </p>
         )}
 
         {/* CTA arrow */}
-        <span className="mt-2 inline-flex items-center gap-1 font-sans text-[12px] font-semibold text-luxgold-light transition-colors group-hover:text-luxgold">
+        <span className="mt-2 inline-flex items-center gap-1 font-sans text-[12px] font-semibold text-blue-chill-300 transition-colors group-hover:text-blue-chill">
           Explore <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </span>
       </div>
@@ -100,23 +100,23 @@ function EmptyState() {
       variant="default"
       className="col-span-full flex flex-col items-center justify-center p-10 text-center"
     >
-      <h3 className="font-serif text-[20px] text-luxtext">
+      <h3 className="font-sans text-[20px] text-ocean-deep dark:text-white">
         Destinations are being refreshed
       </h3>
-      <p className="mt-2 max-w-[42ch] font-sans text-[13px] leading-[1.55] text-luxtext-muted">
+      <p className="mt-2 max-w-[42ch] font-sans text-[13px] leading-[1.55] text-ocean-deep/60 dark:text-white/60">
         Our concierge team is curating new destinations for you. In the
         meantime, explore our tours or reach out.
       </p>
       <div className="mt-4 flex gap-3">
         <Link
           href="/tours"
-          className="inline-flex items-center gap-2 rounded-[8px] bg-luxgold px-4 py-2 text-[12px] font-semibold uppercase text-luxury-base transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-luxgold-light"
+          className="inline-flex items-center gap-2 rounded-[8px] bg-ocean px-4 py-2 text-[12px] font-semibold uppercase text-ocean-deep transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-blue-chill"
         >
           Browse Tours
         </Link>
         <Link
           href="/dashboard/chat"
-          className="inline-flex items-center gap-2 rounded-[8px] border border-luxborder px-4 py-2 text-[12px] font-semibold uppercase text-luxtext transition-[transform,border-color,color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:border-luxborder-gold hover:text-luxgold-light"
+          className="inline-flex items-center gap-2 rounded-[8px] border border-khaki/40 px-4 py-2 text-[12px] font-semibold uppercase text-ocean-deep transition-[transform,border-color,color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:border-ocean/30 hover:text-ocean dark:border-white/10 dark:text-white dark:hover:border-blue-chill/30 dark:hover:text-blue-chill-300"
         >
           Contact Concierge
         </Link>
@@ -139,17 +139,17 @@ export async function LuxuryDestinations() {
       <Reveal>
         <div className="mb-6 flex items-end justify-between">
           <div>
-            <p className="font-sans text-[9px] uppercase tracking-[0.14em] text-luxgold">
+            <p className="font-sans text-[9px] uppercase tracking-[0.14em] text-ocean dark:text-blue-chill">
               Curated Collection
             </p>
-            <h2 id="luxury-destinations-heading" className="mt-1 font-serif text-[22px] text-luxtext">
+            <h2 id="luxury-destinations-heading" className="mt-1 font-sans text-[22px] text-ocean-deep transition-colors duration-300 dark:text-white">
               Explore{" "}
-              <em className="italic text-luxgold-light">Destinations</em>
+              <em className="italic text-ocean dark:text-blue-chill-300">Destinations</em>
             </h2>
           </div>
           <Link
             href="/destinations"
-            className="inline-flex items-center gap-1.5 font-sans text-[12px] font-semibold uppercase tracking-[0.1em] text-luxgold-light transition-colors hover:text-luxgold"
+            className="inline-flex items-center gap-1.5 font-sans text-[12px] font-semibold uppercase tracking-[0.1em] text-ocean transition-colors hover:text-ocean-deep dark:text-blue-chill-300 dark:hover:text-blue-chill"
           >
             View All <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>

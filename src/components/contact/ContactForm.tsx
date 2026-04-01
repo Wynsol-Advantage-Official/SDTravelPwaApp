@@ -70,23 +70,23 @@ export function ContactForm() {
     return (
       <FadeSlide className="mx-auto max-w-xl text-center">
         <FadeSlideChild>
-          <div className="rounded-lg border border-luxborder-gold bg-luxury-card p-10">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-luxgold-dim">
-              <svg className="h-7 w-7 text-luxgold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="rounded-lg border border-blue-chill/30 bg-white p-10 dark:bg-ocean-card">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-chill/10">
+              <svg className="h-7 w-7 text-blue-chill" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="font-serif text-2xl font-bold text-luxtext">
+            <h3 className="font-sans text-2xl font-bold text-ocean-deep dark:text-white">
               Message Sent
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-luxtext-muted">
+            <p className="mt-3 text-sm leading-relaxed text-ocean-deep/60 dark:text-white/60">
               Thank you for reaching out. Our concierge team will respond within
               24 hours.
             </p>
 
             {!isExistingUser && (
               <div className="mt-6 rounded-md border border-ocean/10 bg-ocean/5 p-5">
-                <p className="text-sm font-medium text-luxtext">
+                <p className="text-sm font-medium text-ocean-deep dark:text-white">
                   Want to track your inquiry and explore exclusive tours?
                 </p>
                 <Link
@@ -101,7 +101,7 @@ export function ContactForm() {
             <button
               type="button"
               onClick={() => setStatus("idle")}
-              className="mt-6 inline-flex items-center rounded-sm bg-luxgold px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-luxury-base transition-colors hover:bg-luxgold-light"
+              className="mt-6 inline-flex items-center rounded-sm bg-ocean px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-ocean-deep transition-colors hover:bg-blue-chill"
             >
               Send Another Message
             </button>
@@ -115,34 +115,34 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="mx-auto max-w-xl space-y-6">
       {/* Signed-in user card OR manual input fields */}
       {user && !authLoading ? (
-        <div className="flex items-center gap-4 rounded-lg border border-luxborder-gold bg-luxury-card p-4">
+        <div className="flex items-center gap-4 rounded-lg border border-blue-chill/30 bg-white p-4 dark:bg-ocean-card">
           {user.photoURL ? (
             <Image
               src={user.photoURL}
               alt={user.displayName ?? "User avatar"}
               width={48}
               height={48}
-              className="h-12 w-12 rounded-full object-cover ring-2 ring-luxgold/30"
+              className="h-12 w-12 rounded-full object-cover ring-2 ring-blue-chill/30"
             />
           ) : (
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-luxgold-dim text-lg font-bold text-luxgold ring-2 ring-luxgold/30">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-chill/10 text-lg font-bold text-blue-chill ring-2 ring-blue-chill/30">
               {(user.displayName?.[0] ?? user.email?.[0] ?? "?").toUpperCase()}
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <p className="truncate font-serif text-base font-semibold text-luxtext">
+            <p className="truncate font-sans text-base font-semibold text-ocean-deep dark:text-white">
               {user.displayName ?? "Guest"}
             </p>
-            <p className="truncate text-xs text-luxtext-muted">
+            <p className="truncate text-xs text-ocean-deep/60 dark:text-white/60">
               {user.email}
             </p>
             {user.phoneNumber && (
-              <p className="truncate text-xs text-luxtext-subtle">
+              <p className="truncate text-xs text-ocean-deep/40 dark:text-white/40">
                 {user.phoneNumber}
               </p>
             )}
           </div>
-          <span className="shrink-0 rounded-full bg-luxgold-dim px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-luxgold">
+          <span className="shrink-0 rounded-full bg-blue-chill/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-blue-chill">
             Signed in
           </span>
         </div>
@@ -150,7 +150,7 @@ export function ContactForm() {
         <>
           {/* Name */}
           <div>
-            <label htmlFor="contact-name" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-luxtext-muted">
+            <label htmlFor="contact-name" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-ocean-deep/50 dark:text-white/60">
               Full Name <span className="text-error">*</span>
             </label>
             <input
@@ -161,13 +161,13 @@ export function ContactForm() {
               value={form.name}
               onChange={update("name")}
               placeholder="Your full name"
-              className="w-full rounded-sm border border-luxborder bg-luxury-card px-4 py-3 text-sm text-luxtext placeholder:text-luxtext-subtle focus:border-luxgold focus:outline-none focus:ring-1 focus:ring-luxgold"
+              className="w-full rounded-sm border border-khaki/30 bg-white px-4 py-3 text-sm text-ocean-deep placeholder:text-ocean-deep/30 focus:border-ocean focus:outline-none focus:ring-1 focus:ring-blue-chill dark:border-white/10 dark:bg-ocean-card dark:text-white dark:placeholder:text-white/40"
             />
           </div>
 
           {/* Email */}
           <div>
-            <label htmlFor="contact-email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-luxtext-muted">
+            <label htmlFor="contact-email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-ocean-deep/50 dark:text-white/60">
               Email Address <span className="text-error">*</span>
             </label>
             <input
@@ -178,14 +178,14 @@ export function ContactForm() {
               value={form.email}
               onChange={update("email")}
               placeholder="you@example.com"
-              className="w-full rounded-sm border border-luxborder bg-luxury-card px-4 py-3 text-sm text-luxtext placeholder:text-luxtext-subtle focus:border-luxgold focus:outline-none focus:ring-1 focus:ring-luxgold"
+              className="w-full rounded-sm border border-khaki/30 bg-white px-4 py-3 text-sm text-ocean-deep placeholder:text-ocean-deep/30 focus:border-ocean focus:outline-none focus:ring-1 focus:ring-blue-chill dark:border-white/10 dark:bg-ocean-card dark:text-white dark:placeholder:text-white/40"
             />
           </div>
 
           {/* Phone (optional) */}
           <div>
-            <label htmlFor="contact-phone" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-luxtext-muted">
-              Phone Number <span className="text-luxtext-subtle">(optional)</span>
+            <label htmlFor="contact-phone" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-ocean-deep/50 dark:text-white/60">
+              Phone Number <span className="text-ocean-deep/40 dark:text-white/40">(optional)</span>
             </label>
             <input
               id="contact-phone"
@@ -194,7 +194,7 @@ export function ContactForm() {
               value={form.phone}
               onChange={update("phone")}
               placeholder="+1 (555) 000-0000"
-              className="w-full rounded-sm border border-luxborder bg-luxury-card px-4 py-3 text-sm text-luxtext placeholder:text-luxtext-subtle focus:border-luxgold focus:outline-none focus:ring-1 focus:ring-luxgold"
+              className="w-full rounded-sm border border-khaki/30 bg-white px-4 py-3 text-sm text-ocean-deep placeholder:text-ocean-deep/30 focus:border-ocean focus:outline-none focus:ring-1 focus:ring-blue-chill dark:border-white/10 dark:bg-ocean-card dark:text-white dark:placeholder:text-white/40"
             />
           </div>
         </>
@@ -202,7 +202,7 @@ export function ContactForm() {
 
       {/* Subject */}
       <div>
-        <label htmlFor="contact-subject" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-luxtext-muted">
+        <label htmlFor="contact-subject" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-ocean-deep/50 dark:text-white/60">
           Subject <span className="text-error">*</span>
         </label>
         <select
@@ -210,7 +210,7 @@ export function ContactForm() {
           required
           value={form.subject}
           onChange={update("subject")}
-          className="w-full rounded-sm border border-luxborder bg-luxury-card px-4 py-3 text-sm text-luxtext focus:border-luxgold focus:outline-none focus:ring-1 focus:ring-luxgold"
+          className="w-full rounded-sm border border-khaki/30 bg-white px-4 py-3 text-sm text-ocean-deep focus:border-ocean focus:outline-none focus:ring-1 focus:ring-blue-chill dark:border-white/10 dark:bg-ocean-card dark:text-white"
         >
           <option value="">Select a topic…</option>
           <option value="General Inquiry">General Inquiry</option>
@@ -226,7 +226,7 @@ export function ContactForm() {
 
       {/* Message */}
       <div>
-        <label htmlFor="contact-message" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-luxtext-muted">
+        <label htmlFor="contact-message" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-ocean-deep/50 dark:text-white/60">
           Message <span className="text-error">*</span>
         </label>
         <textarea
@@ -237,7 +237,7 @@ export function ContactForm() {
           value={form.message}
           onChange={update("message")}
           placeholder="Tell us about your dream trip…"
-          className="w-full resize-y rounded-sm border border-luxborder bg-luxury-card px-4 py-3 text-sm text-luxtext placeholder:text-luxtext-subtle focus:border-luxgold focus:outline-none focus:ring-1 focus:ring-luxgold"
+          className="w-full resize-y rounded-sm border border-khaki/30 bg-white px-4 py-3 text-sm text-ocean-deep placeholder:text-ocean-deep/30 focus:border-ocean focus:outline-none focus:ring-1 focus:ring-blue-chill dark:border-white/10 dark:bg-ocean-card dark:text-white dark:placeholder:text-white/40"
         />
       </div>
 
@@ -252,7 +252,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="inline-flex w-full items-center justify-center rounded-sm bg-luxgold px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-luxury-base transition-colors hover:bg-luxgold-light disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex w-full items-center justify-center rounded-sm bg-ocean px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-ocean-deep transition-colors hover:bg-blue-chill disabled:cursor-not-allowed disabled:opacity-60"
       >
         {status === "submitting" ? (
           <>

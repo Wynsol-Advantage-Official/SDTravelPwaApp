@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, Inter, Cormorant_Garamond, DM_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { DesktopShell } from "@/components/layout";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import IOSInstallPrompt from "@/components/pwa/IOSInstallPrompt";
@@ -10,40 +10,32 @@ import { BRAND } from "@/lib/config/brand";
 import "@/styles/globals.css";
 
 // ---------------------------------------------------------------------------
-// Fonts — Premium Serif + Clean Sans-Serif
+// Fonts — Halis GR (brand sans) + CA Negroni Fill (brand display)
 // ---------------------------------------------------------------------------
-// Self-hosted via next/font for zero layout shift and fastest LCP.
-// CSS variables are injected on <html> so Tailwind `font-serif` / `font-sans`
+// Self-hosted via next/font/local for zero layout shift and fastest LCP.
+// CSS variables are injected on <html> so Tailwind `font-sans` / `font-display`
 // classes work everywhere.
 // ---------------------------------------------------------------------------
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
+const halisGR = localFont({
+  src: [
+    { path: "../fonts/halis-gr/HalisGRThin.ttf", weight: "100", style: "normal" },
+    { path: "../fonts/halis-gr/Halis GR-light.otf", weight: "300", style: "normal" },
+    { path: "../fonts/halis-gr/HalisGR-Book.otf", weight: "350", style: "normal" },
+    { path: "../fonts/halis-gr/HalisGR-Regular.otf", weight: "400", style: "normal" },
+    { path: "../fonts/halis-gr/HalisGR-Medium.otf", weight: "500", style: "normal" },
+    { path: "../fonts/halis-gr/HalisGR-Bold.otf", weight: "700", style: "normal" },
+    { path: "../fonts/halis-gr/HalisGR-Black.otf", weight: "900", style: "normal" },
+  ],
   display: "swap",
-  variable: "--font-playfair",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-halis",
 });
 
-const inter = Inter({
-  subsets: ["latin"],
+const caNegroni = localFont({
+  src: "../fonts/CANegroni-Fill.otf",
   display: "swap",
-  variable: "--font-inter",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-cormorant",
-  weight: ["300", "400", "600"],
-  style: ["normal", "italic"],
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-dm-sans",
-  weight: ["300", "400", "500"],
+  variable: "--font-negroni",
+  weight: "400",
 });
 
 // ---------------------------------------------------------------------------
@@ -116,7 +108,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0D0D0D",
+  themeColor: "#076a95",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -162,13 +154,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${inter.variable} ${cormorant.variable} ${dmSans.variable}`}
+      className={`${halisGR.variable} ${caNegroni.variable}`}
       suppressHydrationWarning
     >
       <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+        {/* Anti-FOUC: apply stored/OS theme before first paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('sdtravel-theme');var p=window.matchMedia('(prefers-color-scheme:dark)').matches;var d=s!==null?s==='dark':p;if(d){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','sanddiamonds-dark');}}catch(e){}})();`,
+          }}
+        />
       </head>
-      <body className="bg-luxury-base font-sans text-luxtext antialiased">
+      <body className="bg-tan-50 font-sans text-ocean-deep antialiased transition-colors duration-300 dark:bg-ocean-deep dark:text-white">
         <OfflineBanner />
         <TravelAgencyJsonLd />
         <AuthProvider>

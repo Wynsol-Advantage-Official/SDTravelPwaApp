@@ -37,11 +37,11 @@ function HeroMainCard() {
     <BentoCard
       variant="hero"
       span={{ col: 1, row: 2 }}
-      className="relative flex flex-col justify-end p-5 overflow-hidden border border-white/10"
+      className="relative  flex flex-col justify-end p-5 overflow-hidden "
     >
       {/* Background image overlay */}
       <div
-        className="absolute inset-0 bg-cover bg-center"
+        className="absolute hidden inset-0 bg-cover bg-center"
         style={{
           backgroundImage: "url(/media/home-hero-poster.jpg)",
           opacity: 0.3,
@@ -50,11 +50,11 @@ function HeroMainCard() {
       />
       {/* Gradient scrim for text legibility */}
       <div
-        className="absolute inset-0 bg-gradient-to-t from-luxgold-dim via-blue-chill-dim/60 to-transparent "
+        className="absolute hidden inset-0 bg-gradient-to-t from-luxgold-dim via-blue-chill-dim/60 to-transparent "
         aria-hidden="true"
       />
 
-      <div className="relative z-10 flex flex-col gap-4">
+      <div className="absolute -z-10 hidden flex-col gap-4">
         {/* Eyebrow */}
         <span className="font-sans text-[9px] uppercase tracking-[0.14em] text-white/60">
           Featured Collection 2026
@@ -76,6 +76,19 @@ function HeroMainCard() {
           </Link>
         </div>
       </div>
+      {/* Responsive iframe wrapper: center and cover the iframe so it always
+          fills the card area while preserving aspect. Placed behind content. */}
+      <div className="absolute inset-0 overflow-hidden -z-20">
+        <iframe
+          src="https://www.canva.com/design/DAG5A4NGFLc/kBfefmld-zTZxj_Op7hCGQ/view?embed"
+          title="Hero video"
+          aria-hidden="true"
+          allowFullScreen
+          className="absolute top-1/2 left-1/2 min-w-[100%] min-h-[100%] -translate-x-1/2 -translate-y-1/2 scale-[1.1]"
+          style={{ border: 0 }}
+        />
+      </div>
+        
     </BentoCard>
   );
 }
@@ -311,8 +324,8 @@ export function LuxuryHero() {
         </div>
 
         {/* Mobile / tablet stacked layout */}
-        <div className="flex flex-col gap-[10px] lg:hidden">
-          <div className="min-h-[320px]">
+        <div className="flex flex-col gap-[10px] lg:hidden ">
+          <div className="min-h-[320px] ">
             <HeroMainCard />
           </div>
           <SearchCard />

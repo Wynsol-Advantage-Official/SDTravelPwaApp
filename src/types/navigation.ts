@@ -26,6 +26,8 @@ export interface NavItem {
   requiresAuth?: boolean;
   /** Optional badge value (e.g. unread count). `undefined` means no badge. */
   badge?: number | string;
+  /** Optional sub-items rendered as a collapsible submenu (one level only). */
+  children?: NavItem[];
 }
 
 /** A logical group of navigation items. */

@@ -1,5 +1,5 @@
 import { fetchAccommodation } from "@/lib/api/wix"
-import { fetchTestimonials } from "@/lib/wix/tours"
+import { fetchTestimonials, fetchAccommodationsByType } from "@/lib/wix/tours"
 import type { Accommodation } from "@/types/tour"
 export type { WixTestimonial } from "@/lib/wix/tours"
 
@@ -42,4 +42,14 @@ export async function getTestimonials(
   options?: { featuredOnly?: boolean; tourId?: string },
 ) {
   return fetchTestimonials(limit, options)
+}
+
+/**
+ * Fetch accommodations by property type from Wix CMS.
+ * Pass "resort" for hotels, "airbnb" for Airbnbs, etc.
+ */
+export async function getAccommodationsByType(
+  type: string,
+): Promise<Accommodation[]> {
+  return fetchAccommodationsByType(type)
 }

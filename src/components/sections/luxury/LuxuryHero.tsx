@@ -35,7 +35,7 @@ const FILTER_THEMES = [
 function HeroMainCard() {
   return (
     <BentoCard
-      variant="hero"
+      variant="default"
       span={{ col: 1, row: 2 }}
       className="relative  flex flex-col justify-end p-5 overflow-hidden "
     >
@@ -76,18 +76,8 @@ function HeroMainCard() {
           </Link>
         </div>
       </div>
-      {/* Responsive iframe wrapper: center and cover the iframe so it always
-          fills the card area while preserving aspect. Placed behind content. */}
-      <div className="absolute inset-0 overflow-hidden -z-20">
-        <iframe
-          src="https://www.canva.com/design/DAG5A4NGFLc/kBfefmld-zTZxj_Op7hCGQ/view?embed"
-          title="Hero video"
-          aria-hidden="true"
-          allowFullScreen
-          className="absolute top-1/2 left-1/2 min-w-[100%] min-h-[100%] -translate-x-1/2 -translate-y-1/2 scale-[1.1]"
-          style={{ border: 0 }}
-        />
-      </div>
+      <iframe src="https://www.canva.com/design/DAG5A4NGFLc/kBfefmld-zTZxj_Op7hCGQ/view?embed"  title="Hero video" className="absolute z-1000  inset-0
+       m-0 pb-5   h-fit scale-109   aspect-[5/6]" aria-hidden="true" />
         
     </BentoCard>
   );

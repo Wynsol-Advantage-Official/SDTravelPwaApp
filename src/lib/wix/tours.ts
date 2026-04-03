@@ -674,6 +674,30 @@ export async function getAccommodationById(id: string): Promise<Accommodation | 
   }
 }
 
+/**
+ * Fetch accommodations filtered by type (e.g. "resort", "airbnb").
+ * Returns all matching items sorted by name ascending.
+ */
+export async function fetchAccommodationsByType(
+  type: string,
+): Promise<Accommodation[]> {
+  const client = wixClient();
+  if (!client) return [];
+
+  try {
+    const result = await client.items
+      .query(ACCOMMODATIONS_COLLECTION)
+      .eq("type", type)
+      .ascending("resortName")
+      .find();
+
+    return (result.items ?? []).map((item) => mapAccommodation(item as RawItem));
+  } catch (err) {
+    console.error(`[fetchAccommodationsByType] Failed for type="${type}":`, err);
+    return [];
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Testimonials
 // ---------------------------------------------------------------------------

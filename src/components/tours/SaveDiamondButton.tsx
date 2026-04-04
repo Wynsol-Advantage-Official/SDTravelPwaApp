@@ -1,11 +1,12 @@
 "use client"
 
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Heart } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/hooks/useAuth"
 import { useSavedDiamonds } from "@/hooks/useSavedDiamonds"
+import SaveConfirmModal from "./SaveConfirmModal"
 
 // ---------------------------------------------------------------------------
 // SaveDiamondButton
@@ -53,15 +54,8 @@ export function SaveDiamondButton({
       }
 
       if (saved) {
-        const confirmed = typeof window !== "undefined"
-          ? window.confirm(`Remove "${tourTitle}" from your saved Diamonds?`)
-          : true
-
-        if (!confirmed) {
-          return
-        }
-
-        await removeDiamond(tourSlug)
+        // open modal instead of immediate confirm
+        setConfirmOpen(true)
       } else {
         await addDiamond({ tourId, tourSlug, tourTitle, heroImageSrc })
       }
@@ -69,11 +63,23 @@ export function SaveDiamondButton({
     [user, saved, router, tourId, tourSlug, tourTitle, heroImageSrc, addDiamond, removeDiamond],
   )
 
+  const [confirmOpen, setConfirmOpen] = useState(false)
+
+  const handleConfirm = useCallback(async () => {
+    setConfirmOpen(false)
+    await removeDiamond(tourSlug)
+  }, [removeDiamond, tourSlug])
+
+  const handleCancel = useCallback(() => {
+    setConfirmOpen(false)
+  }, [])
+
   const dim = size === "sm" ? "h-8 w-8" : "h-10 w-10"
   const iconSize = size === "sm" ? "h-4 w-4" : "h-5 w-5"
 
   return (
-    <button
+    <>
+      <button
       type="button"
       onClick={toggle}
       aria-label={saved ? "Remove from saved" : "Save tour"}
@@ -106,5 +112,15 @@ export function SaveDiamondButton({
         </motion.span>
       </AnimatePresence>
     </button>
+      <SaveConfirmModal
+        open={confirmOpen}
+        title={`Remove "${tourTitle}"?`}
+        description={`Remove "${tourTitle}" from your saved Diamonds? You can always save it again later.`}
+        confirmLabel="Remove"
+        cancelLabel="Keep"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
+    </>
   )
 }

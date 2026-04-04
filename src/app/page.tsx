@@ -2,6 +2,7 @@ import {
   LuxuryHero,
   LuxuryDestinations,
   LuxuryToursStats,
+  LuxuryAds,
   LuxuryTestimonials,
   LuxuryPartnersCta,
 } from "@/components/sections";
@@ -20,6 +21,7 @@ export default function HomePage() {
       <LuxuryHero />
       <div className="mt-6"><LuxuryDestinations /></div>
       <div className="mt-6"><LuxuryToursStats /></div>
+      <div className="mt-6"><LuxuryAds /></div>
       <div className="mt-6"><LuxuryTestimonials /></div>
       <div className="mt-6"><LuxuryPartnersCta /></div>
     </main>

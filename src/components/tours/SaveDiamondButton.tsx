@@ -53,6 +53,14 @@ export function SaveDiamondButton({
       }
 
       if (saved) {
+        const confirmed = typeof window !== "undefined"
+          ? window.confirm(`Remove "${tourTitle}" from your saved Diamonds?`)
+          : true
+
+        if (!confirmed) {
+          return
+        }
+
         await removeDiamond(tourSlug)
       } else {
         await addDiamond({ tourId, tourSlug, tourTitle, heroImageSrc })

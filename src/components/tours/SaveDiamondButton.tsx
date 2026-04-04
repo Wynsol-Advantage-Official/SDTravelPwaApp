@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Diamond } from "lucide-react"
+import DiamondIcon from "@/components/icons/DiamondIcon"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/hooks/useAuth"
 import { useSavedDiamonds } from "@/hooks/useSavedDiamonds"
@@ -102,12 +102,9 @@ export function SaveDiamondButton({
           transition={{ duration: 0.18 }}
           className="flex items-center justify-center"
         >
-          <Diamond
-            className={[
-              iconSize,
-              "transition-colors",
-              saved ? "fill-luxgold text-luxgold" : "text-white",
-            ].join(" ")}
+          <DiamondIcon
+            className={[iconSize, "transition-colors", saved ? "text-luxgold" : "text-white"].join(" ")}
+            filled={saved}
           />
         </motion.span>
       </AnimatePresence>

@@ -15,7 +15,9 @@ export interface TenantConfig {
 export interface TenantBranding {
   logo?: string
   primaryColor?: string
+  accentColor?: string
   tagline?: string
+  supportEmail?: string
 }
 
 /** Full tenant record stored in Firestore `tenants/{tenantId}`. */
@@ -35,4 +37,5 @@ export interface TenantContext {
   tenantId: string
   wixSiteId: string
   tenantName: string
+  branding?: TenantBranding
 }

@@ -9,6 +9,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { MockModeProvider } from "@/hooks/useMockMode";
 import { TenantProvider } from "@/hooks/useTenant";
 import { BRAND } from "@/lib/config/brand";
+import { getTenantBranding, brandingToCssVars } from "@/lib/services/branding.service";
 import type { TenantContext } from "@/types/tenant";
 import "@/styles/globals.css";
 
@@ -156,11 +157,19 @@ export default async function RootLayout({
 }>) {
   // Read tenant context injected by Edge Middleware (SOW §6.2)
   const hdrs = await headers();
+  const tenantId = hdrs.get("x-tenant-id") ?? "www";
+
+  // Fetch per-tenant branding from Firestore (SOW §9)
+  const branding = await getTenantBranding(tenantId);
+
   const tenantCtx: TenantContext = {
-    tenantId: hdrs.get("x-tenant-id") ?? "www",
+    tenantId,
     wixSiteId: hdrs.get("x-wix-site-id") ?? process.env.WIX_META_SITE_ID ?? "",
     tenantName: hdrs.get("x-tenant-name") ?? BRAND.name,
+    branding,
   };
+
+  const cssVars = brandingToCssVars(branding);
 
   return (
     <html
@@ -170,6 +179,8 @@ export default async function RootLayout({
     >
       <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+        {/* Tenant branding CSS custom properties (SOW §9) */}
+        <style dangerouslySetInnerHTML={{ __html: `:root { ${cssVars} }` }} />
         {/* Anti-FOUC: apply stored/OS theme before first paint */}
         <script
           dangerouslySetInnerHTML={{

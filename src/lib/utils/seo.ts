@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 // ---------------------------------------------------------------------------
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.sanddiamondstravel.com";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.sanddiamonds.travel";
 
 interface TourMetaInput {
   title: string;

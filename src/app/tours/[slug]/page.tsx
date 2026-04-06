@@ -51,7 +51,7 @@ export async function generateMetadata({
 
 function TourJsonLd({ tour }: { tour: NonNullable<Awaited<ReturnType<typeof getTourBySlug>>>["tour"] }) {
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.sanddiamondstravel.com";
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.sanddiamonds.travel";
 
   const jsonLd = {
     "@context": "https://schema.org",

@@ -1,7 +1,7 @@
 # Multi-Tenant Architecture — SD Travel PWA
 
 > **SOW Reference**: SDTravel-WixHeadless-MultiTenant_ScopeOfWork v1.0  
-> **Domain**: `sanddiamondstravel.com` (Vercel)  
+> **Domain**: `sanddiamonds.travel` (Vercel)  
 > **Principle**: Isolate the experience, share the infrastructure.
 
 ---
@@ -11,9 +11,9 @@
 | Tier | Identity | Access Scope |
 |------|----------|--------------|
 | **T1** | Public Visitor | Browse www + all subdomains. No auth required. Cannot access `/booking`, `/profile`, `/chat`, `/dashboard`. |
-| **T2** | Authenticated End User | Global identity. One session cookie on `.sanddiamondstravel.com` → recognised on all subdomains. |
+| **T2** | Authenticated End User | Global identity. One session cookie on `.sanddiamonds.travel` → recognised on all subdomains. |
 | **T3A** | Tenant Admin | Scoped to own subdomain. Middleware blocks cross-tenant admin access. |
-| **T3B** | Super Admin | Unrestricted. Operates from `www.sanddiamondstravel.com`. No tenantId constraint. |
+| **T3B** | Super Admin | Unrestricted. Operates from `www.sanddiamonds.travel`. No tenantId constraint. |
 
 ---
 
@@ -123,7 +123,7 @@ const PROTECTED_ROUTES = ['/booking', '/profile', '/chat', '/dashboard']
 
 ### Session Cookie
 ```typescript
-{ domain: '.sanddiamondstravel.com', httpOnly: true, secure: true, sameSite: 'lax', maxAge: 604800 }
+{ domain: '.sanddiamonds.travel', httpOnly: true, secure: true, sameSite: 'lax', maxAge: 604800 }
 ```
 
 ---
@@ -242,7 +242,7 @@ export const BRAND = {
   name: process.env.NEXT_PUBLIC_BRAND_NAME ?? 'Sand Diamonds Travel',
   tagline: process.env.NEXT_PUBLIC_BRAND_TAGLINE ?? 'Where Every Journey Becomes a Diamond',
   logo: process.env.NEXT_PUBLIC_BRAND_LOGO ?? '/logos/brand/sd-logo.svg',
-  supportEmail: process.env.NEXT_PUBLIC_BRAND_SUPPORT_EMAIL ?? 'concierge@sanddiamondstravel.com',
+  supportEmail: process.env.NEXT_PUBLIC_BRAND_SUPPORT_EMAIL ?? 'concierge@sanddiamonds.travel',
 } as const
 ```
 
@@ -277,7 +277,7 @@ export const BRAND = {
 EDGE_CONFIG=                          # Edge Config connection string
 
 # Session cookie domain
-SESSION_COOKIE_DOMAIN=.sanddiamondstravel.com
+SESSION_COOKIE_DOMAIN=.sanddiamonds.travel
 
 # Vercel API (for provisioning)
 VERCEL_API_TOKEN=                     # Vercel API token

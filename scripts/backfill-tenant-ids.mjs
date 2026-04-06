@@ -53,7 +53,7 @@ async function ensureDefaultTenant() {
     tenantId: DEFAULT_TENANT_ID,
     name: "Sand Diamonds Travel",
     wixSiteId: process.env.WIX_META_SITE_ID || process.env.WIX_SITE_ID || "",
-    domain: "sanddiamondstravel.com",
+    domain: "sanddiamonds.travel",
     status: "active",
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),

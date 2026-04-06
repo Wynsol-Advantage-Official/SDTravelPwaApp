@@ -13,7 +13,7 @@ import { adminAuth } from "@/lib/firebase/admin"
 const COOKIE_NAME = "session"
 const SEVEN_DAYS = 60 * 60 * 24 * 7
 const SESSION_COOKIE_DOMAIN =
-  process.env.SESSION_COOKIE_DOMAIN ?? ".sanddiamondstravel.com"
+  process.env.SESSION_COOKIE_DOMAIN ?? ".sanddiamonds.travel"
 
 export async function POST(request: NextRequest) {
   try {

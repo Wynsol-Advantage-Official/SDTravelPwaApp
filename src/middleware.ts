@@ -21,7 +21,7 @@ function isStaticOrApi(pathname: string): boolean {
 // Subdomain extraction
 // ---------------------------------------------------------------------------
 
-const PRODUCTION_DOMAIN = "sanddiamondstravel.com"
+const PRODUCTION_DOMAIN = "sanddiamonds.travel"
 
 function extractSubdomain(hostname: string): string {
   // localhost development: tenant-a.localhost → "tenant-a"
@@ -30,7 +30,7 @@ function extractSubdomain(hostname: string): string {
     return sub === "localhost" ? "www" : sub
   }
 
-  // Production: tenant-a.sanddiamondstravel.com → "tenant-a"
+  // Production: tenant-a.sanddiamonds.travel → "tenant-a"
   if (hostname.endsWith(`.${PRODUCTION_DOMAIN}`)) {
     const sub = hostname.replace(`.${PRODUCTION_DOMAIN}`, "")
     return sub || "www"

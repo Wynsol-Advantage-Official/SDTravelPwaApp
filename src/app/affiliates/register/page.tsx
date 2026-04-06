@@ -111,7 +111,7 @@ export default function AffiliateRegisterPage() {
                 className="input input-bordered flex-1"
                 placeholder="acme"
               />
-              <span className="text-base-content/60 text-sm">.sanddiamondstravel.com</span>
+              <span className="text-base-content/60 text-sm">.sanddiamonds.travel</span>
             </div>
           </label>
 

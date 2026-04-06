@@ -39,7 +39,7 @@ export interface VercelDomainResult {
 }
 
 /**
- * Register a subdomain (e.g. `acme.sanddiamondstravel.com`) with the Vercel project.
+ * Register a subdomain (e.g. `acme.sanddiamonds.travel`) with the Vercel project.
  */
 export async function addDomainToProject(
   domain: string

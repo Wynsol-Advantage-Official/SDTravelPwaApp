@@ -44,7 +44,7 @@ const POLICIES: PolicyItem[] = [
       "We do not sell or share your data with third parties except where required to fulfil your booking (hotels, airlines, local operators).",
       "Payment information is processed securely via PCI-DSS compliant payment gateways. We do not store credit card details.",
       "Chat messages and concierge communications are stored securely in encrypted databases and accessible only to you and your assigned travel advisor.",
-      "You may request deletion of your personal data at any time by contacting us at privacy@sanddiamondstravel.com.",
+      "You may request deletion of your personal data at any time by contacting us at privacy@sanddiamonds.travel.",
     ],
   },
   {

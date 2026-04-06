@@ -46,7 +46,7 @@ const caNegroni = localFont({
 // SEO — Global Metadata
 // ---------------------------------------------------------------------------
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.sanddiamondstravel.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.sanddiamonds.travel";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

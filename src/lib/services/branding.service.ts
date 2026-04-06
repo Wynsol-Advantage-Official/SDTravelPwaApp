@@ -14,7 +14,7 @@ export const DEFAULT_BRANDING: Required<TenantBranding> = {
   primaryColor: "#043750",   // ocean-deep
   accentColor: "#1282a5",    // ocean
   tagline: "Where Every Journey Becomes a Diamond",
-  supportEmail: "concierge@sanddiamondstravel.com",
+  supportEmail: "concierge@sanddiamonds.travel",
 }
 
 /**

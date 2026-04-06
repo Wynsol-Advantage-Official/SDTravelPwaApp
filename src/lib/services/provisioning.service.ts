@@ -12,7 +12,7 @@ import { FieldValue } from "firebase-admin/firestore"
 import { addDomainToProject, upsertTenantEdgeConfig } from "@/lib/api/vercel"
 import type { Tenant } from "@/types/tenant"
 
-const BASE_DOMAIN = "sanddiamondstravel.com"
+const BASE_DOMAIN = "sanddiamonds.travel"
 
 export interface ProvisionRequest {
   /** Desired subdomain (e.g. "acme") — will be validated & lower-cased */

@@ -672,7 +672,7 @@ export function TourDetails({ tour, itinerary, destination, rooms = [], remoteRo
               <div className="tooltip tooltip-bottom w-full" data-tip="Sign in to unlock your personal referral link">
                 <div className="flex h-10 w-full items-center gap-2 rounded-lg border border-tan/30 bg-tan/10 px-3">
                   <span className="flex-1 truncate text-xs text-ocean-deep/30">
-                    sanddiamondstravel.com/ref/••••••
+                    sanddiamonds.travel/ref/••••••
                   </span>
                   <Copy className="h-3.5 w-3.5 text-ocean-deep/20" />
                 </div>

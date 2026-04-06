@@ -99,7 +99,16 @@ export async function middleware(request: NextRequest) {
   // Super Admins bypass this check entirely (SOW §3.1.3)
 
   // ── 4. Inject tenant headers for downstream consumption ──────────────
-  const response = NextResponse.next()
+  // Set on REQUEST headers so server components can read them via headers().
+  // Also set on RESPONSE headers so browser DevTools / curl can inspect them.
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set("x-tenant-id", tenant.tenantId)
+  requestHeaders.set("x-wix-site-id", tenant.siteId)
+  requestHeaders.set("x-tenant-name", tenant.name)
+
+  const response = NextResponse.next({
+    request: { headers: requestHeaders },
+  })
   response.headers.set("x-tenant-id", tenant.tenantId)
   response.headers.set("x-wix-site-id", tenant.siteId)
   response.headers.set("x-tenant-name", tenant.name)

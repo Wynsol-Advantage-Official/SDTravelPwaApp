@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect, useCallback } from "react"
 import { useAuth } from "@/hooks/useAuth"
+import { useTenant } from "@/hooks/useTenant"
 import { ChatBubble } from "@/components/dashboard/ChatBubble"
-import { ensureRoomExists, subscribeToMessages, sendMessage, markMessagesRead } from "@/lib/firebase/chat"
+import { ensureRoomExists, subscribeToMessages, sendMessage, markMessagesRead } from "@/lib/services/chat.service"
 import type { ChatMessage } from "@/types/chat"
 
 interface BookingChatPanelProps {
@@ -14,6 +15,7 @@ interface BookingChatPanelProps {
 
 export function BookingChatPanel({ bookingId, tourId, tourSlug }: BookingChatPanelProps) {
   const { user } = useAuth()
+  const { tenantId } = useTenant()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [loading, setLoading] = useState(true)
   const [input, setInput] = useState("")
@@ -38,7 +40,7 @@ export function BookingChatPanel({ bookingId, tourId, tourSlug }: BookingChatPan
     let cancelled = false
     let unsubscribe: (() => void) | null = null
 
-    ensureRoomExists(roomId, uid, { tourId, tourSlug })
+    ensureRoomExists(roomId, uid, { tourId, tourSlug, tenantId })
       .then(() => {
         if (cancelled) return
         unsubscribe = subscribeToMessages(roomId, uid, (msgs) => {

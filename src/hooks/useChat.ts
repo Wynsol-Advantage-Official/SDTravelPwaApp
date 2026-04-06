@@ -6,6 +6,7 @@ import {
   subscribeToMessages,
   sendMessage,
 } from "@/lib/services/chat.service"
+import { useTenant } from "@/hooks/useTenant"
 import type { ChatMessage } from "@/types/chat"
 
 export function useChat(
@@ -15,6 +16,7 @@ export function useChat(
 ) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [loading, setLoading] = useState(true)
+  const { tenantId } = useTenant()
 
   const tourId = options?.tourId
   const tourSlug = options?.tourSlug
@@ -30,8 +32,9 @@ export function useChat(
     let cancelled = false
     let unsubscribe: (() => void) | null = null
 
-    // Ensure room doc exists before subscribing so it appears in the agent inbox
-    ensureRoomExists(roomId, senderUid, { tourId, tourSlug })
+    // Ensure room doc exists before subscribing so it appears in the agent
+    // inbox with the correct tenantId for the current subdomain.
+    ensureRoomExists(roomId, senderUid, { tourId, tourSlug, tenantId })
       .then(() => {
         if (cancelled) return
         unsubscribe = subscribeToMessages(roomId, senderUid, (msgs) => {
@@ -48,7 +51,7 @@ export function useChat(
       cancelled = true
       unsubscribe?.()
     }
-  }, [roomId, senderUid, tourId, tourSlug])
+  }, [roomId, senderUid, tourId, tourSlug, tenantId])
 
   const send = useCallback(
     async (text: string) => {

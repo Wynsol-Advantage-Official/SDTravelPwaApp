@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { useMockMode } from "@/hooks/useMockMode"
 import { useAuth } from "@/hooks/useAuth"
+import { useTenant } from "@/hooks/useTenant"
 import { ChatBubble } from "@/components/dashboard/ChatBubble"
 import {
   subscribeToAllRooms,
@@ -61,9 +62,12 @@ function timeAgo(date: Date): string {
 // ConciergeInbox — manages all chat channels for the agent
 // ---------------------------------------------------------------------------
 export function ConciergeInbox() {
-  const { user } = useAuth()
+  const { user, role } = useAuth()
   const { isMockMode } = useMockMode()
+  const { tenantId: currentTenantId } = useTenant()
   const agentUid = user?.uid ?? ""
+  // super_admin sees all tenants; everyone else is scoped to the current subdomain
+  const scopedTenantId = role === "super_admin" ? undefined : currentTenantId
 
   // ── State ───────────────────────────────────────────────────────────────
   const [rooms, setRooms] = useState<ChatRoom[]>([])
@@ -111,10 +115,10 @@ export function ConciergeInbox() {
     const unsub = subscribeToAllRooms((fetched) => {
       setRooms(fetched)
       setRoomsLoading(false)
-    }, filterVal)
+    }, filterVal, scopedTenantId ?? undefined)
 
     return unsub
-  }, [isMockMode, statusFilter])
+  }, [isMockMode, statusFilter, scopedTenantId])
 
   // ── Fetch client display names (live mode) ──────────────────────────────
   useEffect(() => {

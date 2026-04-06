@@ -3,7 +3,7 @@ import { adminAuth, adminDb } from "@/lib/firebase/admin"
 import { wixClient } from "@/lib/wix/client"
 import { getWixImageUrl } from "@/lib/wix/media"
 import { getItineraryDayCount } from "@/lib/wix/tours"
-import type { Firestore } from "firebase-admin/firestore"
+import type { Firestore, Query, DocumentData } from "firebase-admin/firestore"
 
 // Booking shape returned to the client (Timestamps serialised to ISO strings)
 type SerializedBooking = Record<string, unknown> & { _id: string }
@@ -59,19 +59,31 @@ export default async function handler(
   }
 
   const idToken = authHeader.split(" ")[1]
+  let callerRole: string | undefined
+  let callerTenantId: string | undefined
   try {
     const decoded = await adminAuth.verifyIdToken(idToken)
     if (!decoded.admin) {
       return res.status(403).json({ error: "Admin access required" })
     }
+    callerRole = (decoded.role as string) ?? undefined
+    callerTenantId = (decoded.tenantId as string) ?? undefined
   } catch {
     return res.status(401).json({ error: "Invalid or expired token" })
   }
 
-  // ── Fetch all bookings via Admin SDK (bypasses Firestore rules) ─────────
+  // ── Fetch bookings scoped by tenant ─────────────────────────────────────
+  // super_admin: sees ALL bookings across every tenant
+  // tenant_admin: sees only bookings where tenantId matches their claim
   try {
     const db: Firestore = adminDb
-    const snap = await db.collection("bookings").orderBy("createdAt", "desc").get()
+    let q: Query<DocumentData> = db.collection("bookings").orderBy("createdAt", "desc")
+
+    if (callerRole !== "super_admin" && callerTenantId) {
+      q = q.where("tenantId", "==", callerTenantId)
+    }
+
+    const snap = await q.get()
 
     const bookings: SerializedBooking[] = snap.docs.map((d) => ({
       _id: d.id,

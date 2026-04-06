@@ -54,6 +54,18 @@ if (getApps().length === 0) {
 const auth = getAuth();
 
 try {
+  // Resolve email to uid if an email was provided
+  let targetUid = uid
+  if (uid && uid.includes('@')) {
+    try {
+      const u = await auth.getUserByEmail(uid)
+      targetUid = u.uid
+    } catch (err) {
+      console.error(`Could not find user by email ${uid}:`, err.message)
+      process.exit(1)
+    }
+  }
+
   const claims = {
     role,
     tenantId: role === "tenant_admin" ? tenantId : null,
@@ -61,12 +73,12 @@ try {
     admin: role === "super_admin" || role === "tenant_admin",
   };
 
-  await auth.setCustomUserClaims(uid, claims);
+  await auth.setCustomUserClaims(targetUid, claims);
 
-  const user = await auth.getUser(uid);
-  console.log(`✓ Set claims on ${user.email ?? uid}:`);
+  const user = await auth.getUser(targetUid);
+  console.log(`✓ Set claims on ${user.email ?? targetUid}:`);
   console.log(JSON.stringify(claims, null, 2));
 } catch (err) {
-  console.error("Failed to set claims:", err.message);
+  console.error("Failed to set claims:", err.message || err);
   process.exit(1);
 }

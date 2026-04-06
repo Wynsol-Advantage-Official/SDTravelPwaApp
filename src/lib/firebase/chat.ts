@@ -40,13 +40,16 @@ function normaliseStatus(raw: string | undefined): ChatRoom["status"] {
 export async function ensureRoomExists(
   roomId: string,
   clientUid: string,
-  options?: { tourId?: string; tourSlug?: string },
+  options?: { tourId?: string; tourSlug?: string; tenantId?: string },
 ): Promise<void> {
   const roomRef = doc(db, "chatRooms", roomId)
   const data: Record<string, unknown> = {
     clientUid,
     createdAt: serverTimestamp(),
     status: "active",
+    // Always persist the tenant this room belongs to so the inbox can
+    // be scoped per-subdomain and audits reflect the correct domain.
+    tenantId: options?.tenantId ?? "www",
   }
   if (options?.tourId) data.tourId = options.tourId
   if (options?.tourSlug) data.tourSlug = options.tourSlug
@@ -132,23 +135,30 @@ export async function markMessagesRead(
 
 /**
  * Subscribe to all chat rooms ordered by last activity (agent inbox).
- * Optionally filter by status.
+ * Pass `tenantId` to scope rooms to a single tenant (tenant_admin).
+ * Omit `tenantId` to receive rooms across all tenants (super_admin).
  */
 export function subscribeToAllRooms(
   callback: (rooms: ChatRoom[]) => void,
   statusFilter?: ChatRoom["status"],
+  tenantId?: string,
 ): Unsubscribe {
   const roomsRef = collection(db, "chatRooms")
-  // For "active" filter also match legacy "open" status.
-  const q = statusFilter
-    ? query(
-        roomsRef,
-        statusFilter === "active"
-          ? where("status", "in", ["active", "open"])
-          : where("status", "==", statusFilter),
-        limit(100),
-      )
-    : query(roomsRef, limit(100))
+  const constraints = []
+
+  if (tenantId) {
+    constraints.push(where("tenantId", "==", tenantId))
+  }
+  if (statusFilter) {
+    if (statusFilter === "active") {
+      constraints.push(where("status", "in", ["active", "open"]))
+    } else {
+      constraints.push(where("status", "==", statusFilter))
+    }
+  }
+  constraints.push(limit(100))
+
+  const q = query(roomsRef, ...constraints)
 
   return onSnapshot(q, (snap) => {
     const rooms: ChatRoom[] = snap.docs

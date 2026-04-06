@@ -5,6 +5,7 @@ import { Search, Plus } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
+import { useTenant } from "@/hooks/useTenant"
 import { ThemeToggle } from "@/components/ui/ThemeToggle"
 
 const SEARCH_ITEMS = [
@@ -32,6 +33,16 @@ export function TopBar() {
   const router = useRouter()
   const greeting = getGreeting()
   const name = user?.displayName ?? "Traveler"
+  // Tenant info (may be unavailable in isolated tests) — call inside try/catch
+  let tenantName = "Sand Diamonds"
+  let wixSiteId = ""
+  try {
+    const t = useTenant()
+    tenantName = t.tenantName ?? tenantName
+    wixSiteId = t.wixSiteId ?? ""
+  } catch (e) {
+    // No TenantProvider in this render context (tests or isolated stories)
+  }
 
   const [query, setQuery] = useState("")
   const [open, setOpen] = useState(false)
@@ -112,13 +123,17 @@ export function TopBar() {
     <header
       className="sticky top-0 z-[90] flex h-14 items-center justify-between border-b border-khaki/50 bg-tan-50/90 px-5 backdrop-blur-[12px] transition-colors duration-300 dark:border-white/5 dark:bg-ocean-deep/92"
     >
-      {/* Left: greeting */}
-      <p className="min-w-0 font-sans text-[16px] font-medium text-ocean-deep dark:text-white">
-        <span className="font-sans italic">{greeting},</span>{" "}
-        <span className="inline-block max-w-[200px] truncate align-bottom">
-          {name}
-        </span>
-      </p>
+      {/* Left: greeting + tenant info */}
+      <div className="min-w-0">
+        <p className="font-sans text-[16px] font-medium text-ocean-deep dark:text-white">
+          <span className="font-sans italic">{greeting},</span>{" "}
+          <span className="inline-block max-w-[200px] truncate align-bottom">{name}</span>
+        </p>
+        <div className="mt-0.5 flex items-center gap-3 text-[12px] text-ocean-400 dark:text-blue-chill-300">
+          <span className="font-semibold">{tenantName}</span>
+          {wixSiteId ? <span className="text-khaki/80">• {wixSiteId}</span> : null}
+        </div>
+      </div>
 
       {/* Right: search + CTA */}
       <div className="flex items-center gap-3">

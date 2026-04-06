@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { wixClient } from "./client";
 import { getWixImageUrl, getWixImageDimensions } from "./media";
 import type {
@@ -8,6 +9,22 @@ import type {
   Room,
   WixImage,
 } from "@/types/tour";
+
+// ---------------------------------------------------------------------------
+// Per-request tenant siteId helper
+// ---------------------------------------------------------------------------
+// Reads the x-wix-site-id header injected by Edge Middleware so every Wix
+// query automatically targets the correct tenant site.  Outside of a request
+// context (e.g. generateStaticParams) the try/catch returns undefined and
+// wixClient() falls back to the env-var default (WIX_META_SITE_ID / www).
+async function getTenantSiteId(): Promise<string | undefined> {
+  try {
+    const hdrs = await headers();
+    return hdrs.get("x-wix-site-id") ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Collection IDs — must match the Wix CMS Dashboard exactly
@@ -211,7 +228,7 @@ function mapRoom(item: RawItem): Room {
 export async function getTours(options?: {
   featuredOnly?: boolean;
 }): Promise<Tour[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   //console.log(client.items.query(TOURS_COLLECTION).eq("status", "published"));
@@ -288,7 +305,7 @@ export async function getTours(options?: {
 export async function getTourBySlug(
   slug: string
 ): Promise<{ tour: Tour; itinerary: ItineraryDay[]; destination: Destination | null; rooms: Room[] } | null> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
 
   // 1. Fetch the tour
@@ -522,7 +539,7 @@ export async function getTourBySlug(
  * to verify price against the canonical parent record.
  */
 export async function getTourById(id: string): Promise<Tour | null> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
 
   try {
@@ -544,7 +561,7 @@ export async function getTourById(id: string): Promise<Tour | null> {
  * Used by the admin-list API to enrich bookings with duration.
  */
 export async function getItineraryDayCount(tourId: string): Promise<number> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return 0;
 
   try {
@@ -585,7 +602,7 @@ export async function getItineraryDayCount(tourId: string): Promise<number> {
  * Fetch all published tour slugs — used by generateStaticParams().
  */
 export async function getAllTourSlugs(): Promise<string[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   const result = await client.items
@@ -615,7 +632,7 @@ export async function getAllTourSlugs(): Promise<string[]> {
  * Fetch a single destination by its slug. Used by the detail page.
  */
 export async function getDestinationBySlug(slug: string): Promise<Destination | null> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
   try {
     const result = await client.items
@@ -634,7 +651,7 @@ export async function getDestinationBySlug(slug: string): Promise<Destination | 
  * Fetch all destinations for the hub page.
  */
 export async function getDestinations(): Promise<Destination[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) {
     console.error("[getDestinations] Wix client not initialised — check WIX_CLIENT_ID env var");
     return [];
@@ -657,7 +674,7 @@ export async function getDestinations(): Promise<Destination[]> {
  * Fetch a single room by its Wix _id and map to our `Room` type.
  */
 export async function getRoomById(id: string): Promise<Room | null> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
 
   try {
@@ -681,7 +698,7 @@ export async function getRoomById(id: string): Promise<Room | null> {
 export async function fetchRoomsByType(
   type: string,
 ): Promise<Room[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   try {
@@ -778,7 +795,7 @@ export async function fetchTestimonials(
   limit = 6,
   options?: { featuredOnly?: boolean; tourId?: string },
 ): Promise<WixTestimonial[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   try {

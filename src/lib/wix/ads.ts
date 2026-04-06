@@ -5,10 +5,20 @@
 // Server-only via the wixClient() import chain.
 // ---------------------------------------------------------------------------
 
+import { headers } from "next/headers";
 import { wixClient } from "./client";
 import { getWixImageUrl, getWixImageDimensions } from "./media";
 import type { Ad } from "@/types/ad";
 import type { WixImage } from "@/types/tour";
+
+async function getTenantSiteId(): Promise<string | undefined> {
+  try {
+    const hdrs = await headers();
+    return hdrs.get("x-wix-site-id") ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 const ADS_COLLECTION = "ads";
 
@@ -90,7 +100,7 @@ export async function getAds(options?: {
   activeOnly?: boolean;
   limit?: number;
 }): Promise<Ad[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   try {

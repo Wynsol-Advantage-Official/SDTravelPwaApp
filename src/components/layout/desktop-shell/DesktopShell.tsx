@@ -44,10 +44,13 @@ export function DesktopShell({ children }: DesktopShellProps) {
         className="relative flex min-h-dvh flex-col md:ml-[var(--sidebar-width)]"
       >
         {/* TopBar — desktop only */}
-        <div className="hidden  top-0 z-20  flex-1 md:block">
+        <div
+          className="hidden fixed top-0 z-20 md:block"
+          style={{ left: "var(--sidebar-width)", width: "calc(100% - var(--sidebar-width))" } as React.CSSProperties}
+        >
           <TopBar />
         </div>
-        <main className="absolute top-20 overflow-auto w-full flex-1 pb-[calc(64px+env(safe-area-inset-bottom))] md:p-8 md:pb-8">
+        <main className="absolute bg-white z-18 top-20 overflow-auto w-full flex-1 pb-[calc(64px+env(safe-area-inset-bottom))] md:p-8 md:pb-8">
           {children}
         </main>
       </div>

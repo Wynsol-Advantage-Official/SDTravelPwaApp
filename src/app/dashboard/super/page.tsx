@@ -53,7 +53,7 @@ function SuperAdminDashboard() {
         <StatCard label="Active Tenants" value={String(tenants.length)} />
         <StatCard label="Total Users" value="—" />
         <StatCard label="Platform Bookings" value="—" />
-        <StatCard label="Pending Applications" value="—" />
+        <StatCard label="Active Users" value="—" />
       </div>
 
       {/* Tenants overview */}
@@ -108,19 +108,19 @@ function SuperAdminDashboard() {
 
       {/* Quick links */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <Link href="/dashboard/super/affiliates">
-          <Card className="p-6 hover:ring-2 hover:ring-ocean/30 transition-all cursor-pointer">
-            <h3 className="font-semibold text-ocean-deep dark:text-tan-100">Affiliate Applications</h3>
-            <p className="text-sm text-ocean-deep/50 dark:text-tan-100/50 mt-1">
-              Review and approve new affiliate partner applications.
-            </p>
-          </Card>
-        </Link>
         <Link href="/dashboard/super/tenants">
           <Card className="p-6 hover:ring-2 hover:ring-ocean/30 transition-all cursor-pointer">
             <h3 className="font-semibold text-ocean-deep dark:text-tan-100">Tenant Management</h3>
             <p className="text-sm text-ocean-deep/50 dark:text-tan-100/50 mt-1">
               Provision, suspend, or configure tenant portals.
+            </p>
+          </Card>
+        </Link>
+        <Link href="/dashboard/admin/users">
+          <Card className="p-6 hover:ring-2 hover:ring-ocean/30 transition-all cursor-pointer">
+            <h3 className="font-semibold text-ocean-deep dark:text-tan-100">User Management</h3>
+            <p className="text-sm text-ocean-deep/50 dark:text-tan-100/50 mt-1">
+              Manage user accounts, roles, and access permissions.
             </p>
           </Card>
         </Link>

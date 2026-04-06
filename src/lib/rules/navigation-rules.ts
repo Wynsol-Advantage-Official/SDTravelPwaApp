@@ -70,17 +70,25 @@ export const SUPER_ADMIN_GROUP: NavGroup = {
   items: [
     { id: "super-dashboard", label: "Platform Overview", href: "/dashboard/super", icon: "bar-chart", requiresAuth: true },
     { id: "super-tenants", label: "Tenants", href: "/dashboard/super/tenants", icon: "building", requiresAuth: true },
-    { id: "super-affiliates", label: "Applications", href: "/dashboard/super/affiliates", icon: "users", requiresAuth: true },
   ],
 };
 
-/** All navigation groups including admin sections. Filter by role at render time. */
-export const ALL_NAV_GROUPS: NavGroup[] = [
-  DISCOVER_GROUP,
-  ACCOUNT_GROUP,
-  TENANT_ADMIN_GROUP,
-  SUPER_ADMIN_GROUP,
-];
+/** Sidebar navigation groups — public/discover only. Admin groups live in DashboardAside. */
+export const ALL_NAV_GROUPS: NavGroup[] = [DISCOVER_GROUP];
+
+/** Admin nav groups rendered in the dashboard aside — filtered by role at render time. */
+export const ADMIN_NAV_GROUPS: NavGroup[] = [TENANT_ADMIN_GROUP, SUPER_ADMIN_GROUP];
+
+/**
+ * Return admin-only nav groups the given role is permitted to see.
+ * Returns an empty array for regular users.
+ */
+export function getAdminNavGroupsForRole(role?: UserRole | null): NavGroup[] {
+  const userRank = ROLE_RANK[role ?? "user"] ?? 1;
+  return ADMIN_NAV_GROUPS.filter(
+    (group) => userRank >= (ROLE_RANK[group.requiredRole ?? "super_admin"] ?? 999),
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Pure helper functions

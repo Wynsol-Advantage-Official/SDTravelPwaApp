@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { DashboardNav } from "@/components/dashboard/DashboardNav"
+import { DashboardShell } from "@/components/dashboard/DashboardShell"
 
 export const metadata: Metadata = {
   title: "My Diamond Trips",
@@ -14,7 +15,7 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-dvh flex-col bg-tan-50 transition-colors duration-300 dark:bg-luxury-base">
       <DashboardNav />
-      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-10 sm:px-6">{children}</div>
+      <DashboardShell>{children}</DashboardShell>
     </div>
   )
 }

@@ -17,9 +17,10 @@ const DEFAULT_TENANT: TenantConfig = {
 /**
  * Resolve a subdomain to its tenant config.
  *
- * - In production, reads from Vercel Edge Config (< 1 ms).
- * - In development or when Edge Config is unavailable, returns the default
- *   "www" tenant so the app still works without Vercel infrastructure.
+ * Reads from Vercel Edge Config (SDK or HTTP API fallback) in all
+ * environments so that local dev reflects the same tenant→siteId mappings
+ * as production. Falls back to a synthetic tenant in dev when no Edge Config
+ * credentials are present or the key is not found.
  */
 export async function lookupTenant(
   subdomain: string,
@@ -29,17 +30,7 @@ export async function lookupTenant(
     return DEFAULT_TENANT
   }
 
-  // ── Dev fast-path ────────────────────────────────────────────────────────
-  // In development, skip all external API calls (Edge Config SDK + Vercel API)
-  // and immediately return a synthetic tenant. This avoids:
-  //   1. Auth errors from EDGE_CONFIG using a vcp_ token instead of a read token
-  //   2. 400 ms+ latency per middleware invocation from the Vercel API fallback
-  //   3. Flaky dev experience when network / tokens change
-  if (process.env.NODE_ENV !== "production") {
-    return { tenantId: subdomain, siteId: DEFAULT_TENANT.siteId, name: subdomain }
-  }
-
-  // ── Production: Edge Config SDK (fast path) ──────────────────────────────
+  // ── Edge Config SDK ──────────────────────────────────────────────────────
   if (process.env.EDGE_CONFIG) {
     try {
       const { get } = await import("@vercel/edge-config")
@@ -58,9 +49,8 @@ export async function lookupTenant(
     }
   }
 
-  // Vercel Edge Config HTTP API fallback — works whenever EDGE_CONFIG_STORE_ID
-  // + VERCEL_TOKEN are present, useful for local dev and as a fallback when
-  // the EDGE_CONFIG URL token lacks read permissions.
+  // ── Vercel Edge Config HTTP API fallback ─────────────────────────────────
+  // Used in all environments when EDGE_CONFIG_STORE_ID + VERCEL_TOKEN are set.
   if (process.env.EDGE_CONFIG_STORE_ID && process.env.VERCEL_TOKEN) {
     try {
       const storeId = process.env.EDGE_CONFIG_STORE_ID
@@ -78,7 +68,7 @@ export async function lookupTenant(
           const found = items.find((it: any) => it.key === k)
           if (found) return (found.value as TenantConfig) ?? null
         }
-        // Key not in items — unknown tenant in production
+        // Key not in items — fall through to dev synthetic fallback
       } else {
         const body = await listRes.text()
         console.error(`[Edge Config] Vercel API list failed (${listRes.status}): ${body}`)
@@ -88,7 +78,15 @@ export async function lookupTenant(
     }
   }
 
-  // Production: tenant genuinely not found in any source
+  // ── Dev synthetic fallback ───────────────────────────────────────────────
+  // In development only: if no Edge Config credentials are available (or the
+  // key was not found), synthesize a tenant so the app still renders locally.
+  // In production, return null so middleware can redirect to /lost.
+  if (process.env.NODE_ENV !== "production") {
+    console.warn(`[Edge Config] No entry for "${subdomain}" — using synthetic tenant in dev`)
+    return { tenantId: subdomain, siteId: DEFAULT_TENANT.siteId, name: subdomain }
+  }
+
   return null
 }
 

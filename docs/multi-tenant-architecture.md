@@ -11,9 +11,9 @@
 | Tier | Identity | Access Scope |
 |------|----------|--------------|
 | **T1** | Public Visitor | Browse www + all subdomains. No auth required. Cannot access `/booking`, `/profile`, `/chat`, `/dashboard`. |
-| **T2** | Authenticated End User | Global identity. One session cookie on `.sanddiamonds.travel` → recognised on all subdomains. |
-| **T3A** | Tenant Admin | Scoped to own subdomain. Middleware blocks cross-tenant admin access. |
-| **T3B** | Super Admin | Unrestricted. Operates from `www.sanddiamonds.travel`. No tenantId constraint. |
+| **T2** | Authenticated End User | Global identity. One session cookie on `.sanddiamonds.travel` → recognised on all subdomains. Bookings scoped by uid + tenantId. |
+| **T3A** | Tenant Admin | Scoped to own subdomain. Middleware blocks cross-tenant admin access. Sees all bookings for their tenant only. |
+| **T3B** | Super Admin | Can access any portal subdomain. Dashboard data (including bookings) is always scoped to the currently-visited portal's tenantId. Platform Overview at `/dashboard/super` provides cross-tenant metrics. |
 
 ---
 
@@ -24,7 +24,9 @@
 | Public Visitor | ✓ | ✗ → Login | ✗ | ✗ | ✗ | ✗ |
 | End User | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ |
 | Tenant Admin | ✓ | ✓ | ✓ | ✗ → Redirect | ✗ | ✗ |
-| Super Admin | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Super Admin | ✓ | ✓ | ✓ | ✓ | ✓ | Portal-scoped* |
+
+> *\*Cross-Tenant Data note*: Super admins can access any portal's subdomain, but `/dashboard/admin/bookings` **always** returns bookings scoped to the current portal's `tenantId` (resolved from hostname). There is no cross-tenant bypass for booking lists. To see another tenant's bookings, the super admin navigates to that tenant's subdomain. The `/dashboard/super` panel provides platform-wide metrics but not individual booking details across tenants.
 
 ---
 
@@ -215,13 +217,32 @@ const wix = createTenantWixClient(wixSiteId)
 **Depends on Phases 2–3**
 
 ### New Files
-- `src/app/dashboard/admin/page.tsx` — Tenant Admin (own-tenant scoped)
-- `src/app/dashboard/super/page.tsx` — Super Admin (cross-tenant)
+- `src/app/dashboard/admin/page.tsx` — Tenant Admin dashboard (own-tenant scoped)
+- `src/app/dashboard/admin/bookings/page.tsx` — Tenant-scoped bookings management (all roles see only current portal's bookings)
+- `src/app/dashboard/admin/users/page.tsx` — User management
+- `src/app/dashboard/super/page.tsx` — Super Admin platform overview
+- `src/app/dashboard/super/tenants/page.tsx` — Tenant management
+- `src/lib/rules/navigation-rules.ts` — Pure nav group definitions with role gating
+- `src/components/dashboard/DashboardAside.tsx` — Role-aware dashboard sidebar
 
 ### Modified Files
 - `src/components/auth/AuthGuard.tsx` — Add `requiredRole` prop
-- `src/components/layout/desktop-shell/Sidebar.tsx` — Role-based nav items
-- `src/components/layout/MobileBottomNav.tsx` — Role-based nav items
+- `src/components/layout/desktop-shell/SidebarGroup.tsx` — Extended icon map (User, Headphones, etc.)
+- `src/types/navigation.ts` — Extended `NavGroup`, `NavItem`, `NavIconName` types
+
+### Dashboard Navigation Architecture
+- `getDashboardNavGroupsForRole(role)` returns nav groups filtered by role rank
+- Every authenticated user sees: **My Portal** (Overview, My Bookings, Saved, Concierge Chat, Profile)
+- Tenant admins additionally see: **Tenant Admin** (Dashboard, All Bookings, Concierge Admin, Settings)
+- Super admins additionally see: **Super Admin** (Platform Overview, Tenants, Users)
+
+### Booking Scoping Rule (Critical)
+The admin bookings page at `/dashboard/admin/bookings` calls `GET /api/bookings/admin-list`, which **always** scopes results by the current portal's `tenantId` resolved from the request hostname via Edge Config. This applies to ALL roles including `super_admin`. A super admin on `www` sees only www bookings; on `solnica.localhost` sees only solnica bookings.
+
+### Pages API Endpoints (Node.js runtime)
+- `src/pages/api/bookings/initiate.ts` — Create a booking (resolves tenantId + wixSiteId from hostname)
+- `src/pages/api/bookings/admin-list.ts` — List bookings for current tenant (hostname-scoped)
+- `src/pages/api/bookings/update-status.ts` — Update booking status (admin only)
 
 ---
 
@@ -268,6 +289,9 @@ export const BRAND = {
 - **Auth migration**: Session cookies layered alongside Firebase client auth (not a replacement)
 - **Single Firestore**: tenantId field + rules = isolation (no separate projects)
 - **Shared Wix Client ID**: One developer account, per-tenant Site IDs
+- **Booking tenantId resolution**: Pages API routes resolve tenantId from request hostname via `lookupTenant()` — not from JWT claims (regular users may not have tenantId in claims)
+- **Booking list scoping**: `/dashboard/admin/bookings` always filters by portal tenantId (hostname-based), even for super_admin. No cross-tenant booking list bypass.
+- **Wix multi-tenant**: `wixClient(siteId?)` — client-side passes `wixSiteId` from `useTenant()` through fetch layer; server-side resolves from hostname
 - **Excluded**: Payment processing, email delivery, audit logging, rate limiting (future work)
 
 ## Environment Variables (new)

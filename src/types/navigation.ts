@@ -13,7 +13,14 @@ export type NavIconName =
   | "calendar-days"
   | "hotel"
   | "building"
-  | "car";
+  | "car"
+  | "shield"
+  | "users"
+  | "settings"
+  | "bar-chart"
+  | "layout-dashboard"
+  | "user"
+  | "headphones";
 
 /** A single navigation link entry. */
 export interface NavItem {
@@ -32,7 +39,9 @@ export interface NavItem {
 
 /** A logical group of navigation items. */
 export interface NavGroup {
-  id: "discover" | "account";
+  id: "discover" | "account" | "portal" | "tenant-admin" | "super-admin";
   label: string;
   items: NavItem[];
+  /** Minimum role required to see this group. Omit for public groups. */
+  requiredRole?: "user" | "tenant_admin" | "super_admin";
 }

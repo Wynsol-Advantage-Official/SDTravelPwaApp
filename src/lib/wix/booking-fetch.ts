@@ -64,6 +64,7 @@ export async function initiateBooking(
   tourDate?: string,
   guests?: number,
   pickupDetails?: import("@/types/booking").PickupDetails,
+  wixSiteId?: string,
 ): Promise<BookingResult> {
   const res = await fetch("/api/bookings/initiate", {
     method: "POST",
@@ -71,7 +72,7 @@ export async function initiateBooking(
       "Content-Type": "application/json",
       Authorization: `Bearer ${idToken}`,
     },
-    body: JSON.stringify({ tourId, userPrice, tourDate, guests, pickupDetails }),
+    body: JSON.stringify({ tourId, userPrice, tourDate, guests, pickupDetails, wixSiteId }),
   })
 
   if (!res.ok) {

@@ -1,11 +1,11 @@
 import apiClient from "./client"
-import type { Accommodation } from "@/types/tour"
+import type { Room } from "@/types/tour"
 
-export async function fetchAccommodation(
+export async function fetchRoom(
   id: string,
-): Promise<Accommodation | null> {
-  const { data } = await apiClient.get("/api/wix/debug/accommodations", {
+): Promise<Room | null> {
+  const { data } = await apiClient.get("/api/wix/debug/rooms", {
     params: { id },
   })
-  return data?.accommodation ?? data ?? null
+  return data?.room ?? data ?? null
 }

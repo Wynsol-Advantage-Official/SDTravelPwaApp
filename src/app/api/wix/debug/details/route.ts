@@ -16,7 +16,7 @@ export async function GET(req: Request) {
   try {
     const result = await getTourBySlug(slug);
     if (!result) return NextResponse.json({ ok: false, error: "Tour not found or unpublished" }, { status: 404 });
-    const { tour, itinerary, destination, accommodations } = result;
+    const { tour, itinerary, destination, rooms } = result;
     return NextResponse.json(
       {
         ok: true,
@@ -24,7 +24,7 @@ export async function GET(req: Request) {
         tour,
         itinerary: { count: itinerary.length, items: itinerary },
         destination,
-        accommodations: { count: accommodations.length, items: accommodations },
+        rooms: { count: rooms.length, items: rooms },
       },
       { status: 200 }
     );

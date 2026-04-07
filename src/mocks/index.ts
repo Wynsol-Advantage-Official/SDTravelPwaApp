@@ -15,3 +15,4 @@ export { mockChatRooms, mockChatMessages, mockRoomMessages, mockClientNames } fr
 export { mockTours } from "./tours"
 export { mockActivity } from "./activity"
 export { homepageContent } from "./homepage"
+export { mockAds } from "./ads"

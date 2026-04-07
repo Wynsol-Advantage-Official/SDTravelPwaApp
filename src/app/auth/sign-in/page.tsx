@@ -16,12 +16,23 @@ export default function SignInPage() {
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
+  // Read the ?redirect= query param so that post-sign-in navigation returns
+  // the user to the page they were trying to access (preserving subdomain).
+  const redirectTo =
+    typeof window !== "undefined"
+      ? (new URLSearchParams(window.location.search).get("redirect") ?? "/dashboard")
+      : "/dashboard"
+
+  // Sanitize: only allow relative paths to prevent open-redirect attacks
+  const safeRedirect =
+    redirectTo.startsWith("/") && !redirectTo.startsWith("//") ? redirectTo : "/dashboard"
+
   // If already logged in, redirect
   useEffect(() => {
     if (!loading && user) {
-      router.replace("/dashboard")
+      router.replace(safeRedirect)
     }
-  }, [loading, user, router])
+  }, [loading, user, router, safeRedirect])
 
   if (!loading && user) {
     return null
@@ -34,7 +45,7 @@ export default function SignInPage() {
 
     try {
       await signIn(email, password)
-      router.push("/dashboard")
+      router.push(safeRedirect)
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Sign-in failed. Please try again."
@@ -56,7 +67,7 @@ export default function SignInPage() {
 
     try {
       await signInWithGoogle()
-      router.push("/dashboard")
+      router.push(safeRedirect)
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Google sign-in failed."

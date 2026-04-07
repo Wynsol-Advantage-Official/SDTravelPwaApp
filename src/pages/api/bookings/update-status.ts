@@ -31,12 +31,14 @@ export default async function handler(
 
   const idToken = authHeader.split(" ")[1]
   let uid: string
+  let callerRole: string | undefined
+  let callerTenantId: string | undefined
   try {
     const decoded = await adminAuth.verifyIdToken(idToken)
     uid = decoded.uid
+    callerRole = (decoded.role as string) ?? undefined
+    callerTenantId = (decoded.tenantId as string) ?? undefined
 
-    // Check for admin custom claim — set via Firebase Admin SDK
-    // To grant admin: adminAuth.setCustomUserClaims(uid, { admin: true })
     if (!decoded.admin) {
       return res.status(403).json({ error: "Insufficient permissions — admin role required" })
     }
@@ -60,6 +62,12 @@ export default async function handler(
 
   if (!snap.exists) {
     return res.status(404).json({ error: "Booking not found" })
+  }
+
+  // ── Tenant isolation: tenant_admin can only update their own tenant's bookings
+  const bookingTenantId = snap.data()?.tenantId as string | undefined
+  if (callerRole !== "super_admin" && callerTenantId && bookingTenantId !== callerTenantId) {
+    return res.status(403).json({ error: "Cannot modify bookings outside your tenant" })
   }
 
   const currentStatus = snap.data()?.status as string

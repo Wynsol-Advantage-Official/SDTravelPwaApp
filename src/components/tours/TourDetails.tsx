@@ -20,9 +20,10 @@ import {
   Shield,
   Copy,
 } from "lucide-react"
-import type { Tour, ItineraryDay, WixImage, Destination, Accommodation } from "@/types/tour"
+import type { Tour, ItineraryDay, WixImage, Destination, Room } from "@/types/tour"
 import dynamic from "next/dynamic"
 import { formatPrice } from "@/lib/utils/format"
+import { SaveDiamondButton } from "@/components/tours/SaveDiamondButton"
 import { TestimonialCarousel } from "@/components/tours/TestimonialCarousel"
 import type { Testimonial } from "@/components/tours/TestimonialCarousel"
 
@@ -71,14 +72,13 @@ interface TourDetailsProps {
   tour: Tour
   itinerary: ItineraryDay[]
   destination?: Destination | null
-  accommodations?: Accommodation[]
-  remoteAccImages?: Record<string, { src: string; alt?: string }>
+  rooms?: Room[]
+  remoteRoomImages?: Record<string, { src: string; alt?: string }>
   /** Testimonials fetched from Wix CMS filtered by this tour's _id */
   testimonials?: Testimonial[]
 }
 
-export function TourDetails({ tour, itinerary, destination, accommodations = [], remoteAccImages = {}, testimonials }: TourDetailsProps) {
-  const [liked, setLiked] = useState(false)
+export function TourDetails({ tour, itinerary, destination, rooms = [], remoteRoomImages = {}, testimonials }: TourDetailsProps) {
   const [shareTooltip, setShareTooltip] = useState(false)
   const [savedAccom, setSavedAccom] = useState<Set<string>>(new Set())
 
@@ -192,17 +192,12 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
 
           {/* Like / Share floating buttons */}
           <div className="absolute right-6 top-8 z-20 flex gap-2 sm:right-10">
-            <button
-              onClick={() => setLiked(!liked)}
-              aria-label={liked ? "Remove from saved" : "Save tour"}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/20 backdrop-blur-md transition-all hover:bg-white/40"
-            >
-              <Heart
-                className={`h-5 w-5 transition-colors ${
-                  liked ? "fill-red-500 text-red-500" : "text-white"
-                }`}
-              />
-            </button>
+            <SaveDiamondButton
+              tourId={tour._id}
+              tourSlug={tour.slug}
+              tourTitle={tour.title}
+              heroImageSrc={tour.heroImage.src}
+            />
 
             <div className="relative">
               <button
@@ -386,7 +381,7 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
           )}
 
           {/* ── Itinerary Timeline (Parent→Child) ──────────────────── */}
-          <ItineraryTimeline days={itinerary} accommodations={accommodations} destination={destination} />
+          <ItineraryTimeline days={itinerary} rooms={rooms} destination={destination} />
 
           {/* ── Meet Your Team — daisyUI avatars ────────────────────── */}
           <motion.section
@@ -433,8 +428,8 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
           {/* ── Testimonials ─────────────────────────────────────────── */}
           <TestimonialCarousel testimonials={testimonials ?? []} />
 
-          {/* ── Accommodation ─────────────────────────────────────── */}
-          {accommodations.length > 0 && (
+          {/* ── Room ─────────────────────────────────────── */}
+          {rooms.length > 0 && (
             <motion.section
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -446,12 +441,12 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                 Where You&apos;ll Stay
               </h2>
               <p className="mb-6 text-sm text-ocean-deep/55">
-                {accommodations.length} propert{accommodations.length === 1 ? "y" : "ies"} on this tour
+                {rooms.length} propert{rooms.length === 1 ? "y" : "ies"} on this tour
               </p>
 
               {/* Horizontal scroll on mobile, grid on lg */}
               <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-2 lg:overflow-visible xl:grid-cols-3">
-                {accommodations.map((acc) => {
+                {rooms.map((acc) => {
                   const isSaved = savedAccom.has(acc._id)
                   const DEFAULT_SRC = "/og/default.jpg"
                   // Prefer a real hero image; fall back to the first gallery image
@@ -463,7 +458,7 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
                       : null
 
                   const candidateImage =
-                    candidateFromRecord ?? (acc._id ? remoteAccImages[acc._id] ?? null : null)
+                    candidateFromRecord ?? (acc._id ? remoteRoomImages[acc._id] ?? null : null)
 
                   const hasImage = Boolean(candidateImage && candidateImage.src)
 
@@ -677,7 +672,7 @@ export function TourDetails({ tour, itinerary, destination, accommodations = [],
               <div className="tooltip tooltip-bottom w-full" data-tip="Sign in to unlock your personal referral link">
                 <div className="flex h-10 w-full items-center gap-2 rounded-lg border border-tan/30 bg-tan/10 px-3">
                   <span className="flex-1 truncate text-xs text-ocean-deep/30">
-                    sanddiamondstravel.com/ref/••••••
+                    sanddiamonds.travel/ref/••••••
                   </span>
                   <Copy className="h-3.5 w-3.5 text-ocean-deep/20" />
                 </div>

@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { wixClient } from "./client";
 import { getWixImageUrl, getWixImageDimensions } from "./media";
 import type {
@@ -5,9 +6,25 @@ import type {
   ItineraryDay,
   Activity,
   Destination,
-  Accommodation,
+  Room,
   WixImage,
 } from "@/types/tour";
+
+// ---------------------------------------------------------------------------
+// Per-request tenant siteId helper
+// ---------------------------------------------------------------------------
+// Reads the x-wix-site-id header injected by Edge Middleware so every Wix
+// query automatically targets the correct tenant site.  Outside of a request
+// context (e.g. generateStaticParams) the try/catch returns undefined and
+// wixClient() falls back to the env-var default (WIX_META_SITE_ID / www).
+async function getTenantSiteId(): Promise<string | undefined> {
+  try {
+    const hdrs = await headers();
+    return hdrs.get("x-wix-site-id") ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Collection IDs — must match the Wix CMS Dashboard exactly
@@ -15,7 +32,7 @@ import type {
 const TOURS_COLLECTION = "Tours";
 const ITINERARY_COLLECTION = "ItineraryDays";
 const DESTINATIONS_COLLECTION = "Destinations1";
-const ACCOMMODATIONS_COLLECTION = "Accommodations";
+const ROOMS_COLLECTION = "Rooms";
 
 // ---------------------------------------------------------------------------
 // Image Mapping Helper
@@ -137,7 +154,7 @@ function mapItineraryDay(item: RawItem): ItineraryDay {
     image: mapWixImage(item.image as Record<string, unknown> | string),
     activities: parseActivities(item.activities),
     meals: (item.meals as string) ?? "",
-    accommodation: (item.accommodation as string) ?? "",
+    room: (item.room as string) ?? "",
     // Populated separately via queryReferenced — Wix multi-ref fields are not
     // included in regular .query() results.
     destinations: [],
@@ -167,7 +184,7 @@ function parseAmenities(raw: unknown): string[] {
   return [];
 }
 
-function mapAccommodation(item: RawItem): Accommodation {
+function mapRoom(item: RawItem): Room {
   return {
     _id: (item._id as string) ?? "",
     // Support multiple possible FieldIDs used in Wix for legacy/imported data
@@ -211,7 +228,7 @@ function mapAccommodation(item: RawItem): Accommodation {
 export async function getTours(options?: {
   featuredOnly?: boolean;
 }): Promise<Tour[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   //console.log(client.items.query(TOURS_COLLECTION).eq("status", "published"));
@@ -287,8 +304,8 @@ export async function getTours(options?: {
  */
 export async function getTourBySlug(
   slug: string
-): Promise<{ tour: Tour; itinerary: ItineraryDay[]; destination: Destination | null; accommodations: Accommodation[] } | null> {
-  const client = wixClient();
+): Promise<{ tour: Tour; itinerary: ItineraryDay[]; destination: Destination | null; rooms: Room[] } | null> {
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
 
   // 1. Fetch the tour
@@ -417,26 +434,26 @@ export async function getTourBySlug(
     }
   }
 
-  // 4. Fetch Accommodations matching this tour
-  let accommodations: Accommodation[] = []
+  // 4. Fetch Rooms matching this tour
+  let rooms: Room[] = []
   try {
     const accResult = await client.items
-      .query(ACCOMMODATIONS_COLLECTION)
+      .query(ROOMS_COLLECTION)
       .eq("tour", tour._id)
       .find()
     if (accResult.items && accResult.items.length > 0) {
-      accommodations = (accResult.items as RawItem[]).map(mapAccommodation)
+      rooms = (accResult.items as RawItem[]).map(mapRoom)
     } else {
-      // Fallback: derive unique accommodations from itinerary days
-      const seen = new Map<string, Accommodation>()
+      // Fallback: derive unique rooms from itinerary days
+      const seen = new Map<string, Room>()
       for (const day of itinerary) {
-        if (!day.accommodation) continue
-        const key = day.accommodation.trim()
+        if (!day.room) continue
+        const key = day.room.trim()
         if (seen.has(key)) {
           // increment nights
           seen.get(key)!.nights += 1
         } else {
-          // If the accommodation text looks like a Wix UUID, use it as the
+          // If the room text looks like a Wix UUID, use it as the
           // real _id so the enrichment step below can fetch the full record.
           const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
           const isUUID = UUID_RE.test(key)
@@ -457,13 +474,13 @@ export async function getTourBySlug(
           })
         }
       }
-      accommodations = [...seen.values()]
+      rooms = [...seen.values()]
     }
   } catch {
-    // Accommodations collection may not exist yet — non-fatal
+    // Rooms collection may not exist yet — non-fatal
   }
 
-  // 5. Enrich accommodations with server-side fetched records when the
+  // 5. Enrich rooms with server-side fetched records when the
   // canonical `image` FieldID is missing. This ensures images are present
   // during SSR / prerender if Wix credentials are available. Skip
   // autogenerated itinerary-derived placeholders (ids starting with
@@ -471,14 +488,14 @@ export async function getTourBySlug(
   try {
     const DEFAULT_SRC = "/og/default.jpg"
     const enriched = await Promise.all(
-      accommodations.map(async (acc) => {
+      rooms.map(async (acc) => {
         // Skip non-resolvable placeholder stubs
         if (!acc._id || (acc._id.startsWith("itinerary-") && !acc.name)) return acc
         const hasLocalImage = acc.image?.src && acc.image.src !== DEFAULT_SRC
         const hasGallery = acc.gallery && acc.gallery.length > 0
         if (hasLocalImage && hasGallery && acc.name && acc.description) return acc
 
-        const remote = await getAccommodationById(acc._id)
+        const remote = await getRoomById(acc._id)
         if (!remote) return acc
 
         return {
@@ -494,10 +511,10 @@ export async function getTourBySlug(
         }
       })
     )
-    accommodations = enriched
+    rooms = enriched
   } catch (e) {
-    // Non-fatal: if remote fetch fails, continue with existing accommodations
-    console.warn("[tours] accommodation enrichment failed:", e)
+    // Non-fatal: if remote fetch fails, continue with existing rooms
+    console.warn("[tours] room enrichment failed:", e)
   }
 
   // Ensure `tour.duration` reflects the actual itinerary days.
@@ -514,7 +531,7 @@ export async function getTourBySlug(
     // Non-fatal — keep existing tour.duration
   }
 
-  return { tour, itinerary, destination, accommodations };
+  return { tour, itinerary, destination, rooms };
 }
 
 /**
@@ -522,7 +539,7 @@ export async function getTourBySlug(
  * to verify price against the canonical parent record.
  */
 export async function getTourById(id: string): Promise<Tour | null> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
 
   try {
@@ -544,7 +561,7 @@ export async function getTourById(id: string): Promise<Tour | null> {
  * Used by the admin-list API to enrich bookings with duration.
  */
 export async function getItineraryDayCount(tourId: string): Promise<number> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return 0;
 
   try {
@@ -585,7 +602,7 @@ export async function getItineraryDayCount(tourId: string): Promise<number> {
  * Fetch all published tour slugs — used by generateStaticParams().
  */
 export async function getAllTourSlugs(): Promise<string[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   const result = await client.items
@@ -615,7 +632,7 @@ export async function getAllTourSlugs(): Promise<string[]> {
  * Fetch a single destination by its slug. Used by the detail page.
  */
 export async function getDestinationBySlug(slug: string): Promise<Destination | null> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
   try {
     const result = await client.items
@@ -634,7 +651,7 @@ export async function getDestinationBySlug(slug: string): Promise<Destination | 
  * Fetch all destinations for the hub page.
  */
 export async function getDestinations(): Promise<Destination[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) {
     console.error("[getDestinations] Wix client not initialised — check WIX_CLIENT_ID env var");
     return [];
@@ -654,46 +671,46 @@ export async function getDestinations(): Promise<Destination[]> {
 }
 
 /**
- * Fetch a single accommodation by its Wix _id and map to our `Accommodation` type.
+ * Fetch a single room by its Wix _id and map to our `Room` type.
  */
-export async function getAccommodationById(id: string): Promise<Accommodation | null> {
-  const client = wixClient();
+export async function getRoomById(id: string): Promise<Room | null> {
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
 
   try {
     const res = await client.items
-      .query(ACCOMMODATIONS_COLLECTION)
+      .query(ROOMS_COLLECTION)
       .eq("_id", id)
       .limit(1)
       .find();
     const item = res.items?.[0] as RawItem | undefined;
-    return item ? mapAccommodation(item) : null;
+    return item ? mapRoom(item) : null;
   } catch (err) {
-    console.warn("getAccommodationById failed:", err);
+    console.warn("getRoomById failed:", err);
     return null;
   }
 }
 
 /**
- * Fetch accommodations filtered by type (e.g. "resort", "airbnb").
+ * Fetch rooms filtered by type (e.g. "resort", "airbnb").
  * Returns all matching items sorted by name ascending.
  */
-export async function fetchAccommodationsByType(
+export async function fetchRoomsByType(
   type: string,
-): Promise<Accommodation[]> {
-  const client = wixClient();
+): Promise<Room[]> {
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   try {
     const result = await client.items
-      .query(ACCOMMODATIONS_COLLECTION)
+      .query(ROOMS_COLLECTION)
       .eq("type", type)
       .ascending("resortName")
       .find();
 
-    return (result.items ?? []).map((item) => mapAccommodation(item as RawItem));
+    return (result.items ?? []).map((item) => mapRoom(item as RawItem));
   } catch (err) {
-    console.error(`[fetchAccommodationsByType] Failed for type="${type}":`, err);
+    console.error(`[fetchRoomsByType] Failed for type="${type}":`, err);
     return [];
   }
 }
@@ -778,7 +795,7 @@ export async function fetchTestimonials(
   limit = 6,
   options?: { featuredOnly?: boolean; tourId?: string },
 ): Promise<WixTestimonial[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   try {

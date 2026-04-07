@@ -1,7 +1,17 @@
+import { headers } from "next/headers";
 import { wixClient } from "./client"
 import type { BookingAvailability } from "@/types/booking"
 
 const BOOKINGS_SERVICE_SLUG = "luxury-tour-booking"
+
+async function getTenantSiteId(): Promise<string | undefined> {
+  try {
+    const hdrs = await headers();
+    return hdrs.get("x-wix-site-id") ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 /**
  * Fetch available slots for a given tour/service from Wix Bookings.
@@ -10,7 +20,7 @@ export async function getAvailability(
   startDate: string,
   endDate: string,
 ): Promise<BookingAvailability[]> {
-  const client = wixClient()
+  const client = wixClient(await getTenantSiteId())
   if (!client) return []
 
   try {

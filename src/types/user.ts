@@ -9,6 +9,8 @@ export interface UserProfile {
   phone?: string;
   avatar?: string;
   preferences?: UserPreferences;
+  /** Null for global end-users (T2). Set for tenant-scoped admins (T3A). */
+  tenantId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

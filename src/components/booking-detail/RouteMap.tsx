@@ -26,10 +26,10 @@ function buildMapQuery(itinerary: ItineraryDay[], destination: Destination | nul
     waypoints.push(destination.name)
   }
 
-  // Also add accommodation locations from itinerary
+  // Also add room locations from itinerary
   for (const day of itinerary) {
-    if (day.accommodation && !waypoints.includes(day.accommodation)) {
-      waypoints.push(day.accommodation)
+    if (day.room && !waypoints.includes(day.room)) {
+      waypoints.push(day.room)
     }
   }
 

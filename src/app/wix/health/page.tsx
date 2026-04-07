@@ -14,7 +14,7 @@ export default async function WixHealthPage() {
   const client = wixClient()
   const clientInitialized = !!client
 
-  const collections = ["Tours", "Destinations1", "Accommodations", "ItineraryDays"]
+  const collections = ["Tours", "Destinations1", "Rooms", "ItineraryDays"]
 
   const results: Record<string, { ok: boolean; totalCount?: number; error?: string }> = {}
 

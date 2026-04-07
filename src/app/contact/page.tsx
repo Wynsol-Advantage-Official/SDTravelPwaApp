@@ -28,8 +28,8 @@ const CONTACT_CHANNELS = [
       </svg>
     ),
     label: "Email",
-    value: "hello@sanddiamondstravel.com",
-    href: "mailto:hello@sanddiamondstravel.com",
+    value: "hello@sanddiamonds.travel",
+    href: "mailto:hello@sanddiamonds.travel",
   },
   {
     icon: (

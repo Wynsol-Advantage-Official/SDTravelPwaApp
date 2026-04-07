@@ -2,55 +2,84 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ── Admin helper function ──────────────────────────────────────────────
-    // Accepts either a custom-claim token (granted via grant-admin.mjs) OR
-    // a document in /admins/{uid} — whichever is present grants admin access.
-    function isAdmin() {
+    // ══════════════════════════════════════════════════════════════════════
+    // Multi-tenant helper functions (SOW §5.2)
+    // ══════════════════════════════════════════════════════════════════════
+
+    // T3B — Super Admin: unrestricted cross-tenant access
+    function isSuperAdmin() {
       return request.auth != null && (
+        request.auth.token.role == 'super_admin' ||
+        // Legacy: keep backward compat with existing admin claim during migration
         request.auth.token.admin == true ||
         exists(/databases/$(database)/documents/admins/$(request.auth.uid))
       );
     }
 
-    // ── Admins collection ──────────────────────────────────────────────────
-    // Only admins can read the admins list. Only server-side writes are allowed
-    // (allow write: if false keeps this safe from client manipulation).
+    // T3A — Tenant Admin: scoped to own tenantId
+    function isTenantAdmin(tenantId) {
+      return request.auth != null
+        && request.auth.token.role == 'tenant_admin'
+        && request.auth.token.tenantId == tenantId;
+    }
+
+    // Any authenticated user whose JWT tenantId matches the document's tenant
+    function belongsToTenant(tenantId) {
+      return request.auth != null && (
+        // Global end-users (tenantId: null) can access any tenant's public data
+        request.auth.token.tenantId == null
+        || request.auth.token.tenantId == tenantId
+      );
+    }
+
+    // ── Admins collection (legacy — kept for backward compat) ──────────
     match /admins/{uid} {
-      allow read: if isAdmin();
+      allow read: if isSuperAdmin();
       allow write: if false;
     }
 
-    // ── User Profiles & Wishlists ──────────────────────────────────────────
-    // Users can only read/write their own profile and saved diamonds.
-    // Admins (agents) can read any profile for the concierge inbox.
+    // ── Tenant Configuration (SOW §5.2) ────────────────────────────────
+    // Only Super Admin can write. Readable by Super Admin and own Tenant Admin.
+    match /tenants/{tenantId} {
+      allow read: if isSuperAdmin() || isTenantAdmin(tenantId);
+      allow write: if isSuperAdmin();
+    }
+
+    // ── User Profiles & Wishlists ──────────────────────────────────────
     match /users/{uid}/{document=**} {
       allow read: if request.auth != null &&
-        (request.auth.uid == uid || isAdmin());
+        (request.auth.uid == uid || isSuperAdmin());
       allow write: if request.auth != null && request.auth.uid == uid;
     }
 
-    // ── Concierge Chat Rooms ───────────────────────────────────────────────
-    // Each user owns a room keyed as "room_{uid}". Agents are added later.
-    // Booking-specific rooms use "booking_{bookingId}" with clientUid field.
+    // ── Concierge Chat Rooms ───────────────────────────────────────────
     match /chatRooms/{roomId} {
-      // Admins (agents) can read and write all chat rooms for the concierge inbox
-      allow read, write: if isAdmin();
+      // Super Admin can read/write all rooms
+      allow read, write: if isSuperAdmin();
 
-      // Allow if this is the user's own concierge room, or a booking room
-      // where they are the client, or they are assigned as agent
+      // Tenant Admin can read/write rooms in their tenant
+      allow read, write: if request.auth != null
+        && resource != null
+        && isTenantAdmin(resource.data.tenantId);
+
+      // Users can access their own room or rooms where they are client/agent
       allow read, write: if request.auth != null &&
         (roomId == ('room_' + request.auth.uid) ||
          (resource != null && resource.data.clientUid == request.auth.uid) ||
          (resource != null && resource.data.agentUid == request.auth.uid));
 
-      // Allows creating a new booking chat room if the user sets themselves as client
+      // Allow creating a new room if user sets themselves as client
       allow create: if request.auth != null &&
         request.resource.data.clientUid == request.auth.uid;
 
       // Messages within a chat room
       match /messages/{messageId} {
-        // Admins can read and write all messages
-        allow read, write: if isAdmin();
+        allow read, write: if isSuperAdmin();
+
+        // Tenant Admin can read/write messages in their tenant's rooms
+        allow read, write: if request.auth != null
+          && exists(/databases/$(database)/documents/chatRooms/$(roomId))
+          && isTenantAdmin(get(/databases/$(database)/documents/chatRooms/$(roomId)).data.tenantId);
 
         allow read: if request.auth != null &&
           (roomId == ('room_' + request.auth.uid) ||
@@ -67,11 +96,23 @@ service cloud.firestore {
       }
     }
 
-    // ── Bookings ───────────────────────────────────────────────────────────
-    // Clients read their own bookings. Admins read all. Writes are server-only.
+    // ── Bookings ───────────────────────────────────────────────────────
     match /bookings/{bookingId} {
-      allow read: if request.auth != null &&
-        (resource.data.uid == request.auth.uid || isAdmin());
+      // Super Admin: full access to all bookings
+      allow read, write: if isSuperAdmin();
+
+      // Tenant Admin: read/write bookings in own tenant
+      allow read, write: if request.auth != null
+        && resource != null
+        && isTenantAdmin(resource.data.tenantId);
+
+      // End users: read own bookings
+      allow read: if request.auth != null
+        && resource != null
+        && resource.data.uid == request.auth.uid
+        && belongsToTenant(resource.data.tenantId);
+
+      // Client writes remain server-only for non-admins
       allow write: if false;
     }
   }

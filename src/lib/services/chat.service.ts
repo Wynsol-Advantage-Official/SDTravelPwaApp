@@ -28,11 +28,12 @@ import type { ChatMessage, ChatRoom } from "@/types/chat"
 /**
  * Ensure the chat room document exists in Firestore before subscribing.
  * Creates with merge so existing agent-created data is preserved.
+ * The `tenantId` MUST be passed so rooms are scoped to the correct subdomain.
  */
 export async function ensureRoomExists(
   roomId: string,
   clientUid: string,
-  options?: { tourId?: string; tourSlug?: string },
+  options?: { tourId?: string; tourSlug?: string; tenantId?: string },
 ): Promise<void> {
   return _ensureRoomExists(roomId, clientUid, options)
 }
@@ -94,13 +95,15 @@ export function subscribeToMessages(
 
 /**
  * Subscribe to all chat rooms ordered by last activity (agent inbox).
- * Optionally filter by room status.
+ * Pass `tenantId` to scope rooms to a single tenant (tenant_admin).
+ * Omit for super_admin cross-tenant view.
  */
 export function subscribeToAllRooms(
   callback: (rooms: ChatRoom[]) => void,
   statusFilter?: ChatRoom["status"],
+  tenantId?: string,
 ): Unsubscribe {
-  return _subscribeToAllRooms(callback, statusFilter)
+  return _subscribeToAllRooms(callback, statusFilter, tenantId)
 }
 
 /**

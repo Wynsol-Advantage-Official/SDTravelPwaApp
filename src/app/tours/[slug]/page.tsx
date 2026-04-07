@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTourBySlug, getAllTourSlugs } from "@/lib/wix/tours";
 import { generateTourMetadata } from "@/lib/utils/seo";
-import { resolveAccommodationImages, getTestimonials } from "@/lib/services/tours.service";
+import { resolveRoomImages, getTestimonials } from "@/lib/services/tours.service";
 import { TourDetails } from "@/components/tours/TourDetails";
 
 // ---------------------------------------------------------------------------
@@ -51,7 +51,7 @@ export async function generateMetadata({
 
 function TourJsonLd({ tour }: { tour: NonNullable<Awaited<ReturnType<typeof getTourBySlug>>>["tour"] }) {
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.sanddiamondstravel.com";
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.sanddiamonds.travel";
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -92,11 +92,11 @@ export default async function TourDetailPage({ params }: TourPageProps) {
     notFound();
   }
 
-  const { tour, itinerary, destination, accommodations } = result;
+  const { tour, itinerary, destination, rooms } = result;
 
-  // Resolve missing accommodation images server-side
-  const remoteAccImages = accommodations.length > 0
-    ? await resolveAccommodationImages(accommodations)
+  // Resolve missing room images server-side
+  const remoteRoomImages = rooms.length > 0
+    ? await resolveRoomImages(rooms)
     : {};
 
   // Fetch tour-specific testimonials from Wix CMS
@@ -105,7 +105,7 @@ export default async function TourDetailPage({ params }: TourPageProps) {
   return (
     <>
       <TourJsonLd tour={tour} />
-      <TourDetails tour={tour} itinerary={itinerary} destination={destination} accommodations={accommodations} remoteAccImages={remoteAccImages} testimonials={testimonials} />
+      <TourDetails tour={tour} itinerary={itinerary} destination={destination} rooms={rooms} remoteRoomImages={remoteRoomImages} testimonials={testimonials} />
     </>
   );
 }

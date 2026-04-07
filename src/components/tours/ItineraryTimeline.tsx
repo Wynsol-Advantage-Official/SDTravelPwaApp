@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { MapPin, Utensils, BedDouble, Star } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import type { ItineraryDay, Accommodation } from "@/types/tour"
+import type { ItineraryDay, Room } from "@/types/tour"
 
 // ---------------------------------------------------------------------------
 // ItineraryTimeline — daisyUI timeline with glassmorphism child cards
@@ -16,7 +16,7 @@ import type { ItineraryDay, Accommodation } from "@/types/tour"
 
 interface ItineraryTimelineProps {
   days: ItineraryDay[]
-  accommodations?: Accommodation[]
+  rooms?: Room[]
   /** Tour-level destination used as image fallback when a day has no per-day refs */
   destination?: import("@/types/tour").Destination | null
 }
@@ -30,7 +30,7 @@ const cardVariants = {
   },
 }
 
-export function ItineraryTimeline({ days, accommodations = [], destination }: ItineraryTimelineProps) {
+export function ItineraryTimeline({ days, rooms = [], destination }: ItineraryTimelineProps) {
   const DEFAULT_SRC = "/og/default.jpg"
 
   // Helper: collect valid images from a single Destination record
@@ -103,10 +103,10 @@ export function ItineraryTimeline({ days, accommodations = [], destination }: It
                   viewport={{ once: true, margin: "-40px" }}
                   className="overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-lg backdrop-blur-md"
                 >
-                  {/* Bento grid: accommodation hero (left) + destination tiles (right) */}
+                  {/* Bento grid: room hero (left) + destination tiles (right) */}
                   {(() => {
-                    const accRef = (day.accommodation || "").trim()
-                    const matched = accommodations.find(
+                    const accRef = (day.room || "").trim()
+                    const matched = rooms.find(
                       (a) => a._id === accRef || a.name === accRef
                     )
 
@@ -143,7 +143,7 @@ export function ItineraryTimeline({ days, accommodations = [], destination }: It
                       )
                     }
 
-                    // Bento: left = accommodation (large), right = stacked destination tiles
+                    // Bento: left = room (large), right = stacked destination tiles
                     if (hasAcc) {
                       return (
                         <div className="grid h-48 gap-0.5 md:grid-cols-3">
@@ -192,7 +192,7 @@ export function ItineraryTimeline({ days, accommodations = [], destination }: It
                       )
                     }
 
-                    // Fallback: 2-3 column grid using destination images (no matched accommodation)
+                    // Fallback: 2-3 column grid using destination images (no matched room)
                     const imgs: import("@/types/tour").WixImage[] = [
                       ...(hasImage ? [day.image] : []),
                       ...dayDestImages.filter((d) => d.src !== day.image?.src),
@@ -265,8 +265,8 @@ export function ItineraryTimeline({ days, accommodations = [], destination }: It
                       </ul>
                     )}
 
-                    {/* Meals & Accommodation pills */}
-                    {(day.meals || day.accommodation) && (
+                    {/* Meals & Room pills */}
+                    {(day.meals || day.room) && (
                       <div className="mt-4 flex flex-wrap gap-2">
                         {day.meals && (
                           <span className="inline-flex items-center gap-1.5 rounded-full border border-ocean/20 bg-ocean/5 px-3 py-1 text-xs font-medium text-ocean-deep/75">
@@ -274,10 +274,10 @@ export function ItineraryTimeline({ days, accommodations = [], destination }: It
                             {day.meals}
                           </span>
                         )}
-                        {day.accommodation && (
+                        {day.room && (
                           (() => {
-                            const ref = (day.accommodation || "").trim()
-                            const matched = accommodations.find(
+                            const ref = (day.room || "").trim()
+                            const matched = rooms.find(
                               (a) => a._id === ref || a.name === ref
                             )
 
@@ -293,7 +293,7 @@ export function ItineraryTimeline({ days, accommodations = [], destination }: It
 
                               return (
                                 <Link
-                                  href={`/accommodations/${matched._id}`}
+                                  href={`/rooms/${matched._id}`}
                                   className="group mt-5 block w-full"
                                 >
                                   <div className="overflow-hidden rounded-xl border border-ocean/15 bg-white/30 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-md">
@@ -376,7 +376,7 @@ export function ItineraryTimeline({ days, accommodations = [], destination }: It
                             return (
                               <span className="inline-flex items-center gap-1.5 rounded-full border border-ocean/20 bg-ocean/5 px-3 py-1 text-xs font-medium text-ocean-deep/75">
                                 <BedDouble className="h-3 w-3 text-ocean" />
-                                {day.accommodation}
+                                {day.room}
                               </span>
                             )
                           })()

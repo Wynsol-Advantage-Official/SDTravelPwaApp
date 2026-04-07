@@ -158,6 +158,37 @@
   }
 }
 
+/* ─── Form input field ───────────────────────────────────────────────────── */
+@layer components {
+  .input-field {
+    width: 100%;
+    border-radius: 0.375rem;
+    border: 1px solid var(--lux-border, rgba(0, 0, 0, 0.15));
+    background-color: var(--color-white, #fff);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--color-ocean-deep, #1a2b3c);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .input-field::placeholder {
+    color: rgba(0, 0, 0, 0.35);
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: var(--color-ocean, #3b82f6);
+    box-shadow: 0 0 0 1px var(--color-ocean, #3b82f6);
+  }
+  :is(.dark) .input-field {
+    background-color: var(--color-luxury-base, #1a1a2e);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--color-tan-100, #f5f0eb);
+  }
+  :is(.dark) .input-field::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+}
+
 /* ─── Utility: hide scrollbar but keep scroll ────────────────────────────── */
 @layer utilities {
   .scrollbar-hide {

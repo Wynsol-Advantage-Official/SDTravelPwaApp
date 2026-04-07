@@ -61,7 +61,7 @@ export function BookingForm({
     currency,
   }: BookingFormProps) {
     const { user, loading: authLoading } = useAuth()
-  const { state, setDates, setGuests, setArrival, setAccommodation, setPickup, submit, reset } =
+  const { state, setDates, setGuests, setArrival, setRoom, setPickup, submit, reset } =
     useBooking(tourSlug, tourId, currency)
 
   // ── Core fields ──────────────────────────────────────────────────────────
@@ -191,7 +191,7 @@ export function BookingForm({
     setDates(dateInput)
     setGuests(guestInput, guestTotal)
     setArrival(arrivalChoice!)
-    if (accomChoice) setAccommodation(accomChoice)
+    if (accomChoice) setRoom(accomChoice)
     setPickup(pickup)
 
     // Pass live values directly — submit() reads stale state otherwise
@@ -250,7 +250,7 @@ export function BookingForm({
           <OptionCard
             icon={<Car className="h-5 w-5" />}
             label="Already Here"
-            sublabel="Need pickup from accommodation"
+            sublabel="Need pickup from room"
             selected={arrivalChoice === false}
             onClick={() => setArrivalChoice(false)}
           />
@@ -325,7 +325,7 @@ export function BookingForm({
         </section>
       )}
 
-      {/* ── Section 3b: Already here — accommodation type ─────────────── */}
+      {/* ── Section 3b: Already here — room type ─────────────── */}
       {arrivalChoice === false && (
         <section>
           <p className={`${labelCls} mb-3`}>Where are you staying?</p>

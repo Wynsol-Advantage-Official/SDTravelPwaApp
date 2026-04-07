@@ -1,5 +1,5 @@
 // Minimal local faker shim for demo data during development.
-// Provides only the functions used by the accommodation page.
+// Provides only the functions used by the room page.
 
 function randomChoice<T>(arr: T[]) {
   return arr[Math.floor(Math.random() * arr.length)];

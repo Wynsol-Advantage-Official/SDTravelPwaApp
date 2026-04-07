@@ -13,7 +13,7 @@ import {
   PolicySections,
 } from "@/components/booking-detail"
 import type { Booking } from "@/types/booking"
-import type { Tour, ItineraryDay, Destination, Accommodation } from "@/types/tour"
+import type { Tour, ItineraryDay, Destination, Room } from "@/types/tour"
 
 // Code-split heavy sections
 const ItinerarySection = dynamic(
@@ -51,7 +51,7 @@ interface BookingDetailData {
   tour: Tour | null
   itinerary: ItineraryDay[] | null
   destination: Destination | null
-  accommodations: Accommodation[] | null
+  rooms: Room[] | null
 }
 
 export default function BookingDetailPage() {

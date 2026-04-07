@@ -35,6 +35,8 @@ export type PickupDetails = FlightPickup | ResortPickup | AirbnbPickup
 export interface Booking {
   _id: string;
   uid: string;
+  /** Tenant this booking belongs to. All queries must filter by tenantId. */
+  tenantId: string;
   tourTitle: string;
   status: BookingStatus;
   totalPrice: number;

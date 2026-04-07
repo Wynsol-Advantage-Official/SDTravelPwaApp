@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Car } from "lucide-react";
-import { TaxiBookingForm } from "@/components/accommodations";
+import { TaxiBookingForm } from "@/components/rooms";
 
 export const metadata: Metadata = {
   title: "Book a Transfer | Sand Diamonds Travel",

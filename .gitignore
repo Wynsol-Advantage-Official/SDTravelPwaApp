@@ -48,3 +48,4 @@ next-env.d.ts
 
 # agent work sessions (local only)
 .agents-work/
+.env*.local

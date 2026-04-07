@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import type { Tour } from "@/types/tour";
 import { formatPrice } from "@/lib/utils/format";
+import { SaveDiamondButton } from "./SaveDiamondButton";
 
 // ---------------------------------------------------------------------------
 // TourCard — Luxury card with hero image, price badge, and hover scale
@@ -45,6 +46,16 @@ export function TourCard({ tour, priority = false }: TourCardProps) {
           <span className="absolute left-4 top-4 rounded-sm bg-ocean-deep/70 px-3 py-1 text-xs font-medium tracking-wide text-white backdrop-blur-sm">
             {tour.duration} Days
           </span>
+
+          {/* Save / heart button */}
+          <SaveDiamondButton
+            tourId={tour._id}
+            tourSlug={tour.slug}
+            tourTitle={tour.title}
+            heroImageSrc={tour.heroImage.src}
+            size="sm"
+            className="absolute right-3 top-3 z-10"
+          />
 
           {/* Price badge */}
           <span className="absolute bottom-4 right-4 rounded-sm bg-ocean px-4 py-1.5 text-sm font-bold text-ocean-deep">

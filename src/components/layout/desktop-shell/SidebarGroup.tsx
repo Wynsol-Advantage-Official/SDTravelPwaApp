@@ -13,6 +13,13 @@ import {
   Hotel,
   Building2,
   Car,
+  Shield,
+  Users,
+  User,
+  Headphones,
+  Settings,
+  BarChart3,
+  LayoutDashboard,
   ChevronRight,
   type LucideIcon,
 } from "lucide-react"
@@ -31,6 +38,13 @@ const ICON_MAP: Record<NavIconName, LucideIcon> = {
   hotel: Hotel,
   building: Building2,
   car: Car,
+  shield: Shield,
+  users: Users,
+  user: User,
+  headphones: Headphones,
+  settings: Settings,
+  "bar-chart": BarChart3,
+  "layout-dashboard": LayoutDashboard,
 }
 
 const itemClasses = (active: boolean, collapsed: boolean) =>

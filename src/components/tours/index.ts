@@ -1,5 +1,6 @@
 export { ItineraryTimeline } from "./ItineraryTimeline"
 export { LuxuryGallery } from "./LuxuryGallery"
+export { SaveDiamondButton } from "./SaveDiamondButton"
 export { TestimonialCarousel } from "./TestimonialCarousel"
 export type { Testimonial } from "./TestimonialCarousel"
 export { TourCard } from "./TourCard"

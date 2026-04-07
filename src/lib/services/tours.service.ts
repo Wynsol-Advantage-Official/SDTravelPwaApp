@@ -1,19 +1,19 @@
-import { fetchAccommodation } from "@/lib/api/wix"
-import { fetchTestimonials, fetchAccommodationsByType } from "@/lib/wix/tours"
-import type { Accommodation } from "@/types/tour"
+import { fetchRoom } from "@/lib/api/wix"
+import { fetchTestimonials, fetchRoomsByType } from "@/lib/wix/tours"
+import type { Room } from "@/types/tour"
 export type { WixTestimonial } from "@/lib/wix/tours"
 
 /**
- * Resolve missing accommodation images by fetching from Wix API.
- * Returns a map of accommodation _id → { src, alt }.
+ * Resolve missing room images by fetching from Wix API.
+ * Returns a map of room _id → { src, alt }.
  */
-export async function resolveAccommodationImages(
-  accommodations: Accommodation[],
+export async function resolveRoomImages(
+  rooms: Room[],
 ): Promise<Record<string, { src: string; alt?: string }>> {
   const DEFAULT_SRC = "/og/default.jpg"
   const results: Record<string, { src: string; alt?: string }> = {}
 
-  const missing = accommodations.filter((acc) => {
+  const missing = rooms.filter((acc) => {
     const hasLocal =
       (acc.image?.src && acc.image.src !== DEFAULT_SRC) ||
       (acc.gallery && acc.gallery.length > 0 && acc.gallery[0].src && acc.gallery[0].src !== DEFAULT_SRC)
@@ -22,7 +22,7 @@ export async function resolveAccommodationImages(
 
   await Promise.allSettled(
     missing.map(async (acc) => {
-      const found = await fetchAccommodation(acc._id)
+      const found = await fetchRoom(acc._id)
       if (found?.image?.src) {
         results[acc._id] = { src: found.image.src, alt: found.image.alt }
       }
@@ -45,11 +45,11 @@ export async function getTestimonials(
 }
 
 /**
- * Fetch accommodations by property type from Wix CMS.
+ * Fetch rooms by property type from Wix CMS.
  * Pass "resort" for hotels, "airbnb" for Airbnbs, etc.
  */
-export async function getAccommodationsByType(
+export async function getRoomsByType(
   type: string,
-): Promise<Accommodation[]> {
-  return fetchAccommodationsByType(type)
+): Promise<Room[]> {
+  return fetchRoomsByType(type)
 }

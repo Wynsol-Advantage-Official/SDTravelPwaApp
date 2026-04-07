@@ -17,6 +17,7 @@ export const mockUserProfile: UserProfile = {
   displayName: mockUser.displayName,
   email: mockUser.email,
   phone: "+1 (555) 234-5678",
+  tenantId: null,
   avatar: mockUser.photoURL,
   preferences: {
     favoriteDestinations: ["Caribbean", "Mediterranean", "East Africa"],

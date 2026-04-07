@@ -3,7 +3,8 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { SIDEBAR_NAV_GROUPS } from "@/lib/rules/navigation-rules"
+import { getNavGroupsForRole } from "@/lib/rules/navigation-rules"
+import { useAuth } from "@/hooks/useAuth"
 import { SidebarGroup } from "./SidebarGroup"
 import { SidebarUserCard } from "./SidebarUserCard"
 
@@ -13,6 +14,8 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed }: SidebarProps) {
   const pathname = usePathname() ?? "/"
+  const { role } = useAuth()
+  const navGroups = getNavGroupsForRole(role)
 
   return (
     <aside
@@ -43,7 +46,7 @@ export function Sidebar({ collapsed }: SidebarProps) {
         className="flex-1 overflow-y-auto px-2 scrollbar-hide"
         aria-label="Main navigation"
       >
-        {SIDEBAR_NAV_GROUPS.map((group) => (
+        {navGroups.map((group) => (
           <SidebarGroup
             key={group.id}
             group={group}

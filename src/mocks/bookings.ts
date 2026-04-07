@@ -8,6 +8,7 @@ export const mockBookings: Booking[] = [
   {
     _id: "bk-001",
     uid: "mock-uid-sd-001",
+    tenantId: "www",
     wixBookingId: "wix-bk-a1b2c3",
     tourSlug: "sahara-desert-expedition",
     tourTitle: "Sahara Desert Expedition",
@@ -26,6 +27,7 @@ export const mockBookings: Booking[] = [
   {
     _id: "bk-002",
     uid: "mock-uid-sd-001",
+    tenantId: "www",
     wixBookingId: "wix-bk-d4e5f6",
     tourSlug: "discover-the-ancient-rome",
     tourTitle: "Discover the Ancient Rome",
@@ -43,6 +45,7 @@ export const mockBookings: Booking[] = [
   {
     _id: "bk-003",
     uid: "mock-uid-sd-001",
+    tenantId: "www",
     wixBookingId: "wix-bk-g7h8i9",
     tourSlug: "cockpit-country-adventure",
     tourTitle: "Cockpit Country Adventure",
@@ -61,6 +64,7 @@ export const mockBookings: Booking[] = [
   {
     _id: "bk-004",
     uid: "mock-uid-sd-001",
+    tenantId: "www",
     wixBookingId: "wix-bk-j0k1l2",
     tourSlug: "great-barrier-reef-exploration",
     tourTitle: "Great Barrier Reef Exploration",
@@ -78,6 +82,7 @@ export const mockBookings: Booking[] = [
   {
     _id: "bk-005",
     uid: "mock-uid-sd-001",
+    tenantId: "www",
     wixBookingId: "wix-bk-m3n4o5",
     tourSlug: "paris-city-lights-tour",
     tourTitle: "Paris City Lights Tour",

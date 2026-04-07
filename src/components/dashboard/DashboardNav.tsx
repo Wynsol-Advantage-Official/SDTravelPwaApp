@@ -26,7 +26,7 @@ export function DashboardNav() {
   })
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-khaki/30 bg-white dark:border-white/10 dark:bg-ocean-deep md:top-14" aria-label="Dashboard">
+    <nav className="border-b border-khaki/30 bg-white dark:border-white/10 dark:bg-ocean-deep md:top-14" aria-label="Dashboard">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4">
         <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
           {LINKS.map(({ href, label, icon }) => {

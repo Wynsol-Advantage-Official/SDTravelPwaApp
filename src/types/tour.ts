@@ -33,7 +33,7 @@ export interface ItineraryDay {
   image: WixImage;
   activities: Activity[];
   meals: string;
-  accommodation: string;
+  room: string;
   /** Full Destination records referenced by this itinerary day (Wix multi-ref, fetched via queryReferenced) */
   destinations: Destination[];
 }
@@ -67,7 +67,7 @@ export interface WixImage {
   alt: string;
 }
 
-export interface Accommodation {
+export interface Room {
   _id: string;
   /** Property name, e.g. "Singita Grumeti Lodge" */
   name: string;

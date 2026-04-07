@@ -40,6 +40,22 @@ if (role === "tenant_admin" && !tenantId) {
   process.exit(1);
 }
 
+// Validate tenantId is a slug, not a UUID or siteId
+if (tenantId) {
+  const SLUG_RE = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/;
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-/i;
+  if (UUID_RE.test(tenantId)) {
+    console.error(`ERROR: "${tenantId}" looks like a UUID/siteId, not a tenant slug.`);
+    console.error("Use the tenant slug (e.g. 'solnica'), not the Wix siteId.");
+    process.exit(1);
+  }
+  if (!SLUG_RE.test(tenantId)) {
+    console.error(`ERROR: "${tenantId}" is not a valid subdomain slug.`);
+    console.error("Must be 1-63 chars of lowercase letters, digits, and hyphens.");
+    process.exit(1);
+  }
+}
+
 // Initialize Firebase Admin
 if (getApps().length === 0) {
   initializeApp({

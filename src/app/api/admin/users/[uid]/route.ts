@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { adminAuth } from "@/lib/firebase/admin"
+import { isValidTenantSlug } from "@/lib/rules/tenant-rules"
 
 // ---------------------------------------------------------------------------
 // /api/admin/users/[uid] — Single user operations (super_admin only)
@@ -114,6 +115,14 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       const validRoles = ["user", "tenant_admin", "super_admin"]
       const newRole = validRoles.includes(role ?? "") ? role! : (existingClaims.role as string) ?? "user"
       const newTenantId = tenantId !== undefined ? tenantId : (existingClaims.tenantId as string | null) ?? null
+
+      // Validate tenantId is a slug, not a UUID or siteId
+      if (newTenantId && !isValidTenantSlug(newTenantId)) {
+        return NextResponse.json(
+          { error: "tenantId must be a valid subdomain slug (not a UUID or siteId)" },
+          { status: 400 },
+        )
+      }
 
       const newClaims: Record<string, unknown> = {
         role: newRole,

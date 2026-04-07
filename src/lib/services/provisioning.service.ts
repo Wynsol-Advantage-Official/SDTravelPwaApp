@@ -10,6 +10,7 @@
 import { adminDb, adminAuth } from "@/lib/firebase/admin"
 import { FieldValue } from "firebase-admin/firestore"
 import { addDomainToProject, upsertTenantEdgeConfig } from "@/lib/api/vercel"
+import { isValidTenantSlug, RESERVED_SUBDOMAINS } from "@/lib/rules/tenant-rules"
 import type { Tenant } from "@/types/tenant"
 
 const BASE_DOMAIN = "sanddiamonds.travel"
@@ -33,28 +34,12 @@ export interface ProvisionResult {
 
 // ── Validation ─────────────────────────────────────────────────────────────
 
-const SUBDOMAIN_REGEX = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/
-
-const RESERVED_SUBDOMAINS = new Set([
-  "www",
-  "api",
-  "admin",
-  "app",
-  "mail",
-  "smtp",
-  "ftp",
-  "staging",
-  "dev",
-  "test",
-  "demo",
-])
-
 function validateSubdomain(raw: string): string {
   const subdomain = raw.trim().toLowerCase()
-  if (!SUBDOMAIN_REGEX.test(subdomain)) {
+  if (!isValidTenantSlug(subdomain)) {
     throw new ProvisionError(
       "INVALID_SUBDOMAIN",
-      "Subdomain must be 1-63 chars of lowercase letters, digits, and hyphens."
+      "Subdomain must be 1-63 chars of lowercase letters, digits, and hyphens (not a UUID)."
     )
   }
   if (RESERVED_SUBDOMAINS.has(subdomain)) {

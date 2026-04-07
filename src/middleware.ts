@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { lookupTenant, DEFAULT_TENANT } from "@/lib/edge-config"
 import { decodeSessionCookie, type SessionPayload } from "@/lib/auth/session"
+import { isValidTenantSlug } from "@/lib/rules/tenant-rules"
 
 // ---------------------------------------------------------------------------
 // Route classification (SOW §3.1.1)
@@ -94,7 +95,14 @@ export async function middleware(request: NextRequest) {
 
   // ── 3. Tenant Admin cross-domain enforcement (SOW §3.1.3) ──────────────
   if (session?.role === "tenant_admin" && session.tenantId) {
-    if (tenant.tenantId !== "www" && tenant.tenantId !== session.tenantId) {
+    // Guard: only redirect when tenantId is a valid slug. If it looks like a
+    // UUID (corrupted claim data), skip the redirect to avoid constructing an
+    // invalid hostname that would loop to /lost.
+    if (!isValidTenantSlug(session.tenantId)) {
+      console.warn(
+        `[Middleware] session.tenantId "${session.tenantId}" is not a valid slug — skipping cross-domain redirect`,
+      )
+    } else if (tenant.tenantId !== "www" && tenant.tenantId !== session.tenantId) {
       // Redirect tenant admin back to their own subdomain
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.hostname = `${session.tenantId}.${PRODUCTION_DOMAIN}`

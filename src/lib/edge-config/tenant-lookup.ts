@@ -68,13 +68,15 @@ export async function lookupTenant(
     }
   }
 
-  // ── 3. Dev synthetic fallback ────────────────────────────────────────────
-  // Only in non-production: return a synthetic tenant so the app renders
-  // locally without needing Edge Config credentials for every subdomain.
+  // ── 3. Not found ──────────────────────────────────────────────────────────
   // In production, returning null causes middleware to redirect to /lost.
+  // In dev, the same behaviour applies — Edge Config must contain the tenant.
   if (process.env.NODE_ENV !== "production") {
-    console.warn(`[Edge Config] No entry for "${subdomain}" — using synthetic tenant in dev`)
-    return { tenantId: subdomain, siteId: DEFAULT_TENANT.siteId, name: subdomain }
+    console.warn(
+      `[Edge Config] No entry for "${subdomain}" — redirecting to /lost.\n` +
+      `  To register this tenant in dev, run:\n` +
+      `  node scripts/provision-tenant-edge-config.mjs ${subdomain} <wixSiteId> "<Display Name>"`,
+    )
   }
 
   return null

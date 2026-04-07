@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { adminAuth, adminDb } from "@/lib/firebase/admin"
+import { isValidTenantSlug } from "@/lib/rules/tenant-rules"
 
 // ---------------------------------------------------------------------------
 // /api/admin/users — Super-admin user management
@@ -135,6 +136,14 @@ export async function POST(request: NextRequest) {
       password,
       displayName: displayName || undefined,
     })
+
+    // Validate tenantId is a slug, not a UUID or siteId
+    if (tenantId && !isValidTenantSlug(tenantId)) {
+      return NextResponse.json(
+        { error: "tenantId must be a valid subdomain slug (not a UUID or siteId)" },
+        { status: 400 },
+      )
+    }
 
     // Set custom claims
     const claims: Record<string, unknown> = { role: userRole }

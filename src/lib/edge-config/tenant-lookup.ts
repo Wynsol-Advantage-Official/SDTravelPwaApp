@@ -1,11 +1,18 @@
+// Static import required — dynamic imports do not bundle in the Edge Runtime.
+import { get } from "@vercel/edge-config"
 import type { TenantConfig } from "@/types/tenant"
 
 // ---------------------------------------------------------------------------
 // Edge Config — Tenant Lookup
 // ---------------------------------------------------------------------------
-// Reads tenant mapping from Vercel Edge Config at the network edge.
-// In development (no EDGE_CONFIG), falls back to the default "www" tenant
-// using environment variables.
+// Resolves a subdomain to its TenantConfig via Vercel Edge Config.
+// Works in both the Edge Runtime (production middleware) and Node.js (dev).
+//
+// Resolution order:
+//   1. @vercel/edge-config SDK — fast (<1 ms at edge) when EDGE_CONFIG is set
+//   2. Edge Config HTTP API — direct per-key fetch; works when SDK is not
+//      available but EDGE_CONFIG connection string is present
+//   3. Dev synthetic fallback — only in non-production; avoids /lost in dev
 // ---------------------------------------------------------------------------
 
 const DEFAULT_TENANT: TenantConfig = {
@@ -14,74 +21,57 @@ const DEFAULT_TENANT: TenantConfig = {
   name: "Sand Diamonds Travel",
 }
 
-/**
- * Resolve a subdomain to its tenant config.
- *
- * Reads from Vercel Edge Config (SDK or HTTP API fallback) in all
- * environments so that local dev reflects the same tenant→siteId mappings
- * as production. Falls back to a synthetic tenant in dev when no Edge Config
- * credentials are present or the key is not found.
- */
 export async function lookupTenant(
   subdomain: string,
 ): Promise<TenantConfig | null> {
-  // "www" or apex domain always resolves to the primary tenant
+  // "www" or apex always resolves to the primary tenant
   if (!subdomain || subdomain === "www") {
     return DEFAULT_TENANT
   }
 
-  // ── Edge Config SDK ──────────────────────────────────────────────────────
+  // ── 1. Edge Config SDK (static import — Edge-Runtime safe) ───────────────
   if (process.env.EDGE_CONFIG) {
     try {
-      const { get } = await import("@vercel/edge-config")
       const config = await get<TenantConfig>(subdomain)
       if (config) return config
-      // Key simply not found — fall through to next source
+      // Key not found — fall through
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err)
-      const isAuthError = msg.includes("Unauthorized") || msg.includes("401")
-      if (isAuthError) {
-        console.warn(`[Edge Config] SDK unauthorized for "${subdomain}" — trying Vercel API fallback`)
-      } else {
-        console.error(`[Edge Config] Lookup failed for "${subdomain}":`, err)
-        // Fall through — try API fallback before giving up
-      }
+      console.error(`[Edge Config] SDK lookup failed for "${subdomain}":`, err)
+      // Fall through to direct HTTP fetch
     }
   }
 
-  // ── Vercel Edge Config HTTP API fallback ─────────────────────────────────
-  // Used in all environments when EDGE_CONFIG_STORE_ID + VERCEL_TOKEN are set.
-  if (process.env.EDGE_CONFIG_STORE_ID && process.env.VERCEL_TOKEN) {
+  // ── 2. Edge Config item HTTP fetch (per-key, no credentials needed) ──────
+  // The EDGE_CONFIG connection string encodes the store ID and read token so
+  // we can build the per-item REST URL directly without VERCEL_TOKEN.
+  if (process.env.EDGE_CONFIG) {
     try {
-      const storeId = process.env.EDGE_CONFIG_STORE_ID
-      const candidateKeys = [subdomain, `tenant:${subdomain}`]
-      const teamQuery = process.env.VERCEL_TEAM_ID ? `?teamId=${process.env.VERCEL_TEAM_ID}` : ""
-
-      const listRes = await fetch(
-        `https://api.vercel.com/v1/edge-config/${storeId}/items${teamQuery}`,
-        { headers: { Authorization: `Bearer ${process.env.VERCEL_TOKEN}` } },
-      )
-
-      if (listRes.ok) {
-        const items = await listRes.json()
-        for (const k of candidateKeys) {
-          const found = items.find((it: any) => it.key === k)
-          if (found) return (found.value as TenantConfig) ?? null
+      // Connection string format:
+      //   https://edge-config.vercel.com/<storeId>?token=<readToken>
+      const connUrl = new URL(process.env.EDGE_CONFIG)
+      const storeId = connUrl.pathname.replace(/^\//, "")
+      const token   = connUrl.searchParams.get("token")
+      if (storeId && token) {
+        const itemUrl = `https://edge-config.vercel.com/${storeId}/item/${encodeURIComponent(subdomain)}?version=1`
+        const res = await fetch(itemUrl, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        if (res.ok) {
+          const config = await res.json() as TenantConfig
+          if (config) return config
+        } else if (res.status !== 404) {
+          console.error(`[Edge Config] HTTP item fetch failed (${res.status}) for "${subdomain}"`)
         }
-        // Key not in items — fall through to dev synthetic fallback
-      } else {
-        const body = await listRes.text()
-        console.error(`[Edge Config] Vercel API list failed (${listRes.status}): ${body}`)
       }
     } catch (err) {
-      console.error(`[Edge Config] Vercel API lookup error for "${subdomain}":`, err)
+      console.error(`[Edge Config] HTTP fetch error for "${subdomain}":`, err)
     }
   }
 
-  // ── Dev synthetic fallback ───────────────────────────────────────────────
-  // In development only: if no Edge Config credentials are available (or the
-  // key was not found), synthesize a tenant so the app still renders locally.
-  // In production, return null so middleware can redirect to /lost.
+  // ── 3. Dev synthetic fallback ────────────────────────────────────────────
+  // Only in non-production: return a synthetic tenant so the app renders
+  // locally without needing Edge Config credentials for every subdomain.
+  // In production, returning null causes middleware to redirect to /lost.
   if (process.env.NODE_ENV !== "production") {
     console.warn(`[Edge Config] No entry for "${subdomain}" — using synthetic tenant in dev`)
     return { tenantId: subdomain, siteId: DEFAULT_TENANT.siteId, name: subdomain }

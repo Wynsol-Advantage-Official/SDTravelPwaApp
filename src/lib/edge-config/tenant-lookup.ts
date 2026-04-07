@@ -29,9 +29,17 @@ export async function lookupTenant(
     return DEFAULT_TENANT
   }
 
-  // Try Edge Config SDK (fast path when EDGE_CONFIG is set).
-  // Falls through to the API fallback when the key is missing OR on auth
-  // errors (e.g. EDGE_CONFIG URL token lacks read permissions).
+  // ── Dev fast-path ────────────────────────────────────────────────────────
+  // In development, skip all external API calls (Edge Config SDK + Vercel API)
+  // and immediately return a synthetic tenant. This avoids:
+  //   1. Auth errors from EDGE_CONFIG using a vcp_ token instead of a read token
+  //   2. 400 ms+ latency per middleware invocation from the Vercel API fallback
+  //   3. Flaky dev experience when network / tokens change
+  if (process.env.NODE_ENV !== "production") {
+    return { tenantId: subdomain, siteId: DEFAULT_TENANT.siteId, name: subdomain }
+  }
+
+  // ── Production: Edge Config SDK (fast path) ──────────────────────────────
   if (process.env.EDGE_CONFIG) {
     try {
       const { get } = await import("@vercel/edge-config")
@@ -70,29 +78,17 @@ export async function lookupTenant(
           const found = items.find((it: any) => it.key === k)
           if (found) return (found.value as TenantConfig) ?? null
         }
-        // Key not in items — fall through to dev fallback
+        // Key not in items — unknown tenant in production
       } else {
         const body = await listRes.text()
         console.error(`[Edge Config] Vercel API list failed (${listRes.status}): ${body}`)
-        // Fall through to dev fallback
       }
     } catch (err) {
       console.error(`[Edge Config] Vercel API lookup error for "${subdomain}":`, err)
-      // Fall through to dev fallback
     }
   }
 
-  // ── Dev fallback ─────────────────────────────────────────────────────────
-  // In non-production, synthesise a minimal tenant so local subdomains
-  // (e.g. solnica.localhost:3000) work without provisioning every tenant
-  // into Vercel Edge Config. Reuses the default Wix site ID so pages load.
-  if (process.env.NODE_ENV !== "production") {
-    console.warn(
-      `[Edge Config] "${subdomain}" not found in any source — resolving as synthetic dev tenant.`,
-    )
-    return { tenantId: subdomain, siteId: DEFAULT_TENANT.siteId, name: subdomain }
-  }
-
+  // Production: tenant genuinely not found in any source
   return null
 }
 

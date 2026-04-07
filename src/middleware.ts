@@ -7,7 +7,7 @@ import { decodeSessionCookie, type SessionPayload } from "@/lib/auth/session"
 // ---------------------------------------------------------------------------
 
 const PROTECTED_PREFIXES = ["/booking", "/profile", "/chat", "/dashboard", "/my-bookings"]
-const STATIC_PREFIXES = ["/_next", "/api", "/icons", "/logos", "/media", "/fonts", "/sw.js", "/workbox-", "/manifest.json"]
+const STATIC_PREFIXES = ["/_next", "/api", "/icons", "/logos", "/media", "/fonts", "/sw.js", "/workbox-", "/manifest.json", "/lost"]
 
 function isProtectedRoute(pathname: string): boolean {
   return PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))
@@ -63,10 +63,17 @@ export async function middleware(request: NextRequest) {
   const tenant = await lookupTenant(subdomain)
 
   if (!tenant) {
-    // Unknown subdomain — redirect to www
+    // Unknown subdomain — send the visitor to a friendly "you might be lost" page
+    // on the main www portal rather than a bare root redirect.
     const url = request.nextUrl.clone()
-    url.hostname = `www.${PRODUCTION_DOMAIN}`
-    url.port = ""
+    if (process.env.NODE_ENV === "development") {
+      url.hostname = "localhost"
+    } else {
+      url.hostname = `www.${PRODUCTION_DOMAIN}`
+      url.port = ""
+    }
+    url.pathname = "/lost"
+    url.search = ""
     return NextResponse.redirect(url)
   }
 

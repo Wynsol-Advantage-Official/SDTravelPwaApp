@@ -1,9 +1,0 @@
-[debug] [2026-04-06T19:12:31.327Z] ----------------------------------------------------------------------
-[debug] [2026-04-06T19:12:31.330Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\developer\AppData\Local\npm-cache\_npx\7750544ccf494d8b\node_modules\firebase-tools\lib\bin\firebase.js login
-[debug] [2026-04-06T19:12:31.331Z] CLI Version:   15.13.0
-[debug] [2026-04-06T19:12:31.331Z] Platform:      win32
-[debug] [2026-04-06T19:12:31.331Z] Node Version:  v22.15.1
-[debug] [2026-04-06T19:12:31.331Z] Time:          Mon Apr 06 2026 14:12:31 GMT-0500 (Eastern Standard Time)
-[debug] [2026-04-06T19:12:31.331Z] ----------------------------------------------------------------------
-[debug] 
-[info] i  The Firebase CLI’s MCP server feature can optionally make use of Gemini in Firebase. Learn more about Gemini in Firebase and how it uses your data: https://firebase.google.com/docs/gemini-in-firebase#how-gemini-in-firebase-uses-your-data 

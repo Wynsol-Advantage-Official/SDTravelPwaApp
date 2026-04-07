@@ -3,6 +3,7 @@
 import { useReducer, useCallback } from "react"
 import { initiateBooking, type BookingResult } from "@/lib/wix/booking-fetch"
 import { getIdToken } from "@/lib/firebase/auth"
+import { useTenant } from "@/hooks/useTenant"
 import type { PickupDetails } from "@/types/booking"
 
 type Step =
@@ -101,6 +102,7 @@ function initialState(tourSlug: string, tourId: string, currency: string): Booki
 
 export function useBooking(tourSlug: string, tourId: string, currency = "USD") {
   const [state, dispatch] = useReducer(reducer, initialState(tourSlug, tourId, currency))
+  const { wixSiteId } = useTenant()
 
   const setDates = useCallback((tourDate: string) => {
     dispatch({ type: "SET_DATES", tourDate })
@@ -152,6 +154,7 @@ export function useBooking(tourSlug: string, tourId: string, currency = "USD") {
         tourDate ?? undefined,
         guests,
         pickupDetails ?? undefined,
+        wixSiteId ?? undefined,
       )
 
       dispatch({ type: "SUCCESS", result })

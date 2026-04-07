@@ -18,7 +18,9 @@ export type NavIconName =
   | "users"
   | "settings"
   | "bar-chart"
-  | "layout-dashboard";
+  | "layout-dashboard"
+  | "user"
+  | "headphones";
 
 /** A single navigation link entry. */
 export interface NavItem {
@@ -37,7 +39,7 @@ export interface NavItem {
 
 /** A logical group of navigation items. */
 export interface NavGroup {
-  id: "discover" | "account" | "tenant-admin" | "super-admin";
+  id: "discover" | "account" | "portal" | "tenant-admin" | "super-admin";
   label: string;
   items: NavItem[];
   /** Minimum role required to see this group. Omit for public groups. */

@@ -26,9 +26,23 @@ function SuperAdminDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Fetch tenants from Firestore via API (to be wired up)
-    // For now, show placeholder
-    setLoading(false)
+    let cancelled = false
+
+    async function fetchTenants() {
+      try {
+        const res = await fetch("/api/admin/tenants")
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data = await res.json()
+        if (!cancelled) setTenants(data.tenants ?? [])
+      } catch (err) {
+        console.error("[Super Dashboard] Failed to fetch tenants:", err)
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    fetchTenants()
+    return () => { cancelled = true }
   }, [])
 
   return (

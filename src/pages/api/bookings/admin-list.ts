@@ -3,6 +3,7 @@ import { adminAuth, adminDb } from "@/lib/firebase/admin"
 import { wixClient } from "@/lib/wix/client"
 import { getWixImageUrl } from "@/lib/wix/media"
 import { getItineraryDayCount } from "@/lib/wix/tours"
+import { lookupTenant } from "@/lib/edge-config"
 import type { Firestore, Query, DocumentData } from "firebase-admin/firestore"
 
 // Booking shape returned to the client (Timestamps serialised to ISO strings)
@@ -73,15 +74,25 @@ export default async function handler(
   }
 
   // ── Fetch bookings scoped by tenant ─────────────────────────────────────
-  // super_admin: sees ALL bookings across every tenant
-  // tenant_admin: sees only bookings where tenantId matches their claim
+  // Always scope to the current portal's tenantId — resolved from the request
+  // hostname via Edge Config. This applies to ALL roles including super_admin.
+  // super_admin on www sees www-tenant bookings; on solnica sees solnica bookings.
+  let effectiveTenantId: string = callerTenantId ?? "www"
+  try {
+    const host = (req.headers.host ?? "").split(":")[0]
+    const subdomain = host.includes(".") ? host.split(".")[0] : ""
+    const tenantConfig = await lookupTenant(subdomain)
+    if (tenantConfig?.tenantId) effectiveTenantId = tenantConfig.tenantId
+  } catch {
+    // fall through — use callerTenantId or "www"
+  }
+
   try {
     const db: Firestore = adminDb
     let q: Query<DocumentData> = db.collection("bookings").orderBy("createdAt", "desc")
 
-    if (callerRole !== "super_admin" && callerTenantId) {
-      q = q.where("tenantId", "==", callerTenantId)
-    }
+    // Always apply tenant filter — no role bypasses it
+    q = q.where("tenantId", "==", effectiveTenantId)
 
     const snap = await q.get()
 

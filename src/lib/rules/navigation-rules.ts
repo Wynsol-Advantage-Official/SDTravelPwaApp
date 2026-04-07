@@ -49,6 +49,19 @@ export const ACCOUNT_GROUP: NavGroup = {
 /** All sidebar navigation groups in display order. */
 export const SIDEBAR_NAV_GROUPS: NavGroup[] = [DISCOVER_GROUP];
 
+/** Portal group — authenticated user's personal dashboard areas. */
+export const PORTAL_NAV_GROUP: NavGroup = {
+  id: "portal",
+  label: "My Portal",
+  items: [
+    { id: "portal-overview", label: "Overview", href: "/dashboard", icon: "layout-dashboard", requiresAuth: true },
+    { id: "portal-bookings", label: "My Bookings", href: "/dashboard/bookings", icon: "calendar-days", requiresAuth: true },
+    { id: "portal-saved", label: "Saved Diamonds", href: "/dashboard/saved", icon: "gem", requiresAuth: true },
+    { id: "portal-chat", label: "Concierge Chat", href: "/dashboard/chat", icon: "message-circle", requiresAuth: true },
+    { id: "portal-profile", label: "Profile", href: "/dashboard/profile", icon: "user", requiresAuth: true },
+  ],
+};
+
 /** Tenant admin group — visible to tenant_admin and super_admin. */
 export const TENANT_ADMIN_GROUP: NavGroup = {
   id: "tenant-admin",
@@ -57,7 +70,7 @@ export const TENANT_ADMIN_GROUP: NavGroup = {
   items: [
     { id: "tenant-dashboard", label: "Dashboard", href: "/dashboard/admin", icon: "layout-dashboard", requiresAuth: true },
     { id: "tenant-bookings", label: "All Bookings", href: "/dashboard/admin/bookings", icon: "calendar-days", requiresAuth: true },
-    { id: "tenant-users", label: "Users", href: "/dashboard/admin/users", icon: "users", requiresAuth: true },
+    { id: "tenant-concierge", label: "Concierge Admin", href: "/dashboard/concierge", icon: "headphones", requiresAuth: true },
     { id: "tenant-settings", label: "Settings", href: "/dashboard/admin/settings", icon: "settings", requiresAuth: true },
   ],
 };
@@ -70,6 +83,7 @@ export const SUPER_ADMIN_GROUP: NavGroup = {
   items: [
     { id: "super-dashboard", label: "Platform Overview", href: "/dashboard/super", icon: "bar-chart", requiresAuth: true },
     { id: "super-tenants", label: "Tenants", href: "/dashboard/super/tenants", icon: "building", requiresAuth: true },
+    { id: "super-users", label: "Users", href: "/dashboard/admin/users", icon: "users", requiresAuth: true },
   ],
 };
 
@@ -88,6 +102,15 @@ export function getAdminNavGroupsForRole(role?: UserRole | null): NavGroup[] {
   return ADMIN_NAV_GROUPS.filter(
     (group) => userRank >= (ROLE_RANK[group.requiredRole ?? "super_admin"] ?? 999),
   );
+}
+
+/**
+ * Return dashboard nav groups including the personal "My Portal" section
+ * plus any admin groups the role is permitted to see.
+ * Every authenticated user gets PORTAL_NAV_GROUP at the top.
+ */
+export function getDashboardNavGroupsForRole(role?: UserRole | null): NavGroup[] {
+  return [PORTAL_NAV_GROUP, ...getAdminNavGroupsForRole(role)];
 }
 
 // ---------------------------------------------------------------------------

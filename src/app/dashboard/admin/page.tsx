@@ -29,35 +29,16 @@ function TenantAdminDashboard() {
         </p>
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Active Users" value="—" />
-        <StatCard label="Total Bookings" value="—" />
-        <StatCard label="Revenue (MTD)" value="—" />
-        <StatCard label="Pending Requests" value="—" />
-      </div>
-
-      {/* Placeholder sections */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="p-6">
-          <h2 className="mb-4 text-lg font-semibold text-ocean-deep dark:text-tan-100">
-            Recent Bookings
-          </h2>
-          <p className="text-sm text-ocean-deep/50 dark:text-tan-100/50">
-            Booking data will appear here once connected to Firestore queries
-            scoped to tenant: <code>{tenant.tenantId}</code>.
-          </p>
-        </Card>
-
-        <Card className="p-6">
-          <h2 className="mb-4 text-lg font-semibold text-ocean-deep dark:text-tan-100">
-            User Activity
-          </h2>
-          <p className="text-sm text-ocean-deep/50 dark:text-tan-100/50">
-            User engagement metrics will be displayed here.
-          </p>
-        </Card>
-      </div>
+      {/* Recent Bookings */}
+      <Card className="p-6">
+        <h2 className="mb-4 text-lg font-semibold text-ocean-deep dark:text-tan-100">
+          Recent Bookings
+        </h2>
+        <p className="text-sm text-ocean-deep/50 dark:text-tan-100/50">
+          Booking data will appear here once connected to Firestore queries
+          scoped to tenant: <code>{tenant.tenantId}</code>.
+        </p>
+      </Card>
 
       {/* Admin info */}
       <Card className="p-6">
@@ -80,18 +61,5 @@ function TenantAdminDashboard() {
         </dl>
       </Card>
     </div>
-  )
-}
-
-function StatCard({ label, value }: { label: string; value: string }) {
-  return (
-    <Card className="p-4">
-      <p className="text-xs font-medium uppercase tracking-wider text-ocean-deep/50 dark:text-tan-100/50">
-        {label}
-      </p>
-      <p className="mt-1 text-2xl font-bold text-ocean-deep dark:text-tan-100">
-        {value}
-      </p>
-    </Card>
   )
 }

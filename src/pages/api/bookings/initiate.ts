@@ -3,6 +3,7 @@ import { adminAuth, adminDb } from "@/lib/firebase/admin";
 import { wixClient } from "@/lib/wix/client";
 import { getWixImageUrl } from "@/lib/wix/media";
 import { FieldValue } from "firebase-admin/firestore";
+import { lookupTenant } from "@/lib/edge-config";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -133,20 +134,36 @@ export default async function handler(
 
   const idToken = authHeader.split(" ")[1];
   let uid: string;
+  let callerTenantId: string | undefined;
   try {
     const decoded = await adminAuth.verifyIdToken(idToken);
     uid = decoded.uid;
+    callerTenantId = (decoded.tenantId as string) ?? undefined;
   } catch {
     return res.status(401).json({ error: "Invalid or expired token" });
   }
 
+  // Resolve tenantId from request hostname — more reliable than JWT claims
+  // because regular users (non-admins) may not have tenantId in custom claims.
+  // e.g. solnica.localhost:3000 → "solnica"; localhost:3000 → "www"
+  let resolvedTenantId: string = callerTenantId ?? "www";
+  try {
+    const host = (req.headers.host ?? "").split(":")[0];
+    const subdomain = host.includes(".") ? host.split(".")[0] : "";
+    const tenantConfig = await lookupTenant(subdomain);
+    if (tenantConfig?.tenantId) resolvedTenantId = tenantConfig.tenantId;
+  } catch {
+    // fall through — use callerTenantId or "www"
+  }
+
   // ── Body validation ─────────────────────────────────────────────────────
-  const { tourId, userPrice, tourDate, guests, pickupDetails } = req.body as {
+  const { tourId, userPrice, tourDate, guests, pickupDetails, wixSiteId } = req.body as {
     tourId?: string;
     userPrice?: number | string;
     tourDate?: string;
     guests?: number;
     pickupDetails?: import("@/types/booking").PickupDetails;
+    wixSiteId?: string;
   };
 
   if (!tourId || typeof userPrice === "undefined") {
@@ -173,7 +190,8 @@ export default async function handler(
   }
 
   // ── Wix client ──────────────────────────────────────────────────────────
-  const client = wixClient();
+  const resolvedSiteId = typeof wixSiteId === "string" && wixSiteId.trim() ? wixSiteId.trim() : undefined;
+  const client = wixClient(resolvedSiteId);
   if (!client) {
     return res.status(500).json({ error: "Wix client not configured on server" });
   }
@@ -275,6 +293,7 @@ export default async function handler(
 
     const booking = {
       uid,
+      tenantId: resolvedTenantId,
       tourId: tourData.resolvedId,
       tourSlug: tourData.resolvedId !== tourId ? tourId : null,
       tourTitle: tourData.title,

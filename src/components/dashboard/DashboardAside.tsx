@@ -16,11 +16,14 @@ import {
   Settings,
   BarChart3,
   LayoutDashboard,
+  User,
+  Headphones,
   type LucideIcon,
 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
+import { useMockMode } from "@/hooks/useMockMode"
 import {
-  getAdminNavGroupsForRole,
+  getDashboardNavGroupsForRole,
   isNavItemActive,
 } from "@/lib/rules/navigation-rules"
 import type { NavGroup, NavItem, NavIconName } from "@/types/navigation"
@@ -44,27 +47,49 @@ const ICON_MAP: Record<NavIconName, LucideIcon> = {
   settings: Settings,
   "bar-chart": BarChart3,
   "layout-dashboard": LayoutDashboard,
+  user: User,
+  headphones: Headphones,
 }
 
 // ---------------------------------------------------------------------------
-// DashboardAside — renders nothing for non-admin roles
+// DashboardAside — portal nav for all auth users + admin sections by role
 // ---------------------------------------------------------------------------
 export function DashboardAside() {
-  const { role } = useAuth()
+  const { user, role } = useAuth()
   const pathname = usePathname() ?? "/"
+  const { isMockMode, toggleMockMode } = useMockMode()
 
-  const groups = getAdminNavGroupsForRole(role)
-  if (groups.length === 0) return null
+  // Not authenticated — render nothing
+  if (!user) return null
+
+  const groups = getDashboardNavGroupsForRole(role)
 
   return (
     <aside
-      aria-label="Admin navigation"
+      aria-label="Dashboard navigation"
       className="w-52 shrink-0 self-start sticky top-14 hidden lg:block"
     >
       <nav className="rounded-xl border border-ocean-deep/10 bg-white shadow-sm dark:border-tan-100/10 dark:bg-ocean-card">
         {groups.map((group) => (
           <AsideGroup key={group.id} group={group} pathname={pathname} />
         ))}
+
+        {/* Mock / Live toggle — preserved from DashboardNav */}
+        <div className="border-t border-ocean-deep/5 px-3 py-2 dark:border-tan-100/5">
+          <button
+            type="button"
+            onClick={toggleMockMode}
+            className={[
+              "w-full rounded-md px-2 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors",
+              isMockMode
+                ? "bg-blue-chill/10 text-blue-chill"
+                : "bg-tan-50 text-ocean-deep/50 hover:text-ocean-deep/70 dark:bg-ocean-card dark:text-white/40 dark:hover:text-white/60",
+            ].join(" ")}
+            title={isMockMode ? "Using mock data" : "Using live data"}
+          >
+            {isMockMode ? "Mock" : "Live"}
+          </button>
+        </div>
       </nav>
     </aside>
   )

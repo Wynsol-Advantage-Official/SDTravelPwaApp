@@ -19,12 +19,21 @@ export default function SignUpPage() {
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
+  // Read the ?redirect= query param so post-sign-up navigation returns the user
+  // to the page they were trying to reach (preserving subdomain).
+  const redirectTo =
+    typeof window !== "undefined"
+      ? (new URLSearchParams(window.location.search).get("redirect") ?? "/dashboard")
+      : "/dashboard"
+  const safeRedirect =
+    redirectTo.startsWith("/") && !redirectTo.startsWith("//") ? redirectTo : "/dashboard"
+
   // If already logged in, redirect
   useEffect(() => {
     if (!loading && user) {
-      router.replace("/dashboard")
+      router.replace(safeRedirect)
     }
-  }, [loading, user, router])
+  }, [loading, user, router, safeRedirect])
 
   if (!loading && user) {
     return null
@@ -48,7 +57,7 @@ export default function SignUpPage() {
 
     try {
       await signUp(email, password, displayName)
-      router.push("/dashboard")
+      router.push(safeRedirect)
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Sign-up failed. Please try again."
@@ -72,7 +81,7 @@ export default function SignUpPage() {
 
     try {
       await signInWithGoogle()
-      router.push("/dashboard")
+      router.push(safeRedirect)
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Google sign-in failed."

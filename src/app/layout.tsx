@@ -178,6 +178,11 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Favicon and icons: prefer SVG favicon, fall back to PNG assets in /icons */}
+        <link rel="icon" href="/file.svg" type="image/svg+xml" />
+        <link rel="icon" href="/icons/icon-192.png" sizes="192x192" />
+        <link rel="icon" href="/icons/icon-512.png" sizes="512x512" />
+        <link rel="shortcut icon" href="/file.svg" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
         {/* Tenant branding CSS custom properties (SOW §9) */}
         <style dangerouslySetInnerHTML={{ __html: `:root { ${cssVars} }` }} />

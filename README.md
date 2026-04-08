@@ -1,9 +1,10 @@
 # SD Travel PWA — Luxury Concierge Travel Booking Platform
 
-**"Where Every Journey Becomes a Diamond"** — A premium, modern PWA for booking bespoke luxury travel experiences with real-time concierge support and offline-first functionality.
+**"Where Every Journey Becomes a Diamond"** — A premium, modern PWA for booking bespoke luxury travel experiences with real-time concierge support, offline-first functionality, and multi-tenant affiliate support.
 
 ## Features
 
+- **Multi-Tenant Architecture** — Subdomain-based affiliate portals with Vercel Edge Config for <1ms tenant resolution. Each tenant gets isolated data, their own Wix CMS site, and optional white-label branding.
 - **Muted Video Hero with Parallax** — Premium homepage visual design with cinematic background video, fallback to static poster, and conservative parallax transitions for depth without performance impact.
 - **Accessibility-First Motion** — All parallax and animated effects respect `prefers-reduced-motion` preference; content remains fully readable and navigable without motion.
 - **Testimonials & Social Proof** — Homepage includes trust-building testimonial cards with required/optional fields and responsive layout across all device sizes.
@@ -32,10 +33,16 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=<your-project-id>
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=<your-storage-bucket>
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=<your-sender-id>
 NEXT_PUBLIC_FIREBASE_APP_ID=<your-app-id>
+FIREBASE_CLIENT_EMAIL=<your-service-account-email>
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 
-# Wix (if eCommerce integration enabled)
+# Wix (eCommerce + CMS integration)
 WIX_API_KEY=<your-wix-api-key>
-WIX_SITE_ID=<your-wix-site-id>
+WIX_META_SITE_ID=<your-default-wix-meta-site-id>
+NEXT_PUBLIC_WIX_CLIENT_ID=<your-wix-client-id>
+
+# Multi-Tenant
+EDGE_CONFIG=<your-vercel-edge-config-connection-string>
 
 # Optional: Mock mode for development/testing
 NEXT_PUBLIC_MOCK_MODE=false
@@ -91,6 +98,16 @@ npm start
 | `npm run test:ci` | Run Jest once (for CI pipelines) |
 | `npm run lint` | Check TypeScript and ESLint rules (if configured) |
 
+### Admin Scripts
+
+| Command | Purpose |
+|---|---|
+| `node scripts/grant-role.mjs <uid> <role> [tenantId]` | Assign Firebase Auth role (user, tenant_admin, super_admin) |
+| `node scripts/backfill-tenant-ids.mjs` | Initial multi-tenant data migration (add tenantId to all docs) |
+| `node scripts/provision-tenant.mjs` | Provision a new tenant (Firestore + Edge Config + DNS) |
+| `firebase deploy --only firestore:indexes` | Deploy Firestore composite indexes |
+| `firebase deploy --only firestore:rules` | Deploy Firestore security rules |
+
 ## Project Structure
 
 ```
@@ -100,49 +117,81 @@ src/
 │   ├── layout.tsx               # Root layout wrapper
 │   ├── auth/                    # Authentication pages (sign-in, sign-up)
 │   ├── booking/                 # Booking flow and details
-│   ├── dashboard/               # User dashboard (chat, bookings, profile)
+│   ├── dashboard/               # User dashboard
+│   │   ├── page.tsx             # User overview
+│   │   ├── bookings/            # User's own bookings (scoped by uid + tenantId)
+│   │   ├── admin/               # Tenant admin area
+│   │   │   ├── page.tsx         # Admin dashboard
+│   │   │   ├── bookings/        # All bookings for current tenant
+│   │   │   └── users/           # User management
+│   │   └── super/               # Super admin area
+│   │       ├── page.tsx         # Platform overview
+│   │       └── tenants/         # Tenant management
 │   ├── tours/                   # Tour catalog and detail pages
 │   ├── destinations/            # Destination guides and regional pages
 │   ├── my-bookings/             # User's active and past bookings
-│   └── api/                     # API route handlers (webhooks, proxy)
+│   └── api/                     # App Router API route handlers
+│
+├── pages/
+│   └── api/
+│       └── bookings/            # Pages API routes (Node.js runtime)
+│           ├── initiate.ts      # Create booking (multi-tenant Wix + Firestore)
+│           ├── admin-list.ts    # List bookings for current tenant (hostname-scoped)
+│           └── update-status.ts # Update booking status (admin only)
+│
+├── middleware.ts                  # Edge Middleware — tenant resolution, auth gating
 │
 ├── components/                   # Reusable React components
-│   ├── sections/                # Homepage sections (HeroVideoParallax, TestimonialsSection, etc.)
-│   ├── dashboard/               # Dashboard UI components
+│   ├── sections/                # Homepage sections (HeroVideoParallax, etc.)
+│   ├── dashboard/               # Dashboard UI (DashboardAside, BookingCard)
 │   ├── booking/                 # Booking form and card components
 │   ├── auth/                    # Authentication guard and sign-in form
-│   ├── layout/                  # Header, Footer, Navigation
+│   ├── layout/                  # Header, Footer, Navigation, SidebarGroup
 │   └── ui/                      # Generic UI primitives (buttons, modals, etc.)
 │
 ├── hooks/                        # React hooks (state + service calls)
 │   ├── useAuth.tsx              # Auth state and user context
 │   ├── useChat.ts               # Chat messaging
-│   ├── useBooking.ts            # Booking operations
+│   ├── useBooking.ts            # Booking operations (passes wixSiteId from useTenant)
+│   ├── useUserBookings.ts       # User's own bookings (tenant-scoped Firestore listener)
+│   ├── useTenant.tsx            # TenantProvider context (tenantId, wixSiteId, tenantName)
 │   └── useMockMode.tsx          # Toggle mock vs live data
 │
 ├── lib/                          # Business logic & utilities
 │   ├── services/                # Service layer (wraps Firebase, Wix)
-│   ├── firebase/                # Firebase client config
-│   ├── wix/                     # Wix SDK wrappers
+│   │   └── bookings.service.ts  # Tenant-scoped Firestore booking queries
+│   ├── firebase/                # Firebase client + admin SDK config
+│   ├── wix/                     # Wix SDK wrappers (client, tours, booking-fetch, media)
 │   ├── rules/                   # Pure business logic (no async)
+│   │   └── navigation-rules.ts  # Dashboard nav groups + role-gated navigation
+│   ├── edge-config/             # Vercel Edge Config tenant lookup
+│   │   └── tenant-lookup.ts     # lookupTenant(subdomain) → TenantConfig
 │   ├── utils/                   # Helper functions
 │   └── config/                  # Configuration constants
 │
 ├── types/                        # TypeScript domain types
 │   ├── tour.ts                  # Tour, Destination, Itinerary types
-│   ├── booking.ts               # Booking, Payment types
+│   ├── booking.ts               # Booking, Payment, BookingStatus types
+│   ├── tenant.ts                # TenantConfig, TenantBranding, UserRole
+│   ├── navigation.ts            # NavGroup, NavItem, NavIconName
 │   ├── user.ts                  # UserProfile, Preferences types
 │   ├── chat.ts                  # ChatMessage, Conversation types
 │   └── homepage.ts              # Homepage content (testimonials, logos)
 │
 ├── mocks/                        # Mock data for development
-│   ├── tours.ts                 # Sample tour listings
-│   ├── bookings.ts              # Sample bookings
-│   ├── chat.ts                  # Sample messages
-│   └── homepage.ts              # Sample testimonials, logos
 │
 └── styles/
     └── globals.css              # Global Tailwind v4 styles & theme tokens
+
+scripts/                          # Node.js admin/migration scripts
+├── grant-role.mjs               # Assign roles (user, tenant_admin, super_admin)
+├── backfill-tenant-ids.mjs      # Initial multi-tenant data migration
+├── backfill-ksmylz-tenant.mjs   # Fix tenant assignment for specific user bookings
+├── provision-tenant.mjs         # Automated tenant provisioning
+└── ...                          # Various utility scripts
+
+firestore.indexes.json            # Composite index definitions (deploy with firebase CLI)
+firestore.rules                   # Firestore security rules
 ```
 
 ## Homepage Redesign — Behavior & Validation

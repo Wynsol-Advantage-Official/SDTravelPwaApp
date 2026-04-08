@@ -429,21 +429,33 @@ Accessible to users with `tenant_admin` role. Shows:
 
 A Tenant Admin visiting `acme.sanddiamonds.travel/dashboard/admin` sees only Acme's data.
 
+### Admin Bookings Page (`/dashboard/admin/bookings`)
+
+Accessible to `tenant_admin` and `super_admin`. Displays all bookings for the **current portal's tenant** with:
+- Status filter strip (All, Pending, Hold, Awaiting Payment, Confirmed, Completed, Cancelled)
+- Search by user name, email, tour title, tour ID, UID, or tenant ID
+- Table columns: User, Tour, Tour ID, UID, Tenant, Status, Date, Price, Actions
+- Inline status update dropdown with valid state transitions
+
+**Important scoping rule**: This page **always** returns bookings scoped to the current portal's `tenantId` (resolved from the request hostname). This applies to ALL roles including `super_admin`. A super admin on `www.sanddiamonds.travel` sees only www-tenant bookings; to see another tenant's bookings, navigate to that tenant's subdomain.
+
 ### Super Admin Dashboard (`/dashboard/super`)
 
 Accessible only to users with `super_admin` role. Shows:
-- Platform-wide overview across all tenants
-- Tenant management (create, suspend, configure)
+- Platform-wide overview across all tenants (active tenant count, etc.)
+- Tenant management (create, suspend, configure) at `/dashboard/super/tenants`
 - Affiliate application review and approval
-- Cross-tenant data access
+- Cross-tenant metrics (but not cross-tenant booking details — use the per-tenant admin bookings page)
 
 ### Navigation
 
-The sidebar automatically shows different navigation items based on the user's role:
+The dashboard sidebar automatically shows navigation groups based on the user's role:
 
-- **Regular users** see: Discover + Account groups
-- **Tenant Admins** additionally see: Tenant Admin group (Dashboard, All Bookings, Users, Settings)
-- **Super Admins** additionally see: Super Admin group (Platform Overview, Tenants, Applications)
+- **All authenticated users** see: **My Portal** (Overview, My Bookings, Saved Diamonds, Concierge Chat, Profile)
+- **Tenant Admins** additionally see: **Tenant Admin** (Dashboard, All Bookings, Concierge Admin, Settings)
+- **Super Admins** additionally see: **Super Admin** (Platform Overview, Tenants, Users)
+
+Navigation groups are defined in `src/lib/rules/navigation-rules.ts` and rendered by `src/components/dashboard/DashboardAside.tsx`.
 
 ---
 
@@ -512,6 +524,9 @@ Run `npm install` first — the `@vercel/edge-config` package was added as a new
 node scripts/backfill-tenant-ids.mjs --dry-run
 node scripts/backfill-tenant-ids.mjs
 
+# Backfill a specific user's bookings to a tenant
+node scripts/backfill-ksmylz-tenant.mjs    # example: ksmylzcreations → solnica
+
 # Assign roles
 node scripts/grant-role.mjs <uid> super_admin
 node scripts/grant-role.mjs <uid> tenant_admin <tenant-id>
@@ -519,6 +534,9 @@ node scripts/grant-role.mjs <uid> user
 
 # Deploy Firestore rules
 firebase deploy --only firestore:rules
+
+# Deploy Firestore composite indexes
+firebase deploy --only firestore:indexes
 
 # Verify build
 npm run build

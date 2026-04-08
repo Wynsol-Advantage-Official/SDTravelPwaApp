@@ -44,7 +44,7 @@ export default async function DestinationRegionPage({
   const { region } = await params
   const [dest, allTours] = await Promise.all([
     getDestinationBySlug(region),
-    getTours(),
+    getTours({ activeOnly: true }),
   ])
 
   if (!dest) notFound()

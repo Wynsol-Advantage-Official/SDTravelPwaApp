@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -33,35 +33,102 @@ const FILTER_THEMES = [
 
 /** Main hero card — col 1, spans both rows */
 function HeroMainCard() {
+  const images = [
+    { src: "/media/home-hero-poster.jpg", width: 1600, height: 900, alt: "Luxury beach" },
+    { src: "/media/home-hero-2.jpg", width: 1600, height: 900, alt: "Mountain view" },
+    { src: "/media/home-hero-3.jpg", width: 1600, height: 900, alt: "City skyline" },
+  ] as const;
+
+  const [current, setCurrent] = useState<number>(0);
+  const [remoteImages, setRemoteImages] = useState<Array<{ src: string; width?: number; height?: number; alt?: string }> | null>(null);
+  const touchStartRef = React.useRef<number | null>(null);
+  const touchMoveRef = React.useRef<number | null>(null);
+
+  // Fetch Ads images from server API which wraps the Wix service
+  useEffect(() => {
+    let mounted = true;
+    async function load() {
+      try {
+        const resp = await fetch("/api/ads/list");
+        if (!resp.ok) return;
+        const json = await resp.json();
+        const items = Array.isArray(json?.items) ? json.items : [];
+        const imgs: Array<{ src: string; width?: number; height?: number; alt?: string }> = [];
+        for (const ad of items) {
+          if (Array.isArray(ad.mediaGallery) && ad.mediaGallery.length > 0) {
+            for (const g of ad.mediaGallery) {
+              if (g?.src) imgs.push({ src: g.src, width: g.width, height: g.height, alt: g.alt });
+            }
+            continue;
+          }
+          if (ad.cover?.src) imgs.push({ src: ad.cover.src, width: ad.cover.width, height: ad.cover.height, alt: ad.cover.alt });
+        }
+        if (mounted && imgs.length > 0) setRemoteImages(imgs);
+      } catch (e) {
+        // ignore — fallback to local assets
+      }
+    }
+    load();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Autoplay with dynamic length
+  useEffect(() => {
+    const list = remoteImages ?? images;
+    if (!list || list.length === 0) return;
+    const id = setInterval(() => setCurrent((c) => (c + 1) % list.length), 5000);
+    return () => clearInterval(id);
+  }, [remoteImages]);
+
   return (
     <BentoCard
       variant="default"
       span={{ col: 1, row: 2 }}
-      className="relative  flex flex-col justify-end p-5 overflow-hidden "
+      className="relative flex flex-col justify-end p-5 overflow-hidden w-full max-w-full h-full min-h-[320px] sm:min-h-[420px] lg:min-h-[520px]"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "ArrowLeft") setCurrent((c) => (c - 1 + (remoteImages ?? images).length) % (remoteImages ?? images).length);
+        if (e.key === "ArrowRight") setCurrent((c) => (c + 1) % (remoteImages ?? images).length);
+      }}
+      onTouchStart={(e) => (touchStartRef.current = e.touches?.[0]?.clientX ?? null)}
+      onTouchMove={(e) => (touchMoveRef.current = e.touches?.[0]?.clientX ?? null)}
+      onTouchEnd={() => {
+        const start = touchStartRef.current;
+        const end = touchMoveRef.current ?? start;
+        if (start == null) return;
+        const delta = end - start;
+        const threshold = 50;
+        const listLen = (remoteImages ?? images).length;
+        if (delta > threshold) setCurrent((c) => (c - 1 + listLen) % listLen);
+        else if (delta < -threshold) setCurrent((c) => (c + 1) % listLen);
+        touchStartRef.current = null;
+        touchMoveRef.current = null;
+      }}
     >
-      {/* Background image overlay */}
-      <div
-        className="absolute hidden inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: "url(/media/home-hero-poster.jpg)",
-          opacity: 0.3,
-        }}
-        aria-hidden="true"
-      />
-      {/* Gradient scrim for text legibility */}
-      <div
-        className="absolute hidden inset-0 bg-gradient-to-t from-luxgold-dim via-blue-chill-dim/60 to-transparent "
+      {/* touch refs */}
+      
+      {/* Image gallery background */}
+      <img
+        src={(remoteImages ?? images)[current % (remoteImages ? remoteImages.length : images.length)].src}
+        alt={(remoteImages ?? images)[current % (remoteImages ? remoteImages.length : images.length)].alt ?? "Hero background"}
+        className="absolute inset-0 w-full h-full object-cover opacity-90"
         aria-hidden="true"
       />
 
-      <div className="absolute -z-10 hidden flex-col gap-4">
+      {/* Gradient scrim for text legibility */}
+      <div className="absolute hidden inset-0 bg-gradient-to-tr from-luxgold-dim via-blue-chill-dim/60 to-transparent" aria-hidden="true" />
+
+      <div className="absolute left-6 bottom-6 z-10 flex flex-col gap-4 max-w-[60ch] hidden">
         {/* Eyebrow */}
         <span className="font-sans text-[9px] uppercase tracking-[0.14em] text-white/60">
           Featured Collection 2026
         </span>
 
         {/* Headline */}
-        <h1 className="font-sans text-[38px] leading-tight max-w-[11ch] text-white">
+        <h1 className="font-sans text-[38px] leading-tight max-w-[40ch] text-white">
           Where Every Journey Becomes a{" "}
           <em className="italic text-blue-chill-300">Diamond</em>
         </h1>
@@ -76,9 +143,43 @@ function HeroMainCard() {
           </Link>
         </div>
       </div>
-      <iframe src="https://www.canva.com/design/DAG5A4NGFLc/kBfefmld-zTZxj_Op7hCGQ/view?embed"  title="Hero video" className="absolute z-1000  inset-0
-       m-0 pb-5   h-fit scale-109   aspect-[5/6]" aria-hidden="true" />
-        
+
+      {/* Gallery controls */}
+      <button
+        aria-label="Previous image"
+        onClick={() => setCurrent((c) => {
+          const len = (remoteImages ?? images).length || 1;
+          return (c - 1 + len) % len;
+        })}
+        className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white hover:bg-black/40 focus:outline-none"
+      >
+        ‹
+      </button>
+
+      <button
+        aria-label="Next image"
+        onClick={() => setCurrent((c) => (c + 1) % (remoteImages ?? images).length)}
+        className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white hover:bg-black/40 focus:outline-none"
+      >
+        ›
+      </button>
+
+      {/* Thumbnail strip (desktop) */}
+      <div className="absolute left-6 right-6 bottom-20 md:bottom-6 hidden md:flex items-center gap-2 z-10">
+        {(remoteImages ?? images).map((img, i) => (
+          <button
+            key={img.src}
+            onClick={() => setCurrent(i)}
+            aria-label={`Show image ${i + 1}`}
+            className={`h-12 w-20 overflow-hidden rounded-md border-2 transition-opacity ${
+              i === current ? "border-white opacity-100" : "border-transparent opacity-60"
+            }`}
+          >
+            <img src={img.src} alt={img.alt ?? ""} className="w-full h-full object-cover" />
+          </button>
+        ))}
+      </div>
+
     </BentoCard>
   );
 }
@@ -295,21 +396,21 @@ export function LuxuryHero() {
       <Reveal>
         {/* Desktop / large-screen bento grid */}
         <div className="hidden lg:block">
-          <BentoGrid columns="1fr 1fr 280px" rows="260px 180px" gap={10}>
+          <BentoGrid columns="2fr" rows="360px 180px" gap={10}>
             {/* Col 1, rows 1–2 */}
             <HeroMainCard />
 
-            {/* Col 2, row 1 */}
-            <SearchCard />
+            {/* Col 2, row 1 
+            <SearchCard />*/}
 
-            {/* Col 2, row 2 */}
-            <QuickFilterCard />
+            {/* Col 2, row 2 
+            <QuickFilterCard />*/}
 
-            {/* Col 3, rows 1–2 — side stack wrapper */}
-            <div className="flex flex-col gap-[10px]" style={{ gridRow: "1 / -1" }}>
+            {/* Col 3, rows 1–2 — side stack wrapper 
+            <div className="hidden flex flex-col gap-[10px]" style={{ gridRow: "1 / -1" }}>
               <WeatherCard />
               <ConciergeCard />
-            </div>
+            </div>*/}
           </BentoGrid>
         </div>
 

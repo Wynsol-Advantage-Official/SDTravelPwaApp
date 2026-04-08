@@ -84,10 +84,8 @@ function HeroMainCard() {
   }, [remoteImages]);
 
   return (
-    <BentoCard
-      variant="default"
-      span={{ col: 1, row: 2 }}
-      className="relative flex flex-col justify-end p-5 overflow-hidden w-full max-w-full h-full min-h-[320px] sm:min-h-[420px] lg:min-h-[520px]"
+    <div
+      className="w-full max-w-full"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === "ArrowLeft") setCurrent((c) => (c - 1 + (remoteImages ?? images).length) % (remoteImages ?? images).length);
@@ -99,7 +97,7 @@ function HeroMainCard() {
         const start = touchStartRef.current;
         const end = touchMoveRef.current ?? start;
         if (start == null) return;
-        const delta = end - start;
+        const delta = (end as number) - start;
         const threshold = 50;
         const listLen = (remoteImages ?? images).length;
         if (delta > threshold) setCurrent((c) => (c - 1 + listLen) % listLen);
@@ -108,6 +106,11 @@ function HeroMainCard() {
         touchMoveRef.current = null;
       }}
     >
+      <BentoCard
+        variant="default"
+        span={{ col: 1, row: 2 }}
+        className="relative flex flex-col justify-end p-5 overflow-hidden w-full max-w-full h-full min-h-[320px] sm:min-h-[420px] lg:min-h-[520px]"
+      >
       {/* touch refs */}
       
       {/* Image gallery background */}
@@ -181,6 +184,7 @@ function HeroMainCard() {
       </div>
 
     </BentoCard>
+    </div>
   );
 }
 

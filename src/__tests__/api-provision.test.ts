@@ -84,9 +84,7 @@ describe('POST /api/tenants/provision', () => {
 
   it('maps ProvisionError to proper status', async () => {
     ;(adminAuth.verifyIdToken as jest.Mock).mockResolvedValue({ uid: 'u1', role: 'super_admin' })
-    const err = new ProvisionError('Subdomain taken')
-    // @ts-ignore set code
-    err.code = 'SUBDOMAIN_TAKEN'
+    const err = new ProvisionError('SUBDOMAIN_TAKEN', 'Subdomain taken')
     ;(provisionTenant as jest.Mock).mockRejectedValue(err)
     const res = await POST(makeReq('token', { subdomain: 'x', tenantName: 'X', wixSiteId: 'w1', adminUid: 'u2' }))
     expect(res.status).toBe(409)

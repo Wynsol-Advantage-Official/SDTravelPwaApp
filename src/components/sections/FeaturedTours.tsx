@@ -11,7 +11,7 @@ import { TourCard } from "@/components/tours/TourCard";
 // ---------------------------------------------------------------------------
 
 export async function FeaturedTours() {
-  const tours = await getTours({ featuredOnly: true });
+  const tours = await getTours({ featuredOnly: true, activeOnly: true });
 
   if (tours.length === 0) return null;
 

@@ -173,7 +173,7 @@ function EmptyState() {
 /* ------------------------------------------------------------------ */
 
 export async function LuxuryToursStats() {
-  const allTours = await getTours();
+  const allTours = await getTours({ featuredOnly: true, activeOnly: true });
   const tours = allTours.slice(0, 3);
 
   return (

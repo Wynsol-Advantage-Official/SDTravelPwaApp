@@ -203,9 +203,9 @@ function mapRoom(item: RawItem): Room {
     // Prefer a few possible image FieldIDs (Resort Image, image, heroImage)
     image: mapWixImage(
       (item.resortImage as Record<string, unknown> | string) ??
-        (item["Resort Image"] as Record<string, unknown> | string) ??
-        (item.image as Record<string, unknown> | string) ??
-        (item.heroImage as Record<string, unknown> | string)
+      (item["Resort Image"] as Record<string, unknown> | string) ??
+      (item.image as Record<string, unknown> | string) ??
+      (item.heroImage as Record<string, unknown> | string)
     ),
     gallery: mapGallery(item.gallery),
     pricePerNight: (item.pricePerNight as number) ?? (item.price as number) ?? 0,
@@ -227,18 +227,24 @@ function mapRoom(item: RawItem): Room {
  */
 export async function getTours(options?: {
   featuredOnly?: boolean;
+  activeOnly?: boolean;
 }): Promise<Tour[]> {
   const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
-  //console.log(client.items.query(TOURS_COLLECTION).eq("status", "published"));
+  // By default the service returns only published tours. Callers may opt-out
+  // by passing `activeOnly: false` (used primarily by tooling/debug routes).
+  const includeStatus = options?.activeOnly ?? true;
 
-  let query = client.items
-    .query(TOURS_COLLECTION)
-    .eq("status", "published");
-
+  let query = client.items.query(TOURS_COLLECTION);
+  // if (includeStatus) query = query.eq("status", "published");
+  console.log(query)
   if (options?.featuredOnly) {
     query = query.eq("featured", true);
+  }
+    
+  if (options?.activeOnly) {
+    query = query.eq("isActive", true);
   }
 
   let result;
@@ -253,8 +259,8 @@ export async function getTours(options?: {
     console.error("[getTours] Wix query failed:", errMsg, err);
     console.error(
       "[getTours] Check: WIX_META_SITE_ID/WIX_SITE_ID, WIX_CLIENT_ID, WIX_CLIENT_SECRET, and that the collection '" +
-        TOURS_COLLECTION +
-        "' has read permissions enabled in Wix CMS\u2192Permissions.",
+      TOURS_COLLECTION +
+      "' has read permissions enabled in Wix CMS\u2192Permissions.",
     );
     return [];
   }
@@ -764,8 +770,8 @@ function mapTestimonial(item: RawItem): WixTestimonial {
     typeof rawRef === "string"
       ? rawRef
       : typeof rawRef === "object" && rawRef !== null
-      ? ((rawRef as Record<string, unknown>)._id as string)
-      : undefined;
+        ? ((rawRef as Record<string, unknown>)._id as string)
+        : undefined;
 
   // Avatar: may be a data URI, a wix:image:// ref, or a plain URL
   const rawAvatar = (item.avatar as string) ?? "";

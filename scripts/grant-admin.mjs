@@ -12,7 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 // ---------------------------------------------------------------------------
 const SERVICE_ACCOUNT_PATH =
   process.env.GOOGLE_APPLICATION_CREDENTIALS ??
-  resolve(__dirname, "../../../../Downloads/sdtravel-firebase-app-firebase-adminsdk-fbsvc-c30ec77632.json")
+  resolve(__dirname, "./sdtravel-wynsoladv-firebase-adminsdk-fbsvc-43bc5f07a5.json")
 
 const serviceAccount = JSON.parse(readFileSync(SERVICE_ACCOUNT_PATH, "utf8"))
 

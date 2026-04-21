@@ -13,7 +13,7 @@ export async function GET(req: Request) {
 
   try {
     if (!slug) {
-      const tours = await getTours();
+      const tours = await getTours({ activeOnly: true });
       if (!tours || tours.length === 0) {
         return NextResponse.json({ ok: false, error: "No published tours available" }, { status: 404 });
       }

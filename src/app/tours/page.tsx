@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ToursPage() {
-  const tours = await getTours();
+  const tours = await getTours({ activeOnly: true });
 
   return (
     <main className="min-h-dvh bg-tan-50 dark:bg-ocean-deep">

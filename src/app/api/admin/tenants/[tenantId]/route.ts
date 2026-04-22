@@ -9,6 +9,9 @@ import { FieldValue } from "firebase-admin/firestore"
 // DELETE — delete tenant doc
 // ---------------------------------------------------------------------------
 
+// Use Node.js runtime because this route imports `firebase-admin` (server-only)
+export const runtime = 'nodejs'
+
 async function requireSuperAdmin(request: NextRequest) {
   const session = request.cookies.get("session")?.value
   if (!session) throw new AuthError("Unauthorized", 401)

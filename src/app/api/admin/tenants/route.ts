@@ -8,6 +8,9 @@ import { adminAuth, adminDb } from "@/lib/firebase/admin"
 // All endpoints require super_admin role via session cookie.
 // ---------------------------------------------------------------------------
 
+// Use Node.js runtime because this route imports `firebase-admin` (server-only)
+export const runtime = 'nodejs'
+
 async function requireSuperAdmin(request: NextRequest) {
   const session = request.cookies.get("session")?.value
   if (!session) throw new AuthError("Unauthorized", 401)

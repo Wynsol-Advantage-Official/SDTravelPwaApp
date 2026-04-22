@@ -26,7 +26,7 @@ const SERVICE_ACCOUNT_PATH =
   process.env.GOOGLE_APPLICATION_CREDENTIALS ??
   resolve(
     __dirname,
-    "./sdtravel-wynsoladv-firebase-adminsdk-fbsvc-43bc5f07a5.json",
+    "../.dev_only/sdtravel-wynsoladv-669c18b237bc.json",
   )
 
 const serviceAccount = JSON.parse(readFileSync(SERVICE_ACCOUNT_PATH, "utf8"))

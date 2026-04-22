@@ -14,7 +14,8 @@ export const DEFAULT_BRANDING: Required<TenantBranding> = {
   primaryColor: "#043750",   // ocean-deep
   accentColor: "#1282a5",    // ocean
   tagline: "Where Every Journey Becomes a Diamond",
-  supportEmail: "concierge@sanddiamonds.travel",
+  supportEmail: "support@sanddiamondstravel.com",
+  phone: "+1 876 276-7352",
 }
 
 /**
@@ -39,6 +40,7 @@ export async function getTenantBranding(
       accentColor: branding?.accentColor || DEFAULT_BRANDING.accentColor,
       tagline: branding?.tagline || DEFAULT_BRANDING.tagline,
       supportEmail: branding?.supportEmail || DEFAULT_BRANDING.supportEmail,
+      phone: branding?.phone || DEFAULT_BRANDING.phone,
     }
   } catch (err) {
     console.error(`[Branding] Failed to fetch branding for tenant ${tenantId}:`, err)

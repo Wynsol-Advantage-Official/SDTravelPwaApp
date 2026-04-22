@@ -1,33 +1,34 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import dynamic from "next/dynamic"
 import { AuthGuard } from "@/components/auth/AuthGuard"
+import {
+  TenantModalOverlay,
+  type TenantRecord,
+  type TenantBrandingDraft,
+} from "@/components/dashboard/tenants"
 import {
   Building2,
   Search,
   Pencil,
   Trash2,
-  X,
   Loader2,
   RefreshCw,
   Globe,
   CheckCircle2,
   Pause,
   Clock,
+  Plus,
 } from "lucide-react"
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-interface TenantRecord {
-  tenantId: string
-  name: string
-  domain: string
-  wixSiteId: string | null
-  status: "active" | "suspended" | "provisioning"
-  createdAt: string | null
-  updatedAt: string | null
-}
+const AddTenantWizardModal = dynamic(
+  () =>
+    import("@/components/dashboard/tenants").then(
+      (module) => module.AddTenantWizardModal,
+    ),
+  { ssr: false, loading: () => null },
+)
 
 const STATUS_BADGE: Record<string, { icon: React.ReactNode; cls: string; label: string }> = {
   active: {
@@ -66,6 +67,7 @@ function TenantsPortal() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState("")
+  const [showAddTenantWizard, setShowAddTenantWizard] = useState(false)
   const [editingTenant, setEditingTenant] = useState<TenantRecord | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<TenantRecord | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
@@ -133,13 +135,22 @@ function TenantsPortal() {
             View and manage all tenant portals, site IDs, and access
           </p>
         </div>
-        <button
-          onClick={fetchTenants}
-          className="inline-flex items-center gap-1.5 rounded-md border border-ocean-deep/20 px-3 py-2 text-sm font-medium text-ocean-deep transition-colors hover:bg-ocean-deep/5 dark:border-tan-100/20 dark:text-tan-100"
-        >
-          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-          Refresh
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={fetchTenants}
+            className="inline-flex items-center gap-1.5 rounded-md border border-ocean-deep/20 px-3 py-2 text-sm font-medium text-ocean-deep transition-colors hover:bg-ocean-deep/5 dark:border-tan-100/20 dark:text-tan-100"
+          >
+            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+            Refresh
+          </button>
+          <button
+            onClick={() => setShowAddTenantWizard(true)}
+            className="inline-flex items-center gap-1.5 rounded-md bg-ocean px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-ocean/90"
+          >
+            <Plus className="h-4 w-4" />
+            Add Tenant
+          </button>
+        </div>
       </div>
 
       {/* Search */}
@@ -265,6 +276,15 @@ function TenantsPortal() {
       )}
 
       {/* Edit modal */}
+      {showAddTenantWizard && (
+        <AddTenantWizardModal
+          onClose={() => setShowAddTenantWizard(false)}
+          onCreated={async () => {
+            await fetchTenants()
+          }}
+        />
+      )}
+
       {editingTenant && (
         <EditTenantModal
           tenant={editingTenant}
@@ -282,7 +302,7 @@ function TenantsPortal() {
 
       {/* Delete confirmation */}
       {confirmDelete && (
-        <ModalOverlay onClose={() => setConfirmDelete(null)}>
+        <TenantModalOverlay onClose={() => setConfirmDelete(null)}>
           <div className="space-y-4">
             <h2 className="text-lg font-bold text-ocean-deep dark:text-tan-100">
               Delete Tenant
@@ -309,7 +329,7 @@ function TenantsPortal() {
               </button>
             </div>
           </div>
-        </ModalOverlay>
+        </TenantModalOverlay>
       )}
     </div>
   )
@@ -330,18 +350,67 @@ function EditTenantModal({
   const [name, setName] = useState(tenant.name)
   const [wixSiteId, setWixSiteId] = useState(tenant.wixSiteId ?? "")
   const [status, setStatus] = useState(tenant.status)
+  const [branding, setBranding] = useState<TenantBrandingDraft>({
+    logo: tenant.branding?.logo ?? "",
+    primaryColor: tenant.branding?.primaryColor ?? "",
+    accentColor: tenant.branding?.accentColor ?? "",
+    tagline: tenant.branding?.tagline ?? "",
+    supportEmail: tenant.branding?.supportEmail ?? "",
+    phone: tenant.branding?.phone ?? "",
+  })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const originalBranding: TenantBrandingDraft = {
+    logo: tenant.branding?.logo ?? "",
+    primaryColor: tenant.branding?.primaryColor ?? "",
+    accentColor: tenant.branding?.accentColor ?? "",
+    tagline: tenant.branding?.tagline ?? "",
+    supportEmail: tenant.branding?.supportEmail ?? "",
+    phone: tenant.branding?.phone ?? "",
+  }
+
+  const brandingChanged =
+    branding.logo !== originalBranding.logo ||
+    branding.primaryColor !== originalBranding.primaryColor ||
+    branding.accentColor !== originalBranding.accentColor ||
+    branding.tagline !== originalBranding.tagline ||
+    branding.supportEmail !== originalBranding.supportEmail ||
+    branding.phone !== originalBranding.phone
+
+  const hasChanges =
+    name !== tenant.name ||
+    wixSiteId !== (tenant.wixSiteId ?? "") ||
+    status !== tenant.status ||
+    brandingChanged
+
+  const statusLocked = tenant.tenantId === "www"
+
+  const setBrandingField = (key: keyof TenantBrandingDraft, value: string) => {
+    setBranding((prev) => ({ ...prev, [key]: value }))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!hasChanges) {
+      onClose()
+      return
+    }
+
+    const trimmedSupportEmail = branding.supportEmail.trim()
+    if (trimmedSupportEmail && !/^\S+@\S+\.\S+$/.test(trimmedSupportEmail)) {
+      setError("Brand support email must be a valid email address")
+      return
+    }
+
     setSaving(true)
     setError(null)
     try {
       const body: Record<string, unknown> = {}
       if (name !== tenant.name) body.name = name
       if (wixSiteId !== (tenant.wixSiteId ?? "")) body.wixSiteId = wixSiteId
-      if (status !== tenant.status) body.status = status
+      if (!statusLocked && status !== tenant.status) body.status = status
+      if (brandingChanged) body.branding = branding
 
       const res = await fetch(`/api/admin/tenants/${tenant.tenantId}`, {
         method: "PATCH",
@@ -362,13 +431,14 @@ function EditTenantModal({
   }
 
   return (
-    <ModalOverlay onClose={onClose}>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <TenantModalOverlay onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-5">
         <h2 className="text-lg font-bold text-ocean-deep dark:text-tan-100">
           Edit Tenant
         </h2>
-        <p className="text-xs text-ocean-deep/50 dark:text-tan-100/50">
-          ID: {tenant.tenantId} &bull; Domain: {tenant.domain}
+
+        <p className="text-xs text-ocean-deep/60 dark:text-tan-100/60">
+          Identity and routing fields are locked to protect tenant routing integrity.
         </p>
 
         {error && (
@@ -376,6 +446,32 @@ function EditTenantModal({
             {error}
           </div>
         )}
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="block">
+            <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
+              Tenant ID
+            </span>
+            <input
+              type="text"
+              value={tenant.tenantId}
+              readOnly
+              className="input-field cursor-not-allowed bg-ocean-deep/5 font-mono text-xs text-ocean-deep/70 dark:bg-tan-100/5 dark:text-tan-100/70"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
+              Domain
+            </span>
+            <input
+              type="text"
+              value={tenant.domain}
+              readOnly
+              className="input-field cursor-not-allowed bg-ocean-deep/5 font-mono text-xs text-ocean-deep/70 dark:bg-tan-100/5 dark:text-tan-100/70"
+            />
+          </label>
+        </div>
 
         <label className="block">
           <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
@@ -401,7 +497,7 @@ function EditTenantModal({
             placeholder="e.g. d5aa434f-c121-4b4d-92ff-ca864d907891"
           />
           <span className="mt-0.5 block text-xs text-ocean-deep/50 dark:text-tan-100/50">
-            The Wix headless CMS site ID for this tenant
+            Update carefully: this controls tenant content source and booking data path.
           </span>
         </label>
 
@@ -412,13 +508,105 @@ function EditTenantModal({
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as TenantRecord["status"])}
+            disabled={statusLocked}
             className="input-field"
           >
             <option value="active">Active</option>
             <option value="suspended">Suspended</option>
             <option value="provisioning">Provisioning</option>
           </select>
+          {statusLocked && (
+            <span className="mt-0.5 block text-xs text-ocean-deep/50 dark:text-tan-100/50">
+              Primary tenant status is locked.
+            </span>
+          )}
         </label>
+
+        <div className="rounded-md border border-ocean-deep/10 bg-ocean-deep/5 p-4 dark:border-tan-100/10 dark:bg-tan-100/5">
+          <h3 className="mb-3 text-sm font-semibold text-ocean-deep dark:text-tan-100">
+            Branding Overrides
+          </h3>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block sm:col-span-2">
+              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                Logo URL
+              </span>
+              <input
+                type="text"
+                value={branding.logo}
+                onChange={(e) => setBrandingField("logo", e.target.value)}
+                className="input-field"
+                placeholder="/logos/brand/full_colour.svg"
+              />
+            </label>
+
+            <label className="block">
+              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                Primary Color
+              </span>
+              <input
+                type="text"
+                value={branding.primaryColor}
+                onChange={(e) => setBrandingField("primaryColor", e.target.value)}
+                className="input-field font-mono text-xs"
+                placeholder="#043750"
+              />
+            </label>
+
+            <label className="block">
+              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                Accent Color
+              </span>
+              <input
+                type="text"
+                value={branding.accentColor}
+                onChange={(e) => setBrandingField("accentColor", e.target.value)}
+                className="input-field font-mono text-xs"
+                placeholder="#1282a5"
+              />
+            </label>
+
+            <label className="block sm:col-span-2">
+              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                Tagline
+              </span>
+              <input
+                type="text"
+                value={branding.tagline}
+                onChange={(e) => setBrandingField("tagline", e.target.value)}
+                className="input-field"
+                placeholder="Where Every Journey Becomes a Diamond"
+              />
+            </label>
+
+            <label className="block sm:col-span-2">
+              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                Support Email
+              </span>
+              <input
+                type="email"
+                value={branding.supportEmail}
+                onChange={(e) => setBrandingField("supportEmail", e.target.value)}
+                className="input-field"
+                placeholder="concierge@sanddiamonds.travel"
+              />
+            </label>
+
+            <label className="block sm:col-span-2">
+              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                Support Phone
+              </span>
+              <input
+                type="tel"
+                value={branding.phone}
+                onChange={(e) => setBrandingField("phone", e.target.value)}
+                className="input-field"
+                placeholder="+1 876 276-7352"
+              />
+            </label>
+          </div>
+        </div>
 
         <div className="flex justify-end gap-2 pt-2">
           <button
@@ -430,7 +618,7 @@ function EditTenantModal({
           </button>
           <button
             type="submit"
-            disabled={saving}
+            disabled={saving || !hasChanges}
             className="inline-flex items-center gap-1.5 rounded-md bg-ocean px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-ocean/90 disabled:opacity-50"
           >
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -438,32 +626,7 @@ function EditTenantModal({
           </button>
         </div>
       </form>
-    </ModalOverlay>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// Shared
-// ---------------------------------------------------------------------------
-function ModalOverlay({
-  children,
-  onClose,
-}: {
-  children: React.ReactNode
-  onClose: () => void
-}) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-luxury-base">
-        <button
-          onClick={onClose}
-          className="absolute right-3 top-3 rounded-full p-1 text-ocean-deep/40 hover:text-ocean-deep dark:text-tan-100/40 dark:hover:text-tan-100"
-        >
-          <X className="h-5 w-5" />
-        </button>
-        {children}
-      </div>
-    </div>
+    </TenantModalOverlay>
   )
 }
 

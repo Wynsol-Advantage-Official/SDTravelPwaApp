@@ -2,14 +2,14 @@
 // Provisioning Service — Affiliate Onboarding (SOW §7)
 // ---------------------------------------------------------------------------
 // Orchestrates tenant creation: Firestore doc → Firebase Auth claims →
-// Vercel domain registration → Edge Config update.
+// Edge Config update.
 //
 // Server-only: imports firebase-admin SDK.
 // ---------------------------------------------------------------------------
 
 import { adminDb, adminAuth } from "@/lib/firebase/admin"
 import { FieldValue } from "firebase-admin/firestore"
-import { addDomainToProject, upsertTenantEdgeConfig } from "@/lib/api/vercel"
+import { upsertTenantEdgeConfig } from "@/lib/api/vercel"
 import { isValidTenantSlug, RESERVED_SUBDOMAINS } from "@/lib/rules/tenant-rules"
 import type { Tenant } from "@/types/tenant"
 
@@ -54,7 +54,6 @@ export type ProvisionErrorCode =
   | "INVALID_SUBDOMAIN"
   | "RESERVED_SUBDOMAIN"
   | "SUBDOMAIN_TAKEN"
-  | "VERCEL_DOMAIN_FAILED"
   | "EDGE_CONFIG_FAILED"
   | "FIRESTORE_FAILED"
   | "AUTH_CLAIMS_FAILED"
@@ -123,15 +122,9 @@ export async function provisionTenant(
     )
   }
 
-  // 4. Register domain with Vercel
-  try {
-    await addDomainToProject(domain)
-  } catch (err) {
-    // Non-fatal: log but continue — DNS may need manual config
-    console.error(`[Provisioning] Vercel domain registration failed for ${domain}:`, err)
-  }
-
-  // 5. Update Edge Config for tenant resolution
+  // 4. Update Edge Config for tenant resolution.
+  // Tenant routing uses the wildcard domain plus Edge Config, so there is no
+  // per-tenant Vercel domain registration step here.
   try {
     await upsertTenantEdgeConfig(subdomain, {
       tenantId,
@@ -142,7 +135,7 @@ export async function provisionTenant(
     console.error(`[Provisioning] Edge Config update failed for ${subdomain}:`, err)
   }
 
-  // 6. Mark tenant as active
+  // 5. Mark tenant as active
   try {
     await adminDb.collection("tenants").doc(tenantId).update({
       status: "active",

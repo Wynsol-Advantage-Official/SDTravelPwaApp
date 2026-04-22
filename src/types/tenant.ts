@@ -18,6 +18,7 @@ export interface TenantBranding {
   accentColor?: string
   tagline?: string
   supportEmail?: string
+  phone?: string
 }
 
 /** Full tenant record stored in Firestore `tenants/{tenantId}`. */

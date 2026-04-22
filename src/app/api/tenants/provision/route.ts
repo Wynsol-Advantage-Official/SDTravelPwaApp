@@ -9,7 +9,7 @@ import {
 // POST /api/tenants/provision — Create a new tenant (SOW §7.1)
 // ---------------------------------------------------------------------------
 // Requires super_admin role. Creates Firestore tenant doc, sets admin claims,
-// registers Vercel domain, and updates Edge Config.
+// and updates Edge Config for wildcard subdomain routing.
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest) {
@@ -63,7 +63,6 @@ export async function POST(request: NextRequest) {
         INVALID_SUBDOMAIN: 400,
         RESERVED_SUBDOMAIN: 400,
         SUBDOMAIN_TAKEN: 409,
-        VERCEL_DOMAIN_FAILED: 502,
         EDGE_CONFIG_FAILED: 502,
         FIRESTORE_FAILED: 500,
         AUTH_CLAIMS_FAILED: 500,

@@ -53,6 +53,7 @@ export async function GET(request: NextRequest) {
         domain: d.domain ?? `${doc.id}.sanddiamonds.travel`,
         wixSiteId: d.wixSiteId ?? null,
         status: d.status ?? "active",
+        branding: d.branding ?? null,
         createdAt: d.createdAt?.toDate?.()?.toISOString() ?? null,
         updatedAt: d.updatedAt?.toDate?.()?.toISOString() ?? null,
       }

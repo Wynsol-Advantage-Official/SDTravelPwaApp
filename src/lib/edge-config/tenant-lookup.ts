@@ -21,6 +21,10 @@ const DEFAULT_TENANT: TenantConfig = {
   name: "Sand Diamonds Travel",
 }
 
+function tenantKeys(subdomain: string) {
+  return [`tenant:${subdomain}`, subdomain]
+}
+
 export async function lookupTenant(
   subdomain: string,
 ): Promise<TenantConfig | null> {
@@ -32,8 +36,10 @@ export async function lookupTenant(
   // ── 1. Edge Config SDK (static import — Edge-Runtime safe) ───────────────
   if (process.env.EDGE_CONFIG) {
     try {
-      const config = await get<TenantConfig>(subdomain)
-      if (config) return config
+      for (const key of tenantKeys(subdomain)) {
+        const config = await get<TenantConfig>(key)
+        if (config) return config
+      }
       // Key not found — fall through
     } catch (err) {
       console.error(`[Edge Config] SDK lookup failed for "${subdomain}":`, err)
@@ -52,15 +58,17 @@ export async function lookupTenant(
       const storeId = connUrl.pathname.replace(/^\//, "")
       const token   = connUrl.searchParams.get("token")
       if (storeId && token) {
-        const itemUrl = `https://edge-config.vercel.com/${storeId}/item/${encodeURIComponent(subdomain)}?version=1`
-        const res = await fetch(itemUrl, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        if (res.ok) {
-          const config = await res.json() as TenantConfig
-          if (config) return config
-        } else if (res.status !== 404) {
-          console.error(`[Edge Config] HTTP item fetch failed (${res.status}) for "${subdomain}"`)
+        for (const key of tenantKeys(subdomain)) {
+          const itemUrl = `https://edge-config.vercel.com/${storeId}/item/${encodeURIComponent(key)}?version=1`
+          const res = await fetch(itemUrl, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          if (res.ok) {
+            const config = await res.json() as TenantConfig
+            if (config) return config
+          } else if (res.status !== 404) {
+            console.error(`[Edge Config] HTTP item fetch failed (${res.status}) for key "${key}"`)
+          }
         }
       }
     } catch (err) {

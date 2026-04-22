@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { adminAuth, adminDb } from "@/lib/firebase/admin"
 import { FieldValue } from "firebase-admin/firestore"
+import { upsertTenantEdgeConfig } from "@/lib/api/vercel"
 
 // ---------------------------------------------------------------------------
 // /api/admin/tenants/[tenantId] — Single tenant operations (super_admin)
@@ -41,9 +42,36 @@ interface RouteContext {
   params: Promise<{ tenantId: string }>
 }
 
+interface TenantBrandingInput {
+  logo?: string
+  primaryColor?: string
+  accentColor?: string
+  tagline?: string
+  supportEmail?: string
+  phone?: string
+}
+
+function sanitizeBrandingUpdate(branding?: TenantBrandingInput) {
+  if (!branding || typeof branding !== "object") return null
+
+  const entries = Object.entries(branding)
+  if (entries.length === 0) return null
+
+  const update: Record<string, unknown> = {}
+
+  for (const [key, value] of entries) {
+    if (typeof value !== "string") continue
+
+    const trimmed = value.trim()
+    update[`branding.${key}`] = trimmed ? trimmed : FieldValue.delete()
+  }
+
+  return Object.keys(update).length > 0 ? update : null
+}
+
 // ---------------------------------------------------------------------------
 // PATCH /api/admin/tenants/[tenantId]
-// Body: { name?, wixSiteId?, status? }
+// Body: { name?, wixSiteId?, status?, branding? }
 // ---------------------------------------------------------------------------
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
@@ -57,10 +85,11 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     const body = await request.json()
-    const { name, wixSiteId, status } = body as {
+    const { name, wixSiteId, status, branding } = body as {
       name?: string
       wixSiteId?: string
       status?: string
+      branding?: TenantBrandingInput
     }
 
     const update: Record<string, unknown> = {
@@ -72,10 +101,27 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       update.status = status
     }
 
+    const brandingUpdate = sanitizeBrandingUpdate(branding)
+    if (brandingUpdate) {
+      Object.assign(update, brandingUpdate)
+    }
+
     await docRef.update(update)
 
     const updated = await docRef.get()
     const d = updated.data()!
+
+    if (typeof d.wixSiteId === "string" && d.wixSiteId.trim()) {
+      try {
+        await upsertTenantEdgeConfig(tenantId, {
+          tenantId,
+          siteId: d.wixSiteId,
+          name: typeof d.name === "string" && d.name.trim() ? d.name.trim() : tenantId,
+        })
+      } catch (syncErr) {
+        console.error(`[Admin Tenants PATCH] Edge Config sync failed for ${tenantId}:`, syncErr)
+      }
+    }
 
     return NextResponse.json({
       tenantId: updated.id,
@@ -83,6 +129,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       domain: d.domain,
       wixSiteId: d.wixSiteId ?? null,
       status: d.status,
+      branding: d.branding ?? null,
     })
   } catch (err) {
     if (err instanceof AuthError) {

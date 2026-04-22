@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { headers } from "next/headers"
 import { ContactForm } from "@/components/contact/ContactForm"
 import { BRAND } from "@/lib/config/brand"
+import { getTenantBranding } from "@/lib/services/branding.service"
 import { FadeSlide, FadeSlideChild } from "@/components/ui/FadeSlide"
 
 // ---------------------------------------------------------------------------
@@ -20,40 +22,50 @@ export const metadata: Metadata = {
   },
 }
 
-const CONTACT_CHANNELS = [
-  {
-    icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-      </svg>
-    ),
-    label: "Email",
-    value: "hello@sanddiamonds.travel",
-    href: "mailto:hello@sanddiamonds.travel",
-  },
-  {
-    icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-      </svg>
-    ),
-    label: "Phone",
-    value: "+27 (0) 21 000 0000",
-    href: "tel:+27210000000",
-  },
-  {
-    icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-      </svg>
-    ),
-    label: "Location",
-    value: "Cape Town, South Africa",
-  },
-]
+function buildContactChannels(supportEmail: string, supportPhone: string) {
+  const telPhone = supportPhone.replace(/[^\d+]/g, "")
 
-export default function ContactPage() {
+  return [
+    {
+      icon: (
+        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+        </svg>
+      ),
+      label: "Email",
+      value: supportEmail,
+      href: `mailto:${supportEmail}`,
+    },
+    {
+      icon: (
+        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+        </svg>
+      ),
+      label: "Phone",
+      value: supportPhone,
+      href: `tel:${telPhone}`,
+    },
+    {
+      icon: (
+        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+        </svg>
+      ),
+      label: "Location",
+      value: "Cape Town, South Africa",
+    },
+  ]
+}
+
+export default async function ContactPage() {
+  const hdrs = await headers()
+  const tenantId = hdrs.get("x-tenant-id") ?? "www"
+  const tenantName = hdrs.get("x-tenant-name") ?? BRAND.name
+  const branding = await getTenantBranding(tenantId)
+  const contactChannels = buildContactChannels(branding.supportEmail, branding.phone)
+
   return (
     <main className="min-h-dvh bg-tan-50 dark:bg-ocean-deep">
       {/* ── Hero Header ──────────────────────────────────────────────────── */}
@@ -71,8 +83,9 @@ export default function ContactPage() {
           </FadeSlideChild>
           <FadeSlideChild>
             <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-ocean-deep/60 dark:text-white/60">
-              Have a question, need help with a booking, or ready to start
-              planning your dream journey? Our concierge team is here to help.
+              {branding.tagline}. Have a question, need help with a booking, or
+              ready to plan your next journey with {tenantName}? Our concierge
+              team is here to help.
             </p>
           </FadeSlideChild>
         </FadeSlide>
@@ -81,7 +94,7 @@ export default function ContactPage() {
       {/* ── Contact Channels ─────────────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="mb-16 grid gap-6 sm:grid-cols-3">
-          {CONTACT_CHANNELS.map((ch) => (
+          {contactChannels.map((ch) => (
             <div
               key={ch.label}
               className="flex flex-col items-center rounded-lg border border-khaki/30 bg-white p-8 text-center shadow-sm dark:border-white/10 dark:bg-ocean-card"

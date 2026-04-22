@@ -126,7 +126,7 @@ export async function upsertTenantEdgeConfig(
   config: { tenantId: string; siteId: string; name: string }
 ): Promise<void> {
   await patchEdgeConfig([
-    { operation: "upsert", key: `tenant:${subdomain}`, value: config },
+    { operation: "upsert", key: subdomain, value: config },
   ])
 }
 
@@ -137,6 +137,6 @@ export async function removeTenantEdgeConfig(
   subdomain: string
 ): Promise<void> {
   await patchEdgeConfig([
-    { operation: "delete", key: `tenant:${subdomain}` },
+    { operation: "delete", key: subdomain },
   ])
 }

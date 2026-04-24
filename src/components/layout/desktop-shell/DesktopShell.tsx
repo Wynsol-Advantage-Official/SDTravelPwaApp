@@ -45,12 +45,12 @@ export function DesktopShell({ children }: DesktopShellProps) {
       >
         {/* TopBar — desktop only */}
         <div
-          className="hidden fixed top-0 z-20 md:block"
+          className=" fixed top-0 z-20 md:block"
           style={{ left: "var(--sidebar-width)", width: "calc(100% - var(--sidebar-width))" } as React.CSSProperties}
-        >
+        ></div>
           <TopBar />
-        </div>
-        <main className="absolute bg-white z-18 top-20 overflow-auto w-full flex-1 pb-[calc(64px+env(safe-area-inset-bottom))] md:p-8 md:pb-8">
+        
+        <main className="bg-white  overflow-auto w-full flex-1 pb-[calc(64px+env(safe-area-inset-bottom))] md:p-0 md:pb-0">
           {children}
         </main>
       </div>

@@ -121,13 +121,13 @@ export function TopBar() {
 
   return (
     <header
-      className="sticky top-0 z-[90] flex h-14 items-center justify-between border-b border-khaki/50 bg-tan-50/90 px-5 backdrop-blur-[12px] transition-colors duration-300 dark:border-white/5 dark:bg-ocean-deep/92"
+      className="sticky top-0 z-[90] flex h-14 items-center justify-between border-b border-khaki/50 bg-white px-5 backdrop-blur-md transition-colors duration-300 dark:border-white/5 dark:bg-ocean-deep/92"
     >
       {/* Left: greeting + tenant info */}
       <div className="min-w-0">
         <p className="font-sans text-[16px] font-medium text-ocean-deep dark:text-white">
           <span className="font-sans italic">{greeting},</span>{" "}
-          <span className="inline-block max-w-[200px] truncate align-bottom">{name}</span>
+          <span className="inline-block max-w-50 truncate align-bottom">{name}</span>
         </p>
         <div className="mt-0.5 flex items-center gap-3 text-[12px] text-ocean-400 dark:text-blue-chill-300">
           <span className="font-semibold">{tenantName}</span>
@@ -169,7 +169,7 @@ export function TopBar() {
               }
             }}
             onKeyDown={handleKeyDown}
-            className="h-[34px] w-[240px] rounded-[var(--card-radius-compact)] border border-ocean/15 bg-white pl-8 pr-3 font-sans text-[13px] text-ocean-deep placeholder:text-ocean-400 focus:border-blue-chill focus:outline-none focus:ring-1 focus:ring-inset focus:ring-blue-chill/20 dark:border-luxborder dark:bg-ocean-card dark:text-white dark:placeholder:text-blue-chill-300"
+            className="h-8.5 w-60 rounded-(--card-radius-compact) border border-ocean/15 bg-white pl-8 pr-3 font-sans text-[13px] text-ocean-deep placeholder:text-ocean-400 focus:border-blue-chill focus:outline-none focus:ring-1 focus:ring-inset focus:ring-blue-chill/20 dark:border-luxborder dark:bg-ocean-card dark:text-white dark:placeholder:text-blue-chill-300"
           />
 
           {/* Dropdown panel */}
@@ -178,7 +178,7 @@ export function TopBar() {
               id="search-listbox"
               role="listbox"
               aria-label="Search results"
-              className="absolute left-0 top-full z-50 mt-1 max-h-[320px] w-[280px] overflow-y-auto rounded-[var(--card-radius-compact)] border border-ocean/15 bg-white shadow-lg dark:border-luxborder dark:bg-ocean-card"
+              className="absolute left-0 top-full z-50 mt-1 max-h-80 w-70 overflow-y-auto rounded-(--card-radius-compact) border border-ocean/15 bg-white shadow-lg dark:border-luxborder dark:bg-ocean-card"
             >
               {Object.entries(grouped).map(([category, items]) => (
                 <div key={category}>
@@ -219,7 +219,7 @@ export function TopBar() {
         {/* Plan a Trip CTA */}
         <Link
           href="/tours"
-          className="inline-flex h-[34px] items-center gap-1.5 rounded-[var(--card-radius-compact)] bg-ocean px-3.5 font-sans text-[12px] font-semibold text-white transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-px hover:bg-blue-chill focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-chill motion-reduce:hover:translate-y-0 motion-reduce:transition-none"
+          className="inline-flex h-8.5 items-center gap-1.5 rounded-(--card-radius-compact) bg-ocean px-3.5 font-sans text-[12px] font-semibold text-white transition-[transform,background-color] duration-220 ease-out hover:-translate-y-px hover:bg-blue-chill focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-chill motion-reduce:hover:translate-y-0 motion-reduce:transition-none"
         >
           <Plus size={14} aria-hidden="true" />
           Plan a Trip

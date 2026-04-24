@@ -8,9 +8,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-1 gap-6 px-4 py-10 sm:px-6">
+    <div className="mx-auto flex h-dvh w-full max-w-6xl flex-1 flex-col overflow-hidden">
       {/* Mobile toggle: visible < lg */}
-      <div className="flex w-full items-center justify-between lg:hidden">
+      <div className="flex w-full items-center justify-between px-4 pb-3 pt-4 sm:px-6 lg:hidden">
         <button
           aria-expanded={open}
           aria-label={open ? "Close admin menu" : "Open admin menu"}
@@ -22,14 +22,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </button>
       </div>
 
-      {/* Aside — sticky on lg, overlay drawer on small screens */}
-      <DashboardAside />
-
       {/* Drawer overlay for < lg */}
       {open && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
           <div
-            className="w-72 shrink-0 overflow-auto border-r border-ocean-deep/10 bg-white p-4 shadow-xl dark:bg-ocean-card"
+            className="flex h-full w-72 shrink-0 flex-col overflow-hidden border-r border-ocean-deep/10 bg-white p-4 shadow-xl dark:bg-ocean-card"
             role="dialog"
             aria-modal="true"
           >
@@ -43,8 +40,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="overflow-auto">
-              <DashboardAside />
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <DashboardAside mode="drawer" />
             </div>
           </div>
           <button
@@ -55,8 +52,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {/* Main content */}
-      <main className="min-w-0 flex-1">{children}</main>
+      <div className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 gap-6 overflow-hidden px-4 pb-4 sm:px-6 sm:pb-6">
+        {/* Aside — sticky on lg, overlay drawer on small screens */}
+        <DashboardAside />
+        {/* Main content */}
+        <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">{children}</main>
+      </div>
     </div>
   )
 }

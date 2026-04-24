@@ -54,7 +54,11 @@ const ICON_MAP: Record<NavIconName, LucideIcon> = {
 // ---------------------------------------------------------------------------
 // DashboardAside — portal nav for all auth users + admin sections by role
 // ---------------------------------------------------------------------------
-export function DashboardAside() {
+export function DashboardAside({
+  mode = "desktop",
+}: {
+  mode?: "desktop" | "drawer"
+}) {
   const { user, role } = useAuth()
   const pathname = usePathname() ?? "/"
   const { isMockMode, toggleMockMode } = useMockMode()
@@ -67,7 +71,11 @@ export function DashboardAside() {
   return (
     <aside
       aria-label="Dashboard navigation"
-      className="w-52 shrink-0 self-start sticky top-14 hidden lg:block"
+      className={
+        mode === "drawer"
+          ? "block h-full min-h-0 w-full overflow-y-auto"
+          : "hidden h-full min-h-0 w-52 shrink-0 overflow-y-auto lg:block"
+      }
     >
       <nav className="rounded-xl border border-ocean-deep/10 bg-white shadow-sm dark:border-tan-100/10 dark:bg-ocean-card">
         {groups.map((group) => (

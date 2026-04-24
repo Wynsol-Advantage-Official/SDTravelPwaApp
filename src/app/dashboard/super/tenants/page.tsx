@@ -347,9 +347,18 @@ function EditTenantModal({
   onClose: () => void
   onUpdated: (data: Partial<TenantRecord> & { tenantId: string }) => void
 }) {
+  type TenantEditTab = "identity" | "configuration" | "branding"
+
+  const tabs: Array<{ value: TenantEditTab; label: string }> = [
+    { value: "identity", label: "Identity" },
+    { value: "configuration", label: "Configuration" },
+    { value: "branding", label: "Branding" },
+  ]
+
   const [name, setName] = useState(tenant.name)
   const [wixSiteId, setWixSiteId] = useState(tenant.wixSiteId ?? "")
   const [status, setStatus] = useState(tenant.status)
+  const [activeTab, setActiveTab] = useState<TenantEditTab>("identity")
   const [branding, setBranding] = useState<TenantBrandingDraft>({
     logo: tenant.branding?.logo ?? "",
     primaryColor: tenant.branding?.primaryColor ?? "",
@@ -431,7 +440,7 @@ function EditTenantModal({
   }
 
   return (
-    <TenantModalOverlay onClose={onClose}>
+    <TenantModalOverlay onClose={onClose} panelClassName="max-w-3xl">
       <form onSubmit={handleSubmit} className="space-y-5">
         <h2 className="text-lg font-bold text-ocean-deep dark:text-tan-100">
           Edit Tenant
@@ -447,166 +456,193 @@ function EditTenantModal({
           </div>
         )}
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="block">
-            <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
-              Tenant ID
-            </span>
-            <input
-              type="text"
-              value={tenant.tenantId}
-              readOnly
-              className="input-field cursor-not-allowed bg-ocean-deep/5 font-mono text-xs text-ocean-deep/70 dark:bg-tan-100/5 dark:text-tan-100/70"
-            />
-          </label>
-
-          <label className="block">
-            <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
-              Domain
-            </span>
-            <input
-              type="text"
-              value={tenant.domain}
-              readOnly
-              className="input-field cursor-not-allowed bg-ocean-deep/5 font-mono text-xs text-ocean-deep/70 dark:bg-tan-100/5 dark:text-tan-100/70"
-            />
-          </label>
+        <div className="flex flex-wrap gap-2 rounded-lg border border-ocean-deep/10 bg-ocean-deep/5 p-2 dark:border-tan-100/10 dark:bg-tan-100/5">
+          {tabs.map((tab) => (
+            <button
+              key={tab.value}
+              type="button"
+              onClick={() => setActiveTab(tab.value)}
+              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                activeTab === tab.value
+                  ? "bg-ocean text-white"
+                  : "bg-ocean-deep/5 text-ocean-deep/60 hover:bg-ocean-deep/10 dark:bg-tan-100/5 dark:text-tan-100/60 dark:hover:bg-tan-100/10"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        <label className="block">
-          <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
-            Tenant Name
-          </span>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="input-field"
-          />
-        </label>
+        {activeTab === "identity" && (
+          <div className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block">
+                <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
+                  Tenant ID
+                </span>
+                <input
+                  type="text"
+                  value={tenant.tenantId}
+                  readOnly
+                  className="input-field cursor-not-allowed bg-ocean-deep/5 font-mono text-xs text-ocean-deep/70 dark:bg-tan-100/5 dark:text-tan-100/70"
+                />
+              </label>
 
-        <label className="block">
-          <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
-            Wix Site ID
-          </span>
-          <input
-            type="text"
-            value={wixSiteId}
-            onChange={(e) => setWixSiteId(e.target.value.trim())}
-            className="input-field font-mono text-xs"
-            placeholder="e.g. d5aa434f-c121-4b4d-92ff-ca864d907891"
-          />
-          <span className="mt-0.5 block text-xs text-ocean-deep/50 dark:text-tan-100/50">
-            Update carefully: this controls tenant content source and booking data path.
-          </span>
-        </label>
-
-        <label className="block">
-          <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
-            Status
-          </span>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as TenantRecord["status"])}
-            disabled={statusLocked}
-            className="input-field"
-          >
-            <option value="active">Active</option>
-            <option value="suspended">Suspended</option>
-            <option value="provisioning">Provisioning</option>
-          </select>
-          {statusLocked && (
-            <span className="mt-0.5 block text-xs text-ocean-deep/50 dark:text-tan-100/50">
-              Primary tenant status is locked.
-            </span>
-          )}
-        </label>
-
-        <div className="rounded-md border border-ocean-deep/10 bg-ocean-deep/5 p-4 dark:border-tan-100/10 dark:bg-tan-100/5">
-          <h3 className="mb-3 text-sm font-semibold text-ocean-deep dark:text-tan-100">
-            Branding Overrides
-          </h3>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="block sm:col-span-2">
-              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
-                Logo URL
-              </span>
-              <input
-                type="text"
-                value={branding.logo}
-                onChange={(e) => setBrandingField("logo", e.target.value)}
-                className="input-field"
-                placeholder="/logos/brand/full_colour.svg"
-              />
-            </label>
+              <label className="block">
+                <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
+                  Domain
+                </span>
+                <input
+                  type="text"
+                  value={tenant.domain}
+                  readOnly
+                  className="input-field cursor-not-allowed bg-ocean-deep/5 font-mono text-xs text-ocean-deep/70 dark:bg-tan-100/5 dark:text-tan-100/70"
+                />
+              </label>
+            </div>
 
             <label className="block">
-              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
-                Primary Color
+              <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
+                Tenant Name
               </span>
               <input
                 type="text"
-                value={branding.primaryColor}
-                onChange={(e) => setBrandingField("primaryColor", e.target.value)}
-                className="input-field font-mono text-xs"
-                placeholder="#043750"
-              />
-            </label>
-
-            <label className="block">
-              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
-                Accent Color
-              </span>
-              <input
-                type="text"
-                value={branding.accentColor}
-                onChange={(e) => setBrandingField("accentColor", e.target.value)}
-                className="input-field font-mono text-xs"
-                placeholder="#1282a5"
-              />
-            </label>
-
-            <label className="block sm:col-span-2">
-              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
-                Tagline
-              </span>
-              <input
-                type="text"
-                value={branding.tagline}
-                onChange={(e) => setBrandingField("tagline", e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="input-field"
-                placeholder="Where Every Journey Becomes a Diamond"
-              />
-            </label>
-
-            <label className="block sm:col-span-2">
-              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
-                Support Email
-              </span>
-              <input
-                type="email"
-                value={branding.supportEmail}
-                onChange={(e) => setBrandingField("supportEmail", e.target.value)}
-                className="input-field"
-                placeholder="concierge@sanddiamonds.travel"
-              />
-            </label>
-
-            <label className="block sm:col-span-2">
-              <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
-                Support Phone
-              </span>
-              <input
-                type="tel"
-                value={branding.phone}
-                onChange={(e) => setBrandingField("phone", e.target.value)}
-                className="input-field"
-                placeholder="+1 876 276-7352"
               />
             </label>
           </div>
-        </div>
+        )}
+
+        {activeTab === "configuration" && (
+          <div className="space-y-4">
+            <label className="block">
+              <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
+                Wix Site ID
+              </span>
+              <input
+                type="text"
+                value={wixSiteId}
+                onChange={(e) => setWixSiteId(e.target.value.trim())}
+                className="input-field font-mono text-xs"
+                placeholder="e.g. d5aa434f-c121-4b4d-92ff-ca864d907891"
+              />
+              <span className="mt-0.5 block text-xs text-ocean-deep/50 dark:text-tan-100/50">
+                Update carefully: this controls tenant content source and booking data path.
+              </span>
+            </label>
+
+            <label className="block">
+              <span className="mb-1 block text-sm font-medium text-ocean-deep dark:text-tan-100">
+                Status
+              </span>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value as TenantRecord["status"])}
+                disabled={statusLocked}
+                className="input-field"
+              >
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+                <option value="provisioning">Provisioning</option>
+              </select>
+              {statusLocked && (
+                <span className="mt-0.5 block text-xs text-ocean-deep/50 dark:text-tan-100/50">
+                  Primary tenant status is locked.
+                </span>
+              )}
+            </label>
+          </div>
+        )}
+
+        {activeTab === "branding" && (
+          <div className="rounded-md border border-ocean-deep/10 bg-ocean-deep/5 p-4 dark:border-tan-100/10 dark:bg-tan-100/5">
+            <h3 className="mb-3 text-sm font-semibold text-ocean-deep dark:text-tan-100">
+              Branding Overrides
+            </h3>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="block sm:col-span-2">
+                <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                  Logo URL
+                </span>
+                <input
+                  type="text"
+                  value={branding.logo}
+                  onChange={(e) => setBrandingField("logo", e.target.value)}
+                  className="input-field"
+                  placeholder="/logos/brand/full_colour.svg"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                  Primary Color
+                </span>
+                <input
+                  type="text"
+                  value={branding.primaryColor}
+                  onChange={(e) => setBrandingField("primaryColor", e.target.value)}
+                  className="input-field font-mono text-xs"
+                  placeholder="#043750"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                  Accent Color
+                </span>
+                <input
+                  type="text"
+                  value={branding.accentColor}
+                  onChange={(e) => setBrandingField("accentColor", e.target.value)}
+                  className="input-field font-mono text-xs"
+                  placeholder="#1282a5"
+                />
+              </label>
+
+              <label className="block sm:col-span-2">
+                <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                  Tagline
+                </span>
+                <input
+                  type="text"
+                  value={branding.tagline}
+                  onChange={(e) => setBrandingField("tagline", e.target.value)}
+                  className="input-field"
+                  placeholder="Where Every Journey Becomes a Diamond"
+                />
+              </label>
+
+              <label className="block sm:col-span-2">
+                <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                  Support Email
+                </span>
+                <input
+                  type="email"
+                  value={branding.supportEmail}
+                  onChange={(e) => setBrandingField("supportEmail", e.target.value)}
+                  className="input-field"
+                  placeholder="concierge@sanddiamonds.travel"
+                />
+              </label>
+
+              <label className="block sm:col-span-2">
+                <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-ocean-deep/70 dark:text-tan-100/70">
+                  Support Phone
+                </span>
+                <input
+                  type="tel"
+                  value={branding.phone}
+                  onChange={(e) => setBrandingField("phone", e.target.value)}
+                  className="input-field"
+                  placeholder="+1 876 276-7352"
+                />
+              </label>
+            </div>
+          </div>
+        )}
 
         <div className="flex justify-end gap-2 pt-2">
           <button

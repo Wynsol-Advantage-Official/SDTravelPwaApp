@@ -179,7 +179,7 @@ export default async function RootLayout({
     >
       <head>
         {/* Favicon and icons: prefer SVG favicon, fall back to PNG assets in /icons */}
-        <link rel="icon" href="/file.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" type="image/svg+xml" />
         <link rel="icon" href="/icons/icon-192.png" sizes="192x192" />
         <link rel="icon" href="/icons/icon-512.png" sizes="512x512" />
         <link rel="shortcut icon" href="/file.svg" />
@@ -193,7 +193,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="bg-tan-50 font-sans text-ocean-deep antialiased transition-colors duration-300 dark:bg-ocean-deep dark:text-white">
+      <body className="bg-stone-500 font-sans text-ocean-deep antialiased transition-colors duration-300 dark:bg-ocean-deep dark:text-white">
         <OfflineBanner />
         <TravelAgencyJsonLd />
         <TenantProvider value={tenantCtx}>

@@ -12,7 +12,7 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-dvh flex-col transition-colors duration-300 dark:bg-luxury-base">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden transition-colors duration-300 dark:bg-luxury-base">
       <DashboardShell>{children}</DashboardShell>
     </div>
   )

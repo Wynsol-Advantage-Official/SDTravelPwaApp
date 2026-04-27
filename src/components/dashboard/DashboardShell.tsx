@@ -8,7 +8,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="mx-auto flex h-full min-h-0 w-full max-w-6xl flex-1 flex-col overflow-hidden">
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-full  flex-1 flex-col overflow-hidden">
       {/* Mobile toggle: visible < lg */}
       <div className="flex w-full items-center justify-between px-4 pb-3 pt-4 sm:px-6 lg:hidden">
         <button
@@ -52,13 +52,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      <div className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 gap-6 overflow-hidden px-4 pb-4 sm:px-6 sm:pb-6">
+      <div className="mx-auto flex min-h-0 w-full max-w-full flex-1 gap-6 overflow-hidden px-4 pb-4 sm:px-6 sm:pb-6">
         {/* Aside — sticky on lg, overlay drawer on small screens */}
         <div className="hidden h-full min-h-0 w-52 shrink-0 overflow-y-auto lg:block">
           <DashboardAside />
         </div>
       {/* Main content */}
-      <main className="h-112.5 min-h-0 min-w-0 flex-1 overflow-y-auto">{children}</main>
+      <main className=" min-h-0 min-w-0 flex-1 overflow-y-auto">{children}</main>
     </div>
     </div >
   )

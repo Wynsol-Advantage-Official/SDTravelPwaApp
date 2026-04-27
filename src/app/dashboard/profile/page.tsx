@@ -31,6 +31,8 @@ const BUDGET_RANGES: NonNullable<UserPreferences["budgetRange"]>[] = [
   "no-limit",
 ]
 
+const AVATAR_PLACEHOLDER_SRC = "/logos/brand/Iconset-06.png"
+
 function ProfileContent() {
   const { user, signOut } = useAuth()
   const { isMockMode } = useMockMode()
@@ -82,10 +84,15 @@ function ProfileContent() {
   const avatarUrl = isMockMode
     ? mockUserProfile.avatar
     : user?.photoURL ?? undefined
+  const [avatarSrc, setAvatarSrc] = useState(avatarUrl ?? AVATAR_PLACEHOLDER_SRC)
   const email = isMockMode ? mockUserProfile.email : user?.email
   const memberSince = isMockMode
     ? mockUserProfile.createdAt
     : profile?.createdAt
+
+  useEffect(() => {
+    setAvatarSrc(avatarUrl ?? AVATAR_PLACEHOLDER_SRC)
+  }, [avatarUrl])
 
   return (
     <div className="space-y-8">
@@ -103,19 +110,19 @@ function ProfileContent() {
           {/* ── Profile Card ─────────────────────────────────────── */}
           <div className="lg:col-span-1">
             <div className="rounded-sm border border-tan/20 bg-white p-6 text-center">
-              {avatarUrl ? (
-                <Image
-                  src={avatarUrl}
-                  alt=""
-                  width={80}
-                  height={80}
-                  className="mx-auto rounded-full"
-                />
-              ) : (
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-ocean text-2xl font-bold text-ocean-deep">
-                  {(displayName || "U").charAt(0).toUpperCase()}
-                </div>
-              )}
+              <Image
+                src={avatarSrc}
+                alt=""
+                width={80}
+                height={80}
+                loading="lazy"
+                onError={() => {
+                  if (avatarSrc !== AVATAR_PLACEHOLDER_SRC) {
+                    setAvatarSrc(AVATAR_PLACEHOLDER_SRC)
+                  }
+                }}
+                className="mx-auto rounded-full object-cover"
+              />
               <h2 className="mt-4 font-sans text-xl font-semibold text-ocean-deep">
                 {displayName || "Traveler"}
               </h2>

@@ -39,6 +39,8 @@ interface AdminUser {
 
 type UserRole = "user" | "tenant_admin" | "super_admin"
 
+const AVATAR_PLACEHOLDER_SRC = "/logos/brand/Iconset-06.png"
+
 const ROLE_LABELS: Record<UserRole, string> = {
   user: "User",
   tenant_admin: "Tenant Admin",
@@ -55,6 +57,34 @@ const ROLE_ICONS: Record<UserRole, React.ReactNode> = {
   user: <Shield className="h-3 w-3" />,
   tenant_admin: <ShieldCheck className="h-3 w-3" />,
   super_admin: <ShieldAlert className="h-3 w-3" />,
+}
+
+function UserAvatar({
+  photoURL,
+  fallbackLetter,
+}: {
+  photoURL: string | null
+  fallbackLetter: string
+}) {
+  const [avatarSrc, setAvatarSrc] = useState(photoURL ?? AVATAR_PLACEHOLDER_SRC)
+
+  useEffect(() => {
+    setAvatarSrc(photoURL ?? AVATAR_PLACEHOLDER_SRC)
+  }, [photoURL])
+
+  return (
+    <img
+      src={avatarSrc}
+      alt={fallbackLetter}
+      loading="lazy"
+      onError={() => {
+        if (avatarSrc !== AVATAR_PLACEHOLDER_SRC) {
+          setAvatarSrc(AVATAR_PLACEHOLDER_SRC)
+        }
+      }}
+      className="h-8 w-8 rounded-full object-cover"
+    />
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -258,22 +288,15 @@ function UserManagementPortal() {
                     return (
                       <tr
                         key={u.uid}
-                        className="transition-colors hover:bg-ocean-deep/[0.02] dark:hover:bg-tan-100/[0.02]"
+                        className="transition-colors hover:bg-ocean-deep/2 dark:hover:bg-tan-100/2"
                       >
                         {/* User info */}
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
-                            {u.photoURL ? (
-                              <img
-                                src={u.photoURL}
-                                alt=""
-                                className="h-8 w-8 rounded-full object-cover"
-                              />
-                            ) : (
-                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ocean/20 text-xs font-bold text-ocean">
-                                {(u.displayName?.[0] ?? u.email?.[0] ?? "?").toUpperCase()}
-                              </div>
-                            )}
+                            <UserAvatar
+                              photoURL={u.photoURL}
+                              fallbackLetter={(u.displayName?.[0] ?? u.email?.[0] ?? "?").toUpperCase()}
+                            />
                             <div className="min-w-0">
                               <div className="truncate font-medium text-ocean-deep dark:text-tan-100">
                                 {u.displayName || "—"}

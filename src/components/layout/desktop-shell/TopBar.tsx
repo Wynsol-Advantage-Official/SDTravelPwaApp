@@ -1,11 +1,13 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback } from "react"
-import { Search, Plus } from "lucide-react"
+import { ChevronDown, LayoutDashboard, LogIn, LogOut, Plus, Search } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
-import { useTenant } from "@/hooks/useTenant"
+import { DISCOVER_GROUP, isNavItemActive } from "@/lib/rules/navigation-rules"
+import type { NavItem } from "@/types/navigation"
 import { ThemeToggle } from "@/components/ui/ThemeToggle"
 
 const SEARCH_ITEMS = [
@@ -21,28 +23,172 @@ const SEARCH_ITEMS = [
   { label: "Profile", href: "/dashboard/profile", category: "Dashboard" },
 ] as const
 
-function getGreeting(): string {
-  const hour = new Date().getHours()
-  if (hour < 12) return "Good morning"
-  if (hour < 18) return "Good afternoon"
-  return "Good evening"
+// Primary nav items — DISCOVER_GROUP without the "Saved" item
+const NAV_ITEMS = DISCOVER_GROUP.items.filter((item) => item.id !== "saved")
+
+function getInitials(name: string | null | undefined): string {
+  if (!name) return "T"
+  const parts = name.trim().split(/\s+/)
+  if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+  return parts[0][0].toUpperCase()
+}
+
+/** Authenticated user avatar + dropdown menu. */
+function UserMenu() {
+  const { user, loading, signOut } = useAuth()
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [])
+
+  if (loading) return null
+
+  if (!user) {
+    return (
+      <Link
+        href="/auth/sign-in"
+        className="inline-flex items-center gap-1.5 rounded-full border border-khaki/40 px-3 py-1.5 font-sans text-xs font-semibold text-ocean-deep transition-colors hover:bg-tan/30 dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+      >
+        <LogIn className="h-3.5 w-3.5" />
+        Sign In
+      </Link>
+    )
+  }
+
+  const displayName = user.displayName ?? "Traveler"
+  const initials = getInitials(user.displayName ?? user.email)
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-label="User menu"
+        className="flex items-center gap-1.5 rounded-full border border-khaki/30 py-1 pl-1.5 pr-2.5 transition-colors hover:bg-tan/20 dark:border-white/10 dark:hover:bg-white/5"
+      >
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-chill font-sans text-[10px] font-bold text-white">
+          {initials}
+        </span>
+        <span className="max-w-24 truncate font-sans text-xs font-medium text-ocean-deep dark:text-white">
+          {displayName.split(" ")[0]}
+        </span>
+        <ChevronDown
+          className={`h-3 w-3 text-ocean-deep/50 transition-transform dark:text-white/50 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <>
+          <div className="fixed inset-0 z-95" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 z-96 mt-2 w-52 overflow-hidden rounded-xl border border-khaki/30 bg-white shadow-lg dark:border-white/10 dark:bg-ocean-deep">
+            <div className="border-b border-khaki/20 px-4 py-3 dark:border-white/10">
+              <p className="font-sans text-sm font-semibold text-ocean-deep dark:text-white">
+                {displayName}
+              </p>
+              <p className="font-sans text-xs text-ocean/60 dark:text-blue-chill-300">
+                Diamond Member
+              </p>
+            </div>
+            <Link
+              href="/dashboard"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 px-4 py-2.5 font-sans text-xs font-medium text-ocean-deep transition-colors hover:bg-tan/30 dark:text-white dark:hover:bg-white/5"
+            >
+              <LayoutDashboard className="h-3.5 w-3.5" />
+              Dashboard
+            </Link>
+            <button
+              onClick={() => {
+                setOpen(false)
+                signOut()
+              }}
+              className="flex w-full items-center gap-2 px-4 py-2.5 font-sans text-xs font-medium text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              Sign Out
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+/** Nav item with child flyout (used for Rooms → Hotels / Airbnbs). */
+function DropdownNavItem({
+  item,
+  pathname,
+}: {
+  item: NavItem
+  pathname: string
+}) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const isActive =
+    item.children?.some((c) => isNavItemActive(c, pathname)) ||
+    isNavItemActive(item, pathname)
+
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [])
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className={`relative flex items-center gap-1 rounded-md px-3 py-1.5 font-sans text-sm font-medium transition-colors ${
+          isActive
+            ? "text-ocean-deep dark:text-white"
+            : "text-ocean-deep/60 hover:text-ocean-deep dark:text-white/60 dark:hover:text-white"
+        }`}
+      >
+        {item.label}
+        <ChevronDown
+          className={`h-3.5 w-3.5 opacity-60 transition-transform ${open ? "rotate-180" : ""}`}
+        />
+        {isActive && (
+          <span className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-ocean" />
+        )}
+      </button>
+
+      {open && (
+        <>
+          <div className="fixed inset-0 z-95" onClick={() => setOpen(false)} />
+          <div className="absolute left-0 z-96 mt-1 w-36 overflow-hidden rounded-xl border border-khaki/30 bg-white shadow-lg dark:border-white/10 dark:bg-ocean-deep">
+            {item.children?.map((child) => (
+              <Link
+                key={child.id}
+                href={child.href}
+                onClick={() => setOpen(false)}
+                className={`block px-4 py-2.5 font-sans text-xs font-medium transition-colors hover:bg-tan/30 dark:hover:bg-white/5 ${
+                  isNavItemActive(child, pathname)
+                    ? "text-ocean-deep dark:text-white"
+                    : "text-ocean-deep/70 dark:text-white/70"
+                }`}
+              >
+                {child.label}
+              </Link>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
 }
 
 export function TopBar() {
-  const { user } = useAuth()
   const router = useRouter()
-  const greeting = getGreeting()
-  const name = user?.displayName ?? "Traveler"
-  // Tenant info (may be unavailable in isolated tests) — call inside try/catch
-  let tenantName = "Sand Diamonds"
-  let wixSiteId = ""
-  try {
-    const t = useTenant()
-    tenantName = t.tenantName ?? tenantName
-    wixSiteId = t.wixSiteId ?? ""
-  } catch (e) {
-    // No TenantProvider in this render context (tests or isolated stories)
-  }
+  const pathname = usePathname() ?? "/"
 
   const [query, setQuery] = useState("")
   const [open, setOpen] = useState(false)
@@ -121,21 +267,51 @@ export function TopBar() {
 
   return (
     <header
-      className="sticky top-0 z-[90] flex h-14 items-center justify-between border-b border-khaki/50 bg-white px-5 backdrop-blur-md transition-colors duration-300 dark:border-white/5 dark:bg-ocean-deep/92"
+      className="sticky top-0 z-90 flex h-14 items-center gap-4 border-b border-khaki/50 bg-white px-5 backdrop-blur-md transition-colors duration-300 dark:border-white/5 dark:bg-ocean-deep/92"
     >
-      {/* Left: greeting + tenant info */}
-      <div className="min-w-0">
-        <p className="font-sans text-[16px] font-medium text-ocean-deep dark:text-white">
-          <span className="font-sans italic">{greeting},</span>{" "}
-          <span className="inline-block max-w-50 truncate align-bottom">{name}</span>
-        </p>
-        <div className="mt-0.5 flex items-center gap-3 text-[12px] text-ocean-400 dark:text-blue-chill-300">
-          <span className="font-semibold">{tenantName}</span>
-          {wixSiteId ? <span className="text-khaki/80">• {wixSiteId}</span> : null}
-        </div>
-      </div>
+      {/* Logo */}
+      <Link href="/" aria-label="Sand Diamonds — Home" className="shrink-0 transition-opacity hover:opacity-80">
+        <Image
+          src="/logos/brand/full_colour.svg"
+          alt="Sand Diamonds Travel"
+          width={110}
+          height={32}
+          className="h-8 w-auto"
+          priority
+        />
+      </Link>
 
-      {/* Right: search + CTA */}
+      {/* Divider */}
+      <div className="h-5 w-px shrink-0 bg-khaki/40 dark:bg-white/10" aria-hidden="true" />
+
+      {/* Primary navigation */}
+      <nav aria-label="Primary navigation" className="flex items-center gap-0.5">
+        {NAV_ITEMS.map((item) =>
+          item.children ? (
+            <DropdownNavItem key={item.id} item={item} pathname={pathname} />
+          ) : (
+            <Link
+              key={item.id}
+              href={item.href}
+              className={`relative rounded-md px-3 py-1.5 font-sans text-sm font-medium transition-colors ${
+                isNavItemActive(item, pathname)
+                  ? "text-ocean-deep dark:text-white"
+                  : "text-ocean-deep/60 hover:text-ocean-deep dark:text-white/60 dark:hover:text-white"
+              }`}
+            >
+              {item.label}
+              {isNavItemActive(item, pathname) && (
+                <span className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-ocean" />
+              )}
+            </Link>
+          ),
+        )}
+      </nav>
+
+      {/* Spacer pushes right-side controls to edge */}
+      <div className="flex-1" />
+
+      {/* Right: search + CTA + user + theme */}
       <div className="flex items-center gap-3">
         {/* Search input + dropdown */}
         <div className="relative" ref={containerRef}>
@@ -225,9 +401,13 @@ export function TopBar() {
           Plan a Trip
         </Link>
 
+        {/* User menu */}
+        <UserMenu />
+
         {/* Theme toggle */}
         <ThemeToggle />
       </div>
     </header>
   )
 }
+

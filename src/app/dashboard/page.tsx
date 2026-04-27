@@ -3,6 +3,7 @@
 import { useAuth } from "@/hooks/useAuth"
 import { useMockMode } from "@/hooks/useMockMode"
 import { useUserBookings } from "@/hooks/useUserBookings"
+import { useActivity } from "@/hooks/useActivity"
 import { AuthGuard } from "@/components/auth/AuthGuard"
 import { Button } from "@/components/ui/Button"
 import { TripCard } from "@/components/dashboard/TripCard"
@@ -12,9 +13,8 @@ import {
   mockUser,
   mockBookingStats,
   mockSavedDiamonds,
-  mockActivity,
 } from "@/mocks"
-import type { ActivityItem } from "@/mocks/activity"
+import type { ActivityItem } from "@/types/activity"
 
 // ---------------------------------------------------------------------------
 // Activity icon mapping
@@ -40,6 +40,7 @@ function DashboardContent() {
   const { user, signOut } = useAuth()
   const { isMockMode } = useMockMode()
   const { bookings, loading } = useUserBookings(10)
+  const { activity, loading: activityLoading } = useActivity(20)
 
   const displayName = isMockMode
     ? mockUser.displayName
@@ -57,7 +58,6 @@ function DashboardContent() {
     .filter((b) => b.status !== "cancelled")
     .reduce((s, b) => s + b.totalPrice, 0)
   const savedCount = isMockMode ? mockSavedDiamonds.length : 0
-  const activity: ActivityItem[] = isMockMode ? mockActivity : []
 
   return (
     <div className="space-y-8">
@@ -175,7 +175,20 @@ function DashboardContent() {
           <h2 className="mb-3 font-sans text-xl font-semibold text-ocean-deep dark:text-white">
             Recent Activity
           </h2>
-          {activity.length > 0 ? (
+          {activityLoading ? (
+            <div className="divide-y divide-khaki/30 rounded-sm border border-khaki/40 bg-white dark:divide-luxborder dark:border-white/10 dark:bg-ocean-card">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex items-start gap-3 px-5 py-4 animate-pulse">
+                  <span className="mt-0.5 h-4 w-4 shrink-0 rounded-full bg-khaki/40 dark:bg-white/10" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-3 w-2/5 rounded bg-khaki/40 dark:bg-white/10" />
+                    <div className="h-3 w-3/4 rounded bg-khaki/30 dark:bg-white/5" />
+                  </div>
+                  <div className="h-3 w-10 rounded bg-khaki/30 dark:bg-white/5" />
+                </div>
+              ))}
+            </div>
+          ) : activity.length > 0 ? (
             <div className="divide-y divide-khaki/30 rounded-sm border border-khaki/40 bg-white dark:divide-luxborder dark:border-white/10 dark:bg-ocean-card">
               {activity.map((item) => (
                 <Link
@@ -205,10 +218,8 @@ function DashboardContent() {
             </div>
           ) : (
             <div className="rounded-sm border border-khaki/40 bg-white px-6 py-10 text-center dark:border-white/10 dark:bg-ocean-card">
-              <p className="text-sm text-white/40">
-                {isMockMode
-                  ? "No activity to display."
-                  : "Activity will appear here once you start using your account."}
+              <p className="text-sm text-ocean-deep/40 dark:text-white/40">
+                Activity will appear here once you start using your account.
               </p>
             </div>
           )}

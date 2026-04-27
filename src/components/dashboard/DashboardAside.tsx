@@ -77,7 +77,7 @@ export function DashboardAside({
           : "hidden h-full min-h-0 w-52 shrink-0 overflow-y-auto lg:block"
       }
     >
-      <nav className="rounded-xl border border-ocean-deep/10 bg-white shadow-sm dark:border-tan-100/10 dark:bg-ocean-card">
+      <nav className=" bg-white shadow-sm dark:border-tan-100/10 dark:bg-ocean-card">
         {groups.map((group) => (
           <AsideGroup key={group.id} group={group} pathname={pathname} />
         ))}

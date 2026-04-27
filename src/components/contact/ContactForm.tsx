@@ -25,12 +25,17 @@ const INITIAL: FormState = {
   message: "",
 }
 
+const AVATAR_PLACEHOLDER_SRC = "/logos/brand/Iconset-06.png"
+
 export function ContactForm() {
   const { user, loading: authLoading } = useAuth()
   const [form, setForm] = useState<FormState>(INITIAL)
   const [status, setStatus] = useState<FormStatus>("idle")
   const [errorMsg, setErrorMsg] = useState("")
   const [isExistingUser, setIsExistingUser] = useState(false)
+  const [avatarSrc, setAvatarSrc] = useState(
+    user?.photoURL ?? AVATAR_PLACEHOLDER_SRC,
+  )
 
   // Pre-fill form fields from the signed-in user
   useEffect(() => {
@@ -43,6 +48,10 @@ export function ContactForm() {
       }))
     }
   }, [user])
+
+  useEffect(() => {
+    setAvatarSrc(user?.photoURL ?? AVATAR_PLACEHOLDER_SRC)
+  }, [user?.photoURL])
 
   function update(field: keyof FormState) {
     return (
@@ -116,19 +125,19 @@ export function ContactForm() {
       {/* Signed-in user card OR manual input fields */}
       {user && !authLoading ? (
         <div className="flex items-center gap-4 rounded-lg border border-blue-chill/30 bg-white p-4 dark:bg-ocean-card">
-          {user.photoURL ? (
-            <Image
-              src={user.photoURL}
-              alt={user.displayName ?? "User avatar"}
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-full object-cover ring-2 ring-blue-chill/30"
-            />
-          ) : (
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-chill/10 text-lg font-bold text-blue-chill ring-2 ring-blue-chill/30">
-              {(user.displayName?.[0] ?? user.email?.[0] ?? "?").toUpperCase()}
-            </div>
-          )}
+          <Image
+            src={avatarSrc}
+            alt={user.displayName ?? "User avatar"}
+            width={48}
+            height={48}
+            loading="lazy"
+            onError={() => {
+              if (avatarSrc !== AVATAR_PLACEHOLDER_SRC) {
+                setAvatarSrc(AVATAR_PLACEHOLDER_SRC)
+              }
+            }}
+            className="h-12 w-12 rounded-full object-cover ring-2 ring-blue-chill/30"
+          />
           <div className="min-w-0 flex-1">
             <p className="truncate font-sans text-base font-semibold text-ocean-deep dark:text-white">
               {user.displayName ?? "Guest"}

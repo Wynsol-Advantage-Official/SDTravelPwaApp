@@ -175,9 +175,12 @@ export function BookingCard({
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-ocean-deep">
-                {booking.userName ?? booking.uid.slice(0, 16) + "…"}
-              </p>
+                <p className="text-[10px] uppercase tracking-[0.12em] text-ocean-deep/50">
+                  Primary guest
+                </p>
+                <p className="truncate text-sm font-semibold text-ocean-deep">
+                  {booking.userName ?? booking.uid.slice(0, 16) + "…"}
+                </p>
               <p className="truncate text-xs text-ocean-deep/50">
                 {booking.userCountry ?? booking.userEmail ?? "—"}
               </p>
@@ -198,10 +201,13 @@ export function BookingCard({
               )}
           </div>
           {booking.guests != null && (
-            <div className="flex items-center gap-1 text-ocean-deep/50">
-              <span>👤</span>
-              <span className="font-semibold text-ocean-deep">{booking.guests}</span>
-              <span>{booking.guests === 1 ? "guest" : "guests"}</span>
+            <div className="flex flex-col items-end text-ocean-deep/50">
+              <div className="text-[10px] uppercase tracking-[0.12em]">Party size</div>
+              <div className="mt-0.5 flex items-center gap-1">
+                <span>👤</span>
+                <span className="font-semibold text-ocean-deep">{booking.guests}</span>
+                <span className="text-xs">{booking.guests === 1 ? "guest" : "guests"}</span>
+              </div>
             </div>
           )}
         </div>
@@ -214,8 +220,8 @@ export function BookingCard({
         {/* Duration from itinerary child count */}
         {(booking.itineraryDayCount ?? 0) > 0 && (
           <div className="mt-1.5 flex items-center gap-1 text-[11px] text-ocean-deep/50">
-            <span>📅</span>
-            <span>Duration: <span className="font-semibold text-ocean-deep/70">{booking.itineraryDayCount} Days</span></span>
+            <span>🛏️</span>
+            <span>Room nights: <span className="font-semibold text-ocean-deep/70">{booking.itineraryDayCount} {booking.itineraryDayCount === 1 ? 'night' : 'nights'}</span></span>
           </div>
         )}
 

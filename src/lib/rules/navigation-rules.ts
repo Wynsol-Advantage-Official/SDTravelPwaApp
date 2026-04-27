@@ -19,7 +19,6 @@ export const DISCOVER_GROUP: NavGroup = {
   items: [
     { id: "home", label: "Home", href: "/", icon: "home" },
     { id: "destinations", label: "Destinations", href: "/destinations", icon: "map" },
-    { id: "saved", label: "Saved", href: "/dashboard/saved", icon: "gem", requiresAuth: true },
     { id: "tours", label: "Tours", href: "/tours", icon: "compass" },
     {
       id: "rooms",

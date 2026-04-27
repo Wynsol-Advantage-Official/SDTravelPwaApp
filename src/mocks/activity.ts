@@ -2,14 +2,9 @@
 // Mock Activity Feed — recent account events for dashboard overview
 // ---------------------------------------------------------------------------
 
-export interface ActivityItem {
-  id: string
-  type: "booking_created" | "booking_confirmed" | "booking_completed" | "diamond_saved" | "message_received" | "profile_updated"
-  title: string
-  description: string
-  timestamp: Date
-  link?: string
-}
+export type { ActivityItem } from "@/types/activity"
+export type { ActivityEventType } from "@/types/activity"
+import type { ActivityItem } from "@/types/activity"
 
 export const mockActivity: ActivityItem[] = [
   {

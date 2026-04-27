@@ -1,5 +1,19 @@
+import { headers } from "next/headers";
 import { wixClient } from "./client";
 import { getWixImageUrl, getWixImageDimensions } from "./media";
+
+/**
+ * Read the x-wix-site-id header injected by Edge Middleware for the current
+ * request. This is the per-tenant Wix Meta Site ID — absent for www.
+ */
+async function getTenantSiteId(): Promise<string | undefined> {
+  try {
+    const hdrs = await headers();
+    return hdrs.get("x-wix-site-id") ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
 import type {
   Tour,
   ItineraryDay,
@@ -212,7 +226,7 @@ export async function getTours(options?: {
   featuredOnly?: boolean;
   activeOnly?: boolean;
 }): Promise<Tour[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   // By default the service returns only published tours. Callers may opt-out
@@ -298,7 +312,7 @@ export async function getTours(options?: {
 export async function getTourBySlug(
   slug: string
 ): Promise<{ tour: Tour; itinerary: ItineraryDay[]; destination: Destination | null; rooms: Room[] } | null> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
 
   // 1. Fetch the tour
@@ -532,7 +546,7 @@ export async function getTourBySlug(
  * to verify price against the canonical parent record.
  */
 export async function getTourById(id: string): Promise<Tour | null> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
 
   try {
@@ -554,7 +568,7 @@ export async function getTourById(id: string): Promise<Tour | null> {
  * Used by the admin-list API to enrich bookings with duration.
  */
 export async function getItineraryDayCount(tourId: string): Promise<number> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return 0;
 
   try {
@@ -595,7 +609,7 @@ export async function getItineraryDayCount(tourId: string): Promise<number> {
  * Fetch all published tour slugs — used by generateStaticParams().
  */
 export async function getAllTourSlugs(): Promise<string[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   const result = await client.items
@@ -625,7 +639,7 @@ export async function getAllTourSlugs(): Promise<string[]> {
  * Fetch a single destination by its slug. Used by the detail page.
  */
 export async function getDestinationBySlug(slug: string): Promise<Destination | null> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
   try {
     const result = await client.items
@@ -644,7 +658,7 @@ export async function getDestinationBySlug(slug: string): Promise<Destination | 
  * Fetch all destinations for the hub page.
  */
 export async function getDestinations(): Promise<Destination[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) {
     console.error("[getDestinations] Wix client not initialised — check WIX_CLIENT_ID env var");
     return [];
@@ -667,7 +681,7 @@ export async function getDestinations(): Promise<Destination[]> {
  * Fetch a single room by its Wix _id and map to our `Room` type.
  */
 export async function getRoomById(id: string): Promise<Room | null> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return null;
 
   try {
@@ -691,7 +705,7 @@ export async function getRoomById(id: string): Promise<Room | null> {
 export async function fetchRoomsByType(
   type: string,
 ): Promise<Room[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   try {
@@ -788,7 +802,7 @@ export async function fetchTestimonials(
   limit = 6,
   options?: { featuredOnly?: boolean; tourId?: string },
 ): Promise<WixTestimonial[]> {
-  const client = wixClient();
+  const client = wixClient(await getTenantSiteId());
   if (!client) return [];
 
   try {

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { adminAuth, adminDb } from "@/lib/firebase/admin"
+import { recordActivityAdmin } from "@/lib/firebase/activity-admin"
 import { FieldValue } from "firebase-admin/firestore"
 
 // ---------------------------------------------------------------------------
@@ -86,7 +87,28 @@ export default async function handler(
       updatedAt: FieldValue.serverTimestamp(),
       updatedBy: uid,
     })
+    // ── Activity event ──────────────────────────────────────────────────
+    const bookingData = snap.data() ?? {}
+    const bookingOwnerUid = bookingData.uid as string | undefined
+    const tourTitle = (bookingData.tourTitle as string | undefined) ?? "Your booking"
+    const bookingTenantId = bookingData.tenantId as string | undefined
 
+    const STATUS_ACTIVITY: Record<string, { type: import("@/types/activity").ActivityEventType; title: string }> = {
+      confirmed: { type: "booking_confirmed", title: "Booking confirmed" },
+      completed: { type: "booking_completed", title: "Booking completed" },
+      cancelled: { type: "booking_cancelled", title: "Booking cancelled" },
+    }
+
+    const activityDef = STATUS_ACTIVITY[newStatus]
+    if (activityDef && bookingOwnerUid) {
+      await recordActivityAdmin(bookingOwnerUid, {
+        type: activityDef.type,
+        title: activityDef.title,
+        description: tourTitle,
+        link: "/dashboard/bookings",
+        tenantId: bookingTenantId,
+      })
+    }
     return res.status(200).json({ success: true })
   } catch (err) {
     console.error("[Booking] Status update failed:", err)

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { adminAuth, adminDb } from "@/lib/firebase/admin";
+import { recordActivityAdmin } from "@/lib/firebase/activity-admin";
 import { wixClient } from "@/lib/wix/client";
 import { getWixImageUrl } from "@/lib/wix/media";
 import { FieldValue } from "firebase-admin/firestore";
@@ -314,6 +315,17 @@ export default async function handler(
     const docRef = await adminDb.collection("bookings").add(booking);
     const snap = await docRef.get();
     const data = snap.data() ?? {};
+
+    // ── Activity event ──────────────────────────────────────────────────
+    const dateLabel = tourDate ?? "Date TBD"
+    const guestLabel = numericGuests === 1 ? "1 guest" : `${numericGuests} guests`
+    await recordActivityAdmin(uid, {
+      type: "booking_created",
+      title: "Booking submitted",
+      description: `${tourData.title} \u2014 ${dateLabel}, ${guestLabel}`,
+      link: "/dashboard/bookings",
+      tenantId: resolvedTenantId,
+    })
 
     // ── WhatsApp / Twilio notification ──────────────────────────────────
     try {

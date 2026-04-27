@@ -13,7 +13,11 @@ import {
 // Dark luxury bento homepage with five sections rendered in order.
 // ---------------------------------------------------------------------------
 
-export const revalidate = 60;
+// force-dynamic: section components (LuxuryDestinations, LuxuryToursStats, LuxuryAds,
+// LuxuryTestimonials) all call Wix via getTenantSiteId() which reads x-wix-site-id from
+// request headers. ISR background revalidation runs without a request context on Vercel,
+// causing the header to be missing and all sections to fall back to www data.
+export const dynamic = "force-dynamic";
 
 export default function HomePage() {
   return (

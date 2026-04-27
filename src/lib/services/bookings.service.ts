@@ -5,6 +5,8 @@ import {
   orderBy,
   limit as fbLimit,
   onSnapshot,
+  clearIndexedDbPersistence,
+  terminate,
   type QueryConstraint,
   type Unsubscribe,
 } from "firebase/firestore"
@@ -45,7 +47,9 @@ export function subscribeToUserBookings(
 
   const q = query(ref, ...constraints)
 
-  return onSnapshot(
+  let unsub: Unsubscribe | undefined
+
+  unsub = onSnapshot(
     q,
     (snap) => {
       const items: Booking[] = snap.docs.map((d) => ({
@@ -56,7 +60,24 @@ export function subscribeToUserBookings(
     },
     (err) => {
       console.error("[BookingsService] Listener error:", err)
+      // Stop the listener immediately to prevent retry loops
+      unsub?.()
+      // Firebase SDK v12 INTERNAL ASSERTION FAILED = offline cache corruption
+      // caused by a permissions error. Clear the cache and reload to recover.
+      if (err.message?.includes("INTERNAL ASSERTION FAILED")) {
+        terminate(db)
+          .then(() => clearIndexedDbPersistence(db))
+          .then(() => {
+            if (typeof window !== "undefined") window.location.reload()
+          })
+          .catch(() => {
+            if (typeof window !== "undefined") window.location.reload()
+          })
+        return
+      }
       onError?.(err)
     },
   )
+
+  return () => unsub?.()
 }

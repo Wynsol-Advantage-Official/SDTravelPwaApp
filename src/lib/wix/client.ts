@@ -153,9 +153,21 @@ export function wixClient(siteId?: string) {
     return _defaultClient;
   }
 
-  // Non-default tenant → use an API-key client so the siteId is respected
+  // Non-default tenant → use an API-key client so the siteId is respected.
+  // If WIX_API_KEY / WIX_ACCOUNT_ID are not configured (e.g. missing on a
+  // Vercel environment), buildTenantCmsClient returns null. Fall back to the
+  // default OAuth client so the tenant always serves www content rather than
+  // empty states. Add WIX_API_KEY + WIX_ACCOUNT_ID to Vercel env vars to
+  // enable per-tenant Wix CMS isolation.
   if (!_tenantClients.has(siteId)) {
-    _tenantClients.set(siteId, buildTenantCmsClient(siteId));
+    const tenantClient = buildTenantCmsClient(siteId);
+    if (!tenantClient) {
+      console.warn(
+        `[Wix Client] buildTenantCmsClient returned null for siteId "${siteId}" ` +
+        "(WIX_API_KEY or WIX_ACCOUNT_ID missing). Falling back to default OAuth client.",
+      );
+    }
+    _tenantClients.set(siteId, tenantClient ?? buildOAuthClient(undefined));
   }
   return _tenantClients.get(siteId)!;
 }

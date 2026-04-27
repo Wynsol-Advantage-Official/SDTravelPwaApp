@@ -10,7 +10,10 @@ interface BookingPageProps {
   params: Promise<{ tourSlug: string }>
 }
 
-export const revalidate = 300
+// force-dynamic: tenant-specific Wix data is resolved via request headers (x-wix-site-id)
+// injected by Edge Middleware. ISR background revalidation runs without a request context,
+// causing headers() to return undefined and falling back to the www Wix client.
+export const dynamic = "force-dynamic"
 export const dynamicParams = true
 
 export async function generateStaticParams() {

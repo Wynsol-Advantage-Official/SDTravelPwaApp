@@ -7,7 +7,10 @@ import { faker } from "@/lib/demo/faker"
 import { FadeSlide, FadeSlideChild } from "@/components/ui/FadeSlide"
 import { BRAND } from "@/lib/config/brand"
 
-export const revalidate = 60
+// force-dynamic: tenant-specific Wix data is resolved via request headers (x-wix-site-id)
+// injected by Edge Middleware. ISR background revalidation runs without a request context,
+// causing headers() to return undefined and falling back to the www Wix client.
+export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   title: `Destinations | ${BRAND.name}`,

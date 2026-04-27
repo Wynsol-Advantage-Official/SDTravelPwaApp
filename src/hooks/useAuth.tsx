@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react"
 import {
-  onAuthStateChanged,
+  onIdTokenChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
@@ -60,7 +60,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [tenantId, setTenantId] = useState<string | null>(null)
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (fbUser) => {
+    // onIdTokenChanged is a superset of onAuthStateChanged — it also fires
+    // on token refresh, keeping the session cookie in sync with the latest
+    // ID token and preventing "Invalid session" errors on admin routes.
+    const unsub = onIdTokenChanged(auth, (fbUser) => {
       setUser(fbUser)
       setLoading(false)
 

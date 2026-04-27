@@ -2,13 +2,11 @@ import {
   collection,
   addDoc,
   query,
-  where,
   orderBy,
   limit as fbLimit,
   onSnapshot,
   serverTimestamp,
   Timestamp,
-  type QueryConstraint,
   type Unsubscribe,
 } from "firebase/firestore"
 import { db } from "@/lib/firebase/client"
@@ -49,26 +47,17 @@ function docToItem(id: string, data: ActivityDoc): ActivityItem {
  *
  * Firestore path: `users/{uid}/activity`
  *
- * Results are ordered newest-first and optionally capped at `maxResults`.
- * Pass `tenantId` to scope results to a single tenant portal.
+ * Results are ordered newest-first and capped at `maxResults`.
+ * Activity is already user-scoped by path so no tenant filter is needed.
  */
 export function subscribeToUserActivity(
   uid: string,
-  tenantId: string | null,
   onData: (items: ActivityItem[]) => void,
   onError?: (err: Error) => void,
   maxResults = 20,
 ): Unsubscribe {
   const ref = collection(db, "users", uid, "activity")
-  const constraints: QueryConstraint[] = [orderBy("timestamp", "desc")]
-
-  if (tenantId) {
-    constraints.push(where("tenantId", "==", tenantId))
-  }
-
-  constraints.push(fbLimit(maxResults))
-
-  const q = query(ref, ...constraints)
+  const q = query(ref, orderBy("timestamp", "desc"), fbLimit(maxResults))
 
   return onSnapshot(
     q,

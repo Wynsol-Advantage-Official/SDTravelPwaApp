@@ -46,6 +46,15 @@ service cloud.firestore {
     }
 
     // ── User Profiles & Wishlists ──────────────────────────────────────
+    //
+    // Activity subcollection: read for owner, NO client writes
+    // (activity is written exclusively via Admin SDK from API routes)
+    match /users/{uid}/activity/{activityId} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // All other subcollections under a user doc (profile, wishlist, etc.)
     match /users/{uid}/{document=**} {
       allow read: if request.auth != null &&
         (request.auth.uid == uid || isSuperAdmin());

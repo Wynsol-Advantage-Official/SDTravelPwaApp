@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { useAuth } from "@/hooks/useAuth"
 import { useMockMode } from "@/hooks/useMockMode"
-import { useTenant } from "@/hooks/useTenant"
 import { subscribeToUserActivity } from "@/lib/services/activity.service"
 import { mockActivity } from "@/mocks"
 import type { ActivityItem } from "@/types/activity"
@@ -18,7 +17,6 @@ import type { ActivityItem } from "@/types/activity"
 export function useActivity(maxResults = 20) {
   const { user } = useAuth()
   const { isMockMode } = useMockMode()
-  const { tenantId } = useTenant()
 
   const [activity, setActivity] = useState<ActivityItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -38,7 +36,6 @@ export function useActivity(maxResults = 20) {
 
     const unsub = subscribeToUserActivity(
       user.uid,
-      tenantId ?? null,
       (items) => {
         setActivity(items)
         setLoading(false)
@@ -48,7 +45,7 @@ export function useActivity(maxResults = 20) {
     )
 
     return unsub
-  }, [user, tenantId, isMockMode, maxResults])
+  }, [user, isMockMode, maxResults])
 
   return { activity, loading }
 }

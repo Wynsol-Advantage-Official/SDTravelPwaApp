@@ -23,12 +23,13 @@ service cloud.firestore {
         && request.auth.token.tenantId == tenantId;
     }
 
-    // Any authenticated user whose JWT tenantId matches the document's tenant
+    // Any authenticated user whose JWT tenantId matches the document's tenant.
+    // Uses .get() to safely handle users with no tenantId custom claim.
     function belongsToTenant(tenantId) {
       return request.auth != null && (
-        // Global end-users (tenantId: null) can access any tenant's public data
-        request.auth.token.tenantId == null
-        || request.auth.token.tenantId == tenantId
+        // Global end-users (no tenantId claim) can access any tenant's data
+        request.auth.token.get('tenantId', null) == null
+        || request.auth.token.get('tenantId', null) == tenantId
       );
     }
 
@@ -115,11 +116,12 @@ service cloud.firestore {
         && resource != null
         && isTenantAdmin(resource.data.tenantId);
 
-      // End users: read own bookings
+      // End users: read their own bookings.
+      // tenantId scoping is enforced at write time (Admin SDK) and at the
+      // query layer in useUserBookings — no custom-claim check needed here.
       allow read: if request.auth != null
         && resource != null
-        && resource.data.uid == request.auth.uid
-        && belongsToTenant(resource.data.tenantId);
+        && resource.data.uid == request.auth.uid;
 
       // Client writes remain server-only for non-admins
       allow write: if false;

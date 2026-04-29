@@ -88,7 +88,18 @@ function ProfileContent() {
   const email = isMockMode ? mockUserProfile.email : user?.email
   const memberSince = isMockMode
     ? mockUserProfile.createdAt
-    : profile?.createdAt
+    : (() => {
+        const raw = profile?.createdAt
+        if (!raw) {
+          // Fall back to Firebase Auth account creation time
+          const ct = user?.metadata?.creationTime
+          return ct ? new Date(ct) : undefined
+        }
+        // Firestore returns a Timestamp with .toDate(); the type says Date but may not be
+        return typeof (raw as unknown as { toDate?: () => Date }).toDate === "function"
+          ? (raw as unknown as { toDate: () => Date }).toDate()
+          : new Date(raw as unknown as string | number)
+      })()
 
   useEffect(() => {
     setAvatarSrc(avatarUrl ?? AVATAR_PLACEHOLDER_SRC)
@@ -127,7 +138,7 @@ function ProfileContent() {
                 {displayName || "Traveler"}
               </h2>
               <p className="mt-1 text-sm text-ocean-deep/50">{email}</p>
-              {memberSince && (
+              {memberSince && !isNaN(new Date(memberSince).getTime()) && (
                 <p className="mt-2 text-[10px] uppercase tracking-wider text-ocean-deep/30">
                   Member since{" "}
                   {new Date(memberSince).toLocaleDateString("en-US", {

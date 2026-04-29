@@ -33,9 +33,15 @@ function getInitials(name: string | null | undefined): string {
   return parts[0][0].toUpperCase()
 }
 
+const ROLE_LABEL: Record<string, string> = {
+  super_admin: "Super Admin",
+  tenant_admin: "Portal Admin",
+  user: "Diamond Member",
+}
+
 /** Authenticated user avatar + dropdown menu. */
 function UserMenu() {
-  const { user, loading, signOut } = useAuth()
+  const { user, loading, role, signOut } = useAuth()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -92,7 +98,7 @@ function UserMenu() {
                 {displayName}
               </p>
               <p className="font-sans text-xs text-ocean/60 dark:text-blue-chill-300">
-                Diamond Member
+                {ROLE_LABEL[role] ?? "Diamond Member"}
               </p>
             </div>
             <Link
@@ -146,6 +152,7 @@ function DropdownNavItem({
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
+        suppressHydrationWarning
         className={`relative flex items-center gap-1 rounded-md px-3 py-1.5 font-sans text-sm font-medium transition-colors ${
           isActive
             ? "text-ocean-deep dark:text-white"

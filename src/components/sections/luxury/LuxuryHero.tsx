@@ -15,6 +15,8 @@ import {
 import { BentoGrid, BentoCard } from "@/components/bento";
 import { Reveal, ParallaxLayer } from "@/components/motion";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { useHeroDeal, type RawHeroAd } from "@/hooks/useHeroDeal";
+import { SeeDealButton } from "./SeeDealButton";
 
 /* ------------------------------------------------------------------ */
 /*  Filter themes                                                      */
@@ -46,10 +48,12 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
 
   const [current, setCurrent] = useState<number>(0);
   const [remoteImages, setRemoteImages] = useState<Array<{ src: string; width?: number; height?: number; alt?: string }> | null>(null);
+  const [rawAds, setRawAds] = useState<RawHeroAd[] | null>(null);
   const touchStartRef = React.useRef<number | null>(null);
   const touchMoveRef = React.useRef<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [direction, setDirection] = useState<1 | -1>(1);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Detect mobile viewport for reduced parallax ranges
   useEffect(() => {
@@ -78,7 +82,10 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
           }
           if (ad.cover?.src) imgs.push({ src: ad.cover.src, width: ad.cover.width, height: ad.cover.height, alt: ad.cover.alt });
         }
-        if (mounted && imgs.length > 0) setRemoteImages(imgs);
+        if (mounted && imgs.length > 0) {
+          setRemoteImages(imgs);
+          setRawAds(items);
+        }
       } catch (e) {
         // ignore — fallback to local assets
       }
@@ -90,20 +97,23 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
     };
   }, []);
 
-  // Autoplay with dynamic length
+  // Autoplay with dynamic length — paused while SeeDealButton is hovered
   useEffect(() => {
     const list = remoteImages ?? images;
-    if (!list || list.length === 0) return;
+    if (!list || list.length === 0 || isPaused) return;
     const id = setInterval(() => {
       setDirection(1);
       setCurrent((c) => (c + 1) % list.length);
     }, 5000);
     return () => clearInterval(id);
-  }, [remoteImages]);
+  }, [remoteImages, isPaused]);
 
   const imageList = remoteImages ?? images;
   const listLen = imageList.length || 1;
   const currentImg = imageList[current % listLen];
+
+  // Deal data for the current slide — drives the SeeDealButton panel
+  const deal = useHeroDeal(current, imageList, rawAds);
 
   const slideVariants: Variants = {
     enter: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%" }),
@@ -126,7 +136,7 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
 
   return (
     <div
-      className="w-full max-w-full"
+      className="relative w-full max-w-full"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === "ArrowLeft") goPrev();
@@ -270,6 +280,13 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
       </div>
 
     </BentoCard>
+
+    {/* See Deals — outside overflow-hidden BentoCard so the panel is not clipped */}
+    <SeeDealButton
+      deal={deal}
+      onHoverStart={() => setIsPaused(true)}
+      onHoverEnd={() => setIsPaused(false)}
+    />
     </div>
   );
 }

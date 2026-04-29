@@ -21,6 +21,9 @@
 # production
 /build
 
+# local dev output files
+build_output.txt
+
 # misc
 .DS_Store
 *.pem

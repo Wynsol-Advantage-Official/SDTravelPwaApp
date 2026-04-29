@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { BentoGrid, BentoCard } from "@/components/bento";
-import { Reveal, RevealStagger } from "@/components/motion";
+import { Reveal, Card3DReveal } from "@/components/motion";
 import { getTestimonials } from "@/lib/services";
 import type { WixTestimonial } from "@/lib/services";
 
@@ -107,11 +107,19 @@ export async function LuxuryTestimonials() {
         </Reveal>
       ) : (
         <BentoGrid columns="repeat(auto-fit, minmax(300px, 1fr))" className="max-md:grid-cols-1">
-          <RevealStagger staggerMs={80}>
-            {testimonials.map((t) => (
-              <TestimonialCard key={t._id} testimonial={t} />
-            ))}
-          </RevealStagger>
+          {testimonials.map((t, i) => (
+            <Card3DReveal
+              key={t._id}
+              index={i}
+              rotateXFrom={8}
+              rotateYFrom={-6}
+              depthFrom={-24}
+              distance={45}
+              durationMs={550}
+            >
+              <TestimonialCard testimonial={t} />
+            </Card3DReveal>
+          ))}
         </BentoGrid>
       )}
     </section>

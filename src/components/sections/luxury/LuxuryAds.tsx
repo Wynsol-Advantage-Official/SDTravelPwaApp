@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Reveal } from "@/components/motion";
+import { Reveal, Card3DReveal } from "@/components/motion";
 import { AdBentoStrip } from "@/components/ads";
 import { getActiveAds } from "@/lib/services/ads.service";
 
@@ -47,9 +47,15 @@ export async function LuxuryAds() {
       </Reveal>
 
       {/* ── Bento ad grid ──────────────────────────────────────────── */}
-      <Reveal delayMs={100}>
+      <Card3DReveal
+        rotateXFrom={0}
+        rotateYFrom={0}
+        depthFrom={0}
+        distance={30}
+        durationMs={500}
+      >
         <AdBentoStrip ads={ads} />
-      </Reveal>
+      </Card3DReveal>
     </section>
   );
 }

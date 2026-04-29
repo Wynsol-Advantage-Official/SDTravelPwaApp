@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BentoGrid, BentoCard } from "@/components/bento";
-import { Reveal, RevealStagger } from "@/components/motion";
+import { Reveal, Card3DReveal } from "@/components/motion";
 
 /* ------------------------------------------------------------------ */
 /*  Inline partner data                                                */
@@ -64,20 +64,36 @@ export function LuxuryPartnersCta() {
 
       {/* ── 2-column layout ────────────────────────────────────────── */}
       <BentoGrid columns="1fr 1fr" className="max-md:grid-cols-1">
-        <RevealStagger staggerMs={100}>
-          {/* Left column — Partners pill grid */}
-          <BentoCard variant="default" hoverable className="p-[18px]">
-            <h3 className="mb-4 font-sans text-[18px] text-ocean-deep dark:text-white">
-              Our Partners
-            </h3>
-            <div className="grid grid-cols-3 gap-[10px] max-sm:grid-cols-2">
-              {partners.map((p) => (
-                <PartnerPill key={p.id} partner={p} />
-              ))}
-            </div>
-          </BentoCard>
+        {/* Left column — Partners pill grid */}
+        <BentoCard variant="default" hoverable className="p-[18px]">
+          <h3 className="mb-4 font-sans text-[18px] text-ocean-deep dark:text-white">
+            Our Partners
+          </h3>
+          <div className="grid grid-cols-3 gap-[10px] max-sm:grid-cols-2">
+            {partners.map((p, i) => (
+              <Card3DReveal
+                key={p.id}
+                index={i}
+                rotateXFrom={8}
+                depthFrom={-20}
+                distance={15}
+                durationMs={400}
+              >
+                <PartnerPill partner={p} />
+              </Card3DReveal>
+            ))}
+          </div>
+        </BentoCard>
 
-          {/* Right column — CTA card */}
+        {/* Right column — CTA card */}
+        <Card3DReveal
+          index={PARTNERS.length}
+          rotateXFrom={0}
+          depthFrom={0}
+          distance={40}
+          durationMs={600}
+          delayMs={200}
+        >
           <BentoCard
             variant="default"
             className="relative flex flex-col justify-between overflow-hidden p-[20px]"
@@ -121,7 +137,7 @@ export function LuxuryPartnersCta() {
               </p>
             </div>
           </BentoCard>
-        </RevealStagger>
+        </Card3DReveal>
       </BentoGrid>
     </section>
   );

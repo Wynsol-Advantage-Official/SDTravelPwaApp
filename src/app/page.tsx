@@ -6,6 +6,7 @@ import {
   LuxuryTestimonials,
   LuxuryPartnersCta,
 } from "@/components/sections";
+import { HomeMotionConfig } from "@/components/motion";
 
 // ---------------------------------------------------------------------------
 // Homepage — Server Component (default)
@@ -22,12 +23,14 @@ export const dynamic = "force-dynamic";
 export default function HomePage() {
   return (
     <main className="relative min-h-dvh bg transition-colors duration-300 dark:bg-ocean-deep">
-      <LuxuryHero />
-      <div className="mt-6"><LuxuryDestinations /></div>
-      <div className="mt-6"><LuxuryToursStats /></div>
-      <div className="mt-6"><LuxuryAds /></div>
-      <div className="mt-6"><LuxuryTestimonials /></div>
-      <div className="mt-6"><LuxuryPartnersCta /></div>
+      <HomeMotionConfig>
+        <LuxuryHero />
+        <div className="mt-6"><LuxuryDestinations /></div>
+        <div className="mt-6"><LuxuryToursStats /></div>
+        <div className="mt-6"><LuxuryAds /></div>
+        <div className="mt-6"><LuxuryTestimonials /></div>
+        <div className="mt-6"><LuxuryPartnersCta /></div>
+      </HomeMotionConfig>
     </main>
   );
 }

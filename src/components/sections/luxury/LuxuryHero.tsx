@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -13,7 +13,10 @@ import {
   CloudSun,
 } from "lucide-react";
 import { BentoGrid, BentoCard } from "@/components/bento";
-import { Reveal } from "@/components/motion";
+import { Reveal, ParallaxLayer } from "@/components/motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { useHeroDeal, type RawHeroAd } from "@/hooks/useHeroDeal";
+import { SeeDealButton } from "./SeeDealButton";
 
 /* ------------------------------------------------------------------ */
 /*  Filter themes                                                      */
@@ -31,8 +34,12 @@ const FILTER_THEMES = [
 /*  Sub-cards                                                          */
 /* ------------------------------------------------------------------ */
 
+interface HeroMainCardProps {
+  sectionRef: React.RefObject<HTMLElement | null>;
+}
+
 /** Main hero card — col 1, spans both rows */
-function HeroMainCard() {
+function HeroMainCard({ sectionRef }: HeroMainCardProps) {
   const images = [
     { src: "/media/home-hero-poster.jpg", width: 1600, height: 900, alt: "Luxury beach" },
     { src: "/media/home-hero-2.jpg", width: 1600, height: 900, alt: "Mountain view" },
@@ -41,8 +48,20 @@ function HeroMainCard() {
 
   const [current, setCurrent] = useState<number>(0);
   const [remoteImages, setRemoteImages] = useState<Array<{ src: string; width?: number; height?: number; alt?: string }> | null>(null);
+  const [rawAds, setRawAds] = useState<RawHeroAd[] | null>(null);
   const touchStartRef = React.useRef<number | null>(null);
   const touchMoveRef = React.useRef<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [direction, setDirection] = useState<1 | -1>(1);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Detect mobile viewport for reduced parallax ranges
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Fetch Ads images from server API which wraps the Wix service
   useEffect(() => {
@@ -63,7 +82,10 @@ function HeroMainCard() {
           }
           if (ad.cover?.src) imgs.push({ src: ad.cover.src, width: ad.cover.width, height: ad.cover.height, alt: ad.cover.alt });
         }
-        if (mounted && imgs.length > 0) setRemoteImages(imgs);
+        if (mounted && imgs.length > 0) {
+          setRemoteImages(imgs);
+          setRawAds(items);
+        }
       } catch (e) {
         // ignore — fallback to local assets
       }
@@ -75,21 +97,50 @@ function HeroMainCard() {
     };
   }, []);
 
-  // Autoplay with dynamic length
+  // Autoplay with dynamic length — paused while SeeDealButton is hovered
   useEffect(() => {
     const list = remoteImages ?? images;
-    if (!list || list.length === 0) return;
-    const id = setInterval(() => setCurrent((c) => (c + 1) % list.length), 5000);
+    if (!list || list.length === 0 || isPaused) return;
+    const id = setInterval(() => {
+      setDirection(1);
+      setCurrent((c) => (c + 1) % list.length);
+    }, 5000);
     return () => clearInterval(id);
-  }, [remoteImages]);
+  }, [remoteImages, isPaused]);
+
+  const imageList = remoteImages ?? images;
+  const listLen = imageList.length || 1;
+  const currentImg = imageList[current % listLen];
+
+  // Deal data for the current slide — drives the SeeDealButton panel
+  const deal = useHeroDeal(current, imageList, rawAds);
+
+  const slideVariants: Variants = {
+    enter: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%" }),
+    center: { x: 0 },
+    exit: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%" }),
+  };
+
+  function goNext() {
+    setDirection(1);
+    setCurrent((c) => (c + 1) % listLen);
+  }
+  function goPrev() {
+    setDirection(-1);
+    setCurrent((c) => (c - 1 + listLen) % listLen);
+  }
+  function goTo(i: number) {
+    setDirection(i > current ? 1 : -1);
+    setCurrent(i);
+  }
 
   return (
     <div
-      className="w-full max-w-full"
+      className="relative w-full max-w-full"
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key === "ArrowLeft") setCurrent((c) => (c - 1 + (remoteImages ?? images).length) % (remoteImages ?? images).length);
-        if (e.key === "ArrowRight") setCurrent((c) => (c + 1) % (remoteImages ?? images).length);
+        if (e.key === "ArrowLeft") goPrev();
+        if (e.key === "ArrowRight") goNext();
       }}
       onTouchStart={(e) => (touchStartRef.current = e.touches?.[0]?.clientX ?? null)}
       onTouchMove={(e) => (touchMoveRef.current = e.touches?.[0]?.clientX ?? null)}
@@ -99,61 +150,106 @@ function HeroMainCard() {
         if (start == null) return;
         const delta = (end as number) - start;
         const threshold = 50;
-        const listLen = (remoteImages ?? images).length;
-        if (delta > threshold) setCurrent((c) => (c - 1 + listLen) % listLen);
-        else if (delta < -threshold) setCurrent((c) => (c + 1) % listLen);
+        if (delta > threshold) goPrev();
+        else if (delta < -threshold) goNext();
         touchStartRef.current = null;
         touchMoveRef.current = null;
       }}
     >
       <BentoCard
         variant="default"
-        span={{ col: 1, row: 2 }}
-        className="relative flex flex-col justify-end p-5 overflow-hidden w-full max-w-full h-full min-h-[320px] sm:min-h-[420px] lg:min-h-[520px]"
+        span={{ col: 1, row: 1 }}
+        className="relative flex flex-col justify-end p-5 overflow-hidden w-full max-w-full h-full min-h-[50dvh] lg:min-h-[calc(100dvh-3.5rem)] rounded-none"
       >
       {/* touch refs */}
       
-      {/* Image gallery background */}
-      <img
-        src={(remoteImages ?? images)[current % (remoteImages ? remoteImages.length : images.length)].src}
-        alt={(remoteImages ?? images)[current % (remoteImages ? remoteImages.length : images.length)].alt ?? "Hero background"}
-        className="absolute inset-0 w-full h-full object-cover opacity-90"
-        aria-hidden="true"
-      />
+      {/* Image gallery background — Layer 1 parallax */}
+      <ParallaxLayer
+        targetRef={sectionRef}
+        offset={["start start", "end start"]}
+        yRange={isMobile ? [0, -40] : [0, -100]}
+        scaleRange={isMobile ? undefined : [1.0, 1.08]}
+        opacityRange={[1, 0.75]}
+        className="absolute inset-0 w-full h-full overflow-hidden"
+      >
+        {/* Blurred background — crossfade on image change */}
+        <AnimatePresence initial={false}>
+          <motion.img
+            key={`bg-${current}`}
+            src={currentImg.src}
+            alt=""
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="absolute inset-0 w-full h-full object-cover scale-125 blur-[80px]"
+            aria-hidden="true"
+          />
+        </AnimatePresence>
 
-      {/* Gradient scrim for text legibility */}
-      <div className="absolute hidden inset-0 bg-gradient-to-tr from-luxgold-dim via-blue-chill-dim/60 to-transparent" aria-hidden="true" />
+        {/* Main image — slide transition, contained in frame */}
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.img
+            key={`main-${current}`}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            src={currentImg.src}
+            alt={currentImg.alt ?? "Hero background"}
+            className="absolute inset-0 w-full h-full object-contain"
+            aria-hidden="true"
+          />
+        </AnimatePresence>
+      </ParallaxLayer>
 
-      <div className="absolute left-6 bottom-6 z-10 flex flex-col gap-4 max-w-[60ch] hidden">
-        {/* Eyebrow */}
-        <span className="font-sans text-[9px] uppercase tracking-[0.14em] text-white/60">
-          Featured Collection 2026
-        </span>
+      {/* Gradient scrim for text legibility — Layer 2 parallax */}
+      <ParallaxLayer
+        targetRef={sectionRef}
+        offset={["start start", "end start"]}
+        yRange={isMobile ? [0, -20] : [0, -50]}
+        className="absolute inset-0"
+      >
+        <div className="absolute hidden inset-0 bg-gradient-to-tr from-luxgold-dim via-blue-chill-dim/60 to-transparent" aria-hidden="true" />
+      </ParallaxLayer>
 
-        {/* Headline */}
-        <h1 className="font-sans text-[38px] leading-tight max-w-[40ch] text-white">
-          Where Every Journey Becomes a{" "}
-          <em className="italic text-blue-chill-300">Diamond</em>
-        </h1>
+      {/* Content text overlay — Layer 3 parallax */}
+      <ParallaxLayer
+        targetRef={sectionRef}
+        offset={["start start", "end start"]}
+        yRange={isMobile ? [0, 10] : [0, 40]}
+        className="absolute inset-0"
+      >
+        <div className="absolute left-6 bottom-6 z-10 flex flex-col gap-4 max-w-[60ch] hidden">
+          {/* Eyebrow */}
+          <span className="font-sans text-[9px] uppercase tracking-[0.14em] text-white/60">
+            Featured Collection 2026
+          </span>
 
-        {/* CTAs */}
-        <div className="flex items-center gap-3 mt-2">
-          <Link
-            href="/tours"
-            className="inline-flex items-center gap-2 rounded-[8px] bg-ocean px-4 py-2 text-[12px] font-semibold uppercase text-ocean-deep transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-blue-chill"
-          >
-            Explore Diamonds
-          </Link>
+          {/* Headline */}
+          <h1 className="font-sans text-[38px] leading-tight max-w-[40ch] text-white">
+            Where Every Journey Becomes a{" "}
+            <em className="italic text-blue-chill-300">Diamond</em>
+          </h1>
+
+          {/* CTAs */}
+          <div className="flex items-center gap-3 mt-2">
+            <Link
+              href="/tours"
+              className="inline-flex items-center gap-2 rounded-[8px] bg-ocean px-4 py-2 text-[12px] font-semibold uppercase text-ocean-deep transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-blue-chill"
+            >
+              Explore Diamonds
+            </Link>
+          </div>
         </div>
-      </div>
+      </ParallaxLayer>
 
       {/* Gallery controls */}
       <button
         aria-label="Previous image"
-        onClick={() => setCurrent((c) => {
-          const len = (remoteImages ?? images).length || 1;
-          return (c - 1 + len) % len;
-        })}
+        onClick={goPrev}
         className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white hover:bg-black/40 focus:outline-none"
       >
         ‹
@@ -161,7 +257,7 @@ function HeroMainCard() {
 
       <button
         aria-label="Next image"
-        onClick={() => setCurrent((c) => (c + 1) % (remoteImages ?? images).length)}
+        onClick={goNext}
         className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white hover:bg-black/40 focus:outline-none"
       >
         ›
@@ -172,7 +268,7 @@ function HeroMainCard() {
         {(remoteImages ?? images).map((img, i) => (
           <button
             key={img.src}
-            onClick={() => setCurrent(i)}
+            onClick={() => goTo(i)}
             aria-label={`Show image ${i + 1}`}
             className={`h-12 w-20 overflow-hidden rounded-md border-2 transition-opacity ${
               i === current ? "border-white opacity-100" : "border-transparent opacity-60"
@@ -184,6 +280,13 @@ function HeroMainCard() {
       </div>
 
     </BentoCard>
+
+    {/* See Deals — outside overflow-hidden BentoCard so the panel is not clipped */}
+    <SeeDealButton
+      deal={deal}
+      onHoverStart={() => setIsPaused(true)}
+      onHoverEnd={() => setIsPaused(false)}
+    />
     </div>
   );
 }
@@ -395,14 +498,15 @@ function ConciergeCard() {
 /* ------------------------------------------------------------------ */
 
 export function LuxuryHero() {
+  const sectionRef = useRef<HTMLElement>(null);
   return (
-    <section aria-label="Hero" className="w-full">
+    <section ref={sectionRef} aria-label="Hero" className="w-full">
       <Reveal>
         {/* Desktop / large-screen bento grid */}
         <div className="hidden lg:block">
-          <BentoGrid columns="2fr" rows="360px 180px" gap={10}>
+          <BentoGrid columns="2fr" rows="calc(100dvh - 3.5rem)" gap={10}>
             {/* Col 1, rows 1–2 */}
-            <HeroMainCard />
+            <HeroMainCard sectionRef={sectionRef} />
 
             {/* Col 2, row 1 
             <SearchCard />*/}
@@ -420,8 +524,8 @@ export function LuxuryHero() {
 
         {/* Mobile / tablet stacked layout */}
         <div className="flex flex-col gap-[10px] lg:hidden ">
-          <div className="min-h-[320px] ">
-            <HeroMainCard />
+          <div className="min-h-[50dvh]">
+            <HeroMainCard sectionRef={sectionRef} />
           </div>
           <SearchCard />
           <QuickFilterCard />

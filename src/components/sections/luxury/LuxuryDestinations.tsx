@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { BentoGrid, BentoCard } from "@/components/bento";
-import { Reveal } from "@/components/motion";
+import { Reveal, Card3DReveal } from "@/components/motion";
 import { getDestinations } from "@/lib/wix/tours";
 import type { Destination } from "@/types/tour";
 
@@ -157,94 +157,157 @@ export async function LuxuryDestinations() {
       </Reveal>
 
       {/* ── Bento grid ─────────────────────────────────────────────── */}
-      <Reveal delayMs={100}>
-        {destinations.length === 0 ? (
-          <BentoGrid columns="1fr" gap={10}>
-            <EmptyState />
-          </BentoGrid>
-        ) : (
-          <>
-            {/* Desktop asymmetric 4-column grid */}
-            <div className="hidden lg:block">
-              {destinations.length >= 5 ? (
-                <BentoGrid columns="repeat(4, 1fr)" rows="280px 220px" gap={10}>
-                  {/* Featured — cols 1-2, row 1 */}
+      {destinations.length === 0 ? (
+        <BentoGrid columns="1fr" gap={10}>
+          <EmptyState />
+        </BentoGrid>
+      ) : (
+        <>
+          {/* Desktop asymmetric 4-column grid */}
+          <div className="hidden lg:block">
+            {destinations.length >= 5 ? (
+              <BentoGrid columns="repeat(4, 1fr)" rows="280px 220px" gap={10}>
+                {/* Featured — cols 1-2, row 1 */}
+                <Card3DReveal
+                  index={0}
+                  rotateXFrom={14}
+                  depthFrom={-80}
+                  distance={48}
+                  durationMs={600}
+                  style={{ gridColumn: "span 2" }}
+                >
                   <DestinationCard
                     dest={destinations[0]}
                     variant="featured"
-                    style={{ gridColumn: "span 2" }}
+                    style={{ minHeight: "280px" }}
                   />
-                  {/* Standard 1 — col 3, row 1 */}
+                </Card3DReveal>
+                {/* Standard 1 — col 3, row 1 */}
+                <Card3DReveal
+                  index={1}
+                  rotateXFrom={12}
+                  depthFrom={-60}
+                  distance={40}
+                  durationMs={600}
+                >
                   <DestinationCard
                     dest={destinations[1]}
                     variant="standard"
+                    style={{ minHeight: "280px" }}
                   />
-                  {/* Tall — col 4, rows 1-2 */}
+                </Card3DReveal>
+                {/* Tall — col 4, rows 1-2 */}
+                <Card3DReveal
+                  index={2}
+                  rotateXFrom={12}
+                  depthFrom={-60}
+                  distance={40}
+                  durationMs={600}
+                  style={{ gridRow: "span 2" }}
+                >
                   <DestinationCard
                     dest={destinations[2]}
                     variant="tall"
-                    style={{ gridRow: "span 2" }}
+                    style={{ minHeight: "510px" }}
                   />
-                  {/* Standard 2 — col 1, row 2 */}
+                </Card3DReveal>
+                {/* Standard 2 — col 1, row 2 */}
+                <Card3DReveal
+                  index={3}
+                  rotateXFrom={12}
+                  depthFrom={-60}
+                  distance={40}
+                  durationMs={600}
+                >
                   <DestinationCard
                     dest={destinations[3]}
                     variant="standard"
+                    style={{ minHeight: "220px" }}
                   />
-                  {/* Standard 3 — cols 2-3, row 2 */}
+                </Card3DReveal>
+                {/* Standard 3 — cols 2-3, row 2 */}
+                <Card3DReveal
+                  index={4}
+                  rotateXFrom={12}
+                  depthFrom={-60}
+                  distance={40}
+                  durationMs={600}
+                  style={{ gridColumn: "span 2" }}
+                >
                   <DestinationCard
                     dest={destinations[4]}
                     variant="standard"
-                    style={{ gridColumn: "span 2" }}
+                    style={{ minHeight: "220px" }}
                   />
-                </BentoGrid>
-              ) : (
-                <BentoGrid columns="repeat(2, 1fr)" gap={10}>
-                  {destinations.map((dest, i) => (
-                    <DestinationCard
-                      key={dest.slug}
-                      dest={dest}
-                      variant={i === 0 ? "featured" : "standard"}
-                      style={{
-                        minHeight: i === 0 ? "280px" : "220px",
-                        ...(i === 0 ? { gridColumn: "span 2" } : {}),
-                      }}
-                    />
-                  ))}
-                </BentoGrid>
-              )}
-            </div>
-
-            {/* Tablet 2-column grid */}
-            <div className="hidden md:block lg:hidden">
+                </Card3DReveal>
+              </BentoGrid>
+            ) : (
               <BentoGrid columns="repeat(2, 1fr)" gap={10}>
                 {destinations.map((dest, i) => (
-                  <DestinationCard
+                  <Card3DReveal
                     key={dest.slug}
-                    dest={dest}
-                    variant={i === 0 ? "featured" : "standard"}
-                    style={{
-                      minHeight: i === 0 ? "280px" : "220px",
-                      ...(i === 0 ? { gridColumn: "span 2" } : {}),
-                    }}
-                  />
+                    index={i}
+                    rotateXFrom={12}
+                    depthFrom={-60}
+                    distance={40}
+                    durationMs={600}
+                    style={i === 0 ? { gridColumn: "span 2" } : undefined}
+                  >
+                    <DestinationCard
+                      dest={dest}
+                      variant={i === 0 ? "featured" : "standard"}
+                      style={{ minHeight: i === 0 ? "280px" : "220px" }}
+                    />
+                  </Card3DReveal>
                 ))}
               </BentoGrid>
-            </div>
+            )}
+          </div>
 
-            {/* Mobile single-column stack */}
-            <div className="grid grid-cols-1 gap-[10px] md:hidden">
+          {/* Tablet 2-column grid */}
+          <div className="hidden md:block lg:hidden">
+            <BentoGrid columns="repeat(2, 1fr)" gap={10}>
               {destinations.map((dest, i) => (
-                <DestinationCard
+                <Card3DReveal
                   key={dest.slug}
+                  index={i}
+                  rotateXFrom={12}
+                  depthFrom={-60}
+                  distance={40}
+                  durationMs={600}
+                  style={i === 0 ? { gridColumn: "span 2" } : undefined}
+                >
+                  <DestinationCard
+                    dest={dest}
+                    variant={i === 0 ? "featured" : "standard"}
+                    style={{ minHeight: i === 0 ? "280px" : "220px" }}
+                  />
+                </Card3DReveal>
+              ))}
+            </BentoGrid>
+          </div>
+
+          {/* Mobile single-column stack */}
+          <div className="grid grid-cols-1 gap-[10px] md:hidden">
+            {destinations.map((dest, i) => (
+              <Card3DReveal
+                key={dest.slug}
+                index={i}
+                rotateXFrom={6}
+                depthFrom={-20}
+                distance={20}
+                durationMs={600}
+              >
+                <DestinationCard
                   dest={dest}
                   variant={i === 0 ? "featured" : "standard"}
                   style={{ minHeight: i === 0 ? "280px" : "200px" }}
                 />
-              ))}
-            </div>
-          </>
-        )}
-      </Reveal>
+              </Card3DReveal>
+            ))}
+          </div>
+        </>
+      )}
     </section>
   );
 }

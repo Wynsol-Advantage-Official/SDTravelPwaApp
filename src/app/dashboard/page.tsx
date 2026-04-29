@@ -3,6 +3,8 @@
 import { useAuth } from "@/hooks/useAuth"
 import { useMockMode } from "@/hooks/useMockMode"
 import { useTenant } from "@/hooks/useTenant"
+import { useEffect, useState } from "react"
+import type { TenantBrandingResponse } from "@/pages/api/tenant/branding"
 import { useUserBookings } from "@/hooks/useUserBookings"
 import { useActivity } from "@/hooks/useActivity"
 import { AuthGuard } from "@/components/auth/AuthGuard"
@@ -42,6 +44,20 @@ function DashboardContent() {
   const { user } = useAuth()
   const { isMockMode } = useMockMode()
   const tenant = useTenant()
+
+  // Fetch live branding from Firestore (source of truth).
+  // useTenant() only carries Edge Config headers — branding fields are not there.
+  const [liveBranding, setLiveBranding] = useState<TenantBrandingResponse | null>(null)
+  useEffect(() => {
+    fetch("/api/tenant/branding")
+      .then((r) => r.ok ? r.json() as Promise<TenantBrandingResponse> : null)
+      .then((data) => { if (data) setLiveBranding(data) })
+      .catch(() => { /* non-fatal — fall back to defaults */ })
+  }, [])
+
+  const tagline = liveBranding?.tagline ?? tenant.branding?.tagline ?? "Where Every Journey Becomes a Diamond"
+  const supportEmail = liveBranding?.supportEmail ?? tenant.branding?.supportEmail
+  const phone = liveBranding?.phone ?? tenant.branding?.phone
   const { bookings, loading } = useUserBookings(10)
   const { activity, loading: activityLoading } = useActivity(20)
 
@@ -78,22 +94,22 @@ function DashboardContent() {
               {tenant.tenantName || tenant.tenantId}
             </p>
             <p className="text-xs text-ocean/60 dark:text-blue-chill-300">
-              {tenant.branding?.tagline ?? "Where Every Journey Becomes a Diamond"}
+              {tagline}
             </p>
           </div>
         </div>
         {/* Portal quick-details strip */}
         <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 border-t border-khaki/30 pt-4 dark:border-white/10">
-          {tenant.branding?.supportEmail && (
+          {supportEmail && (
             <span className="flex items-center gap-1.5 text-xs text-ocean-deep/50 dark:text-white/50">
               <span className="text-ocean">✉</span>
-              {tenant.branding.supportEmail}
+              {supportEmail}
             </span>
           )}
-          {tenant.branding?.phone && (
+          {phone && (
             <span className="flex items-center gap-1.5 text-xs text-ocean-deep/50 dark:text-white/50">
               <span className="text-ocean">✆</span>
-              {tenant.branding.phone}
+              {phone}
             </span>
           )}
           <span className="flex items-center gap-1.5 text-xs text-ocean-deep/30 dark:text-white/30">

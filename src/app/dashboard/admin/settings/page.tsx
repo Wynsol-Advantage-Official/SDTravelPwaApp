@@ -296,6 +296,9 @@ function SettingsContent() {
   // Controlled form state — mirrors the server data
   const [formName, setFormName] = useState("")
   const [formBranding, setFormBranding] = useState<Partial<TenantBranding>>({})
+  // Local display name: starts from useTenant() but updated immediately on save
+  // (useTenant() is frozen at server render; Edge Config propagates on next load)
+  const [displayName, setDisplayName] = useState(tenant.tenantName || tenant.tenantId)
 
   // ── Load tenant settings ─────────────────────────────────────────────────
   const load = useCallback(async () => {
@@ -314,6 +317,7 @@ function SettingsContent() {
       setData(body.tenant)
       setFormName(body.tenant.name ?? "")
       setFormBranding(body.tenant.branding ?? {})
+      setDisplayName(body.tenant.name || tenant.tenantId)
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : "Failed to load settings")
       setSaveStatus("error")
@@ -357,6 +361,7 @@ function SettingsContent() {
       }
       const body = (await res.json()) as { tenant: Tenant }
       setData(body.tenant)
+      setDisplayName(body.tenant.name || tenant.tenantId)
       setSaveStatus("success")
       setTimeout(() => setSaveStatus("idle"), 3000)
     } catch (err) {
@@ -376,7 +381,7 @@ function SettingsContent() {
           Portal Settings
         </h1>
         <p className="mt-1 text-sm text-ocean-deep/60 dark:text-tan-100/60">
-          Manage your portal configuration — {tenant.tenantName || tenant.tenantId}
+          Manage your portal configuration — {displayName}
         </p>
       </div>
 

@@ -11,6 +11,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { adminAuth, adminDb } from "@/lib/firebase/admin"
 import { lookupTenant } from "@/lib/edge-config/tenant-lookup"
+import { upsertTenantEdgeConfig } from "@/lib/api/vercel"
 import { FieldValue } from "firebase-admin/firestore"
 import type { Tenant, TenantBranding } from "@/types/tenant"
 
@@ -170,6 +171,24 @@ export default async function handler(
           ? (data.updatedAt as { toDate: () => Date }).toDate()
           : (data.updatedAt as Date),
     }
+    // ── Sync name change to Vercel Edge Config ────────────────────────────
+    // Edge Config drives the x-tenant-name header injected by proxy.ts on every
+    // request. Without this sync, the subtitle and other consumers of
+    // useTenant().tenantName will show the stale name until a manual redeploy.
+    // Failure here is non-fatal — Firestore is source of truth.
+    if (typeof safeUpdate.name === "string") {
+      try {
+        // tenantId IS the subdomain (e.g. "lljwent")
+        await upsertTenantEdgeConfig(effectiveTenantId, {
+          tenantId: tenant.tenantId,
+          siteId: tenant.wixSiteId,
+          name: tenant.name,
+        })
+      } catch (ecErr) {
+        console.warn("[tenant-settings PUT] Edge Config sync failed (non-fatal):", ecErr)
+      }
+    }
+
     return res.status(200).json({ tenant })
   } catch (err) {
     console.error("[tenant-settings PUT]", err)

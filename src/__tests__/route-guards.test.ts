@@ -19,7 +19,7 @@ jest.mock('next/server', () => {
   }
 })
 
-import { middleware } from '@/middleware'
+import { proxy } from '@/proxy'
 
 jest.mock('@/lib/edge-config', () => ({
   lookupTenant: jest.fn(),
@@ -59,7 +59,7 @@ function makeReq(host: string, path = '/', cookies: Record<string,string> = {}) 
   } as any
 }
 
-describe('middleware route guards', () => {
+describe('proxy route guards', () => {
   beforeEach(() => {
     jest.resetAllMocks()
   })
@@ -67,7 +67,7 @@ describe('middleware route guards', () => {
   it('redirects unknown subdomain to www', async () => {
     ;(lookupTenant as jest.Mock).mockResolvedValue(null)
     const req = makeReq('unknown.sanddiamonds.travel', '/')
-    const res: any = await middleware(req)
+    const res: any = await proxy(req)
     const loc = res.headers.get('location')
     expect(loc).toMatch(/www\.sanddiamonds\.travel/)
   })
@@ -76,7 +76,7 @@ describe('middleware route guards', () => {
     ;(lookupTenant as jest.Mock).mockResolvedValue({ tenantId: 'solnica', siteId: 's1', name: 'Solnica' })
     ;(decodeSessionCookie as jest.Mock).mockReturnValue(null)
     const req = makeReq('solnica.sanddiamonds.travel', '/booking/123')
-    const res: any = await middleware(req)
+    const res: any = await proxy(req)
     const loc = res.headers.get('location')
     expect(loc).toContain('/auth/sign-in')
     const u = new URL(loc)
@@ -87,7 +87,7 @@ describe('middleware route guards', () => {
     ;(lookupTenant as jest.Mock).mockResolvedValue({ tenantId: 'other', siteId: 's1', name: 'Other' })
     ;(decodeSessionCookie as jest.Mock).mockReturnValue({ role: 'tenant_admin', tenantId: 'solnica' })
     const req = makeReq('other.sanddiamonds.travel', '/dashboard', { session: 'token' })
-    const res: any = await middleware(req)
+    const res: any = await proxy(req)
     const loc = res.headers.get('location')
     expect(loc).toMatch(/solnica\.sanddiamonds\.travel/)
     expect(loc).toContain('/dashboard')
@@ -97,7 +97,7 @@ describe('middleware route guards', () => {
     ;(lookupTenant as jest.Mock).mockResolvedValue({ tenantId: 'solnica', siteId: 's1', name: 'Solnica' })
     ;(decodeSessionCookie as jest.Mock).mockReturnValue({ role: 'user', tenantId: 'solnica' })
     const req = makeReq('solnica.sanddiamonds.travel', '/')
-    const res: any = await middleware(req)
+    const res: any = await proxy(req)
     expect(res.headers.get('x-tenant-id')).toBe('solnica')
     expect(res.headers.get('x-wix-site-id')).toBe('s1')
     expect(res.headers.get('x-tenant-name')).toBe('Solnica')

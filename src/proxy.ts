@@ -50,7 +50,7 @@ function extractSubdomain(hostname: string): string {
 // Middleware (SOW §3.1)
 // ---------------------------------------------------------------------------
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const hostname = request.headers.get("host") ?? request.nextUrl.hostname
 
@@ -100,7 +100,7 @@ export async function middleware(request: NextRequest) {
     // invalid hostname that would loop to /lost.
     if (!isValidTenantSlug(session.tenantId)) {
       console.warn(
-        `[Middleware] session.tenantId "${session.tenantId}" is not a valid slug — skipping cross-domain redirect`,
+        `[Proxy] session.tenantId "${session.tenantId}" is not a valid slug — skipping cross-domain redirect`,
       )
     } else if (tenant.tenantId !== "www" && tenant.tenantId !== session.tenantId) {
       // Redirect tenant admin back to their own subdomain

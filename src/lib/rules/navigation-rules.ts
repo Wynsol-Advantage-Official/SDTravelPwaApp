@@ -119,17 +119,16 @@ export function getDashboardNavGroupsForRole(role?: UserRole | null): NavGroup[]
 /**
  * Determine whether a nav item is active for the given pathname.
  *
- * - The root `/` item matches only an exact pathname of `/`.
- * - All other items match when the pathname starts with their href.
- * - Hrefs with query strings are compared by pathname portion only.
+ * Exact match only — every dashboard nav item is a terminal route with its
+ * own dedicated entry, so prefix ("startsWith") matching is not needed and
+ * would incorrectly activate parent items (e.g. "/dashboard/admin" lighting
+ * up when the user is on "/dashboard/admin/bookings").
+ *
+ * Query strings and fragments are stripped before comparison.
  */
 export function isNavItemActive(item: NavItem, pathname: string): boolean {
-  // Strip query string / fragment from href for comparison
   const hrefPath = item.href.split("?")[0].split("#")[0];
-  if (hrefPath === "/") {
-    return pathname === "/";
-  }
-  return pathname === hrefPath || pathname.startsWith(`${hrefPath}/`);
+  return pathname === hrefPath;
 }
 
 /**

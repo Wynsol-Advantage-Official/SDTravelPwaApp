@@ -40,10 +40,19 @@ service cloud.firestore {
     }
 
     // ── Tenant Configuration (SOW §5.2) ────────────────────────────────
-    // Only Super Admin can write. Readable by Super Admin and own Tenant Admin.
+    // Super Admin can read/write all fields.
+    // Tenant Admin can read their own tenant doc and update safe fields only
+    // (name, branding). Restricted fields (domain, wixSiteId, status, tenantId)
+    // are write-protected for tenant_admin — updates go through the Admin SDK
+    // API route which enforces this server-side as well.
     match /tenants/{tenantId} {
       allow read: if isSuperAdmin() || isTenantAdmin(tenantId);
       allow write: if isSuperAdmin();
+      allow update: if isTenantAdmin(tenantId)
+        && !('status' in request.resource.data.diff(resource.data).affectedKeys())
+        && !('wixSiteId' in request.resource.data.diff(resource.data).affectedKeys())
+        && !('domain' in request.resource.data.diff(resource.data).affectedKeys())
+        && !('tenantId' in request.resource.data.diff(resource.data).affectedKeys());
     }
 
     // ── User Profiles & Wishlists ──────────────────────────────────────

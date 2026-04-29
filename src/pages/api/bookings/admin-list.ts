@@ -64,11 +64,15 @@ export default async function handler(
   let callerTenantId: string | undefined
   try {
     const decoded = await adminAuth.verifyIdToken(idToken)
-    if (!decoded.admin) {
-      return res.status(403).json({ error: "Admin access required" })
-    }
     callerRole = (decoded.role as string) ?? undefined
     callerTenantId = (decoded.tenantId as string) ?? undefined
+    const isAdmin =
+      decoded.admin === true ||
+      callerRole === "tenant_admin" ||
+      callerRole === "super_admin"
+    if (!isAdmin) {
+      return res.status(403).json({ error: "Admin access required" })
+    }
   } catch {
     return res.status(401).json({ error: "Invalid or expired token" })
   }

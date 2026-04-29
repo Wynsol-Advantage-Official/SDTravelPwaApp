@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Clock } from "lucide-react";
 import { BentoGrid, BentoCard, StatCard } from "@/components/bento";
-import { Reveal } from "@/components/motion";
+import { Reveal, Card3DReveal } from "@/components/motion";
 import { getTours } from "@/lib/wix/tours";
 import type { Tour } from "@/types/tour";
 
@@ -39,7 +39,8 @@ function TourCard({
   const duration = `${tour.duration} Night${tour.duration !== 1 ? "s" : ""}`;
   // Combine tour highlights with any destination-level tags (if present),
   // remove duplicates and limit to first 3 tags for the card.
-  const destTags: string[] = (tour as any)?.destination?.tags ?? (tour as any)?.destination?.highlights ?? [];
+  const tourWithDest = tour as typeof tour & { destination?: { tags?: string[]; highlights?: string[] } };
+  const destTags: string[] = tourWithDest.destination?.tags ?? tourWithDest.destination?.highlights ?? [];
   const combined = [...(tour.highlights ?? []), ...destTags];
   const unique: string[] = Array.from(new Set(combined));
   const tags = unique.slice(0, 3);
@@ -200,88 +201,162 @@ export async function LuxuryToursStats() {
       </Reveal>
 
       {/* ── Tour cards grid ────────────────────────────────────────── */}
-      <Reveal delayMs={100}>
-        {tours.length === 0 ? (
-          <EmptyState />
-        ) : tours.length >= 3 ? (
-          <>
-            {/* Desktop: featured left + 2 standard right */}
-            <div className="hidden lg:block">
-              <BentoGrid columns="1fr 1fr" gap={10}>
-                {/* Featured tour — full left column */}
+      {tours.length === 0 ? (
+        <EmptyState />
+      ) : tours.length >= 3 ? (
+        <>
+          {/* Desktop: featured left + 2 standard right */}
+          <div className="hidden lg:block">
+            <BentoGrid columns="1fr 1fr" gap={10}>
+              {/* Featured tour — full left column */}
+              <Card3DReveal
+                index={0}
+                rotateXFrom={8}
+                rotateYFrom={-4}
+                depthFrom={-50}
+                distance={35}
+                durationMs={550}
+                style={{ gridRow: "span 2" }}
+              >
                 <TourCard
                   tour={tours[0]}
                   featured
-                  style={{ gridRow: "span 2" }}
+                  style={{ minHeight: "450px" }}
                   className="h-full"
                 />
-                {/* Standard tour 1 */}
+              </Card3DReveal>
+              {/* Standard tour 1 */}
+              <Card3DReveal
+                index={1}
+                rotateXFrom={8}
+                rotateYFrom={-4}
+                depthFrom={-50}
+                distance={35}
+                durationMs={550}
+              >
                 <TourCard tour={tours[1]} />
-                {/* Standard tour 2 */}
+              </Card3DReveal>
+              {/* Standard tour 2 */}
+              <Card3DReveal
+                index={2}
+                rotateXFrom={8}
+                rotateYFrom={-4}
+                depthFrom={-50}
+                distance={35}
+                durationMs={550}
+              >
                 <TourCard tour={tours[2]} />
-              </BentoGrid>
-            </div>
+              </Card3DReveal>
+            </BentoGrid>
+          </div>
 
-            {/* Tablet: 2-column grid */}
-            <div className="hidden md:block lg:hidden">
-              <BentoGrid columns="repeat(2, 1fr)" gap={10}>
+          {/* Tablet: 2-column grid */}
+          <div className="hidden md:block lg:hidden">
+            <BentoGrid columns="repeat(2, 1fr)" gap={10}>
+              <Card3DReveal
+                index={0}
+                rotateXFrom={8}
+                rotateYFrom={-4}
+                depthFrom={-50}
+                distance={35}
+                durationMs={550}
+                style={{ gridColumn: "span 2" }}
+              >
                 <TourCard
                   tour={tours[0]}
                   featured
-                  style={{ gridColumn: "span 2" }}
+                  style={{ minHeight: "300px" }}
                 />
-                {tours.slice(1).map((tour) => (
-                  <TourCard key={tour.slug} tour={tour} />
-                ))}
-              </BentoGrid>
-            </div>
-
-            {/* Mobile: single column stack */}
-            <div className="grid grid-cols-1 gap-[10px] md:hidden">
-              {tours.map((tour, i) => (
-                <TourCard key={tour.slug} tour={tour} featured={i === 0} />
+              </Card3DReveal>
+              {tours.slice(1).map((tour, i) => (
+                <Card3DReveal
+                  key={tour.slug}
+                  index={i + 1}
+                  rotateXFrom={8}
+                  rotateYFrom={-4}
+                  depthFrom={-50}
+                  distance={35}
+                  durationMs={550}
+                >
+                  <TourCard tour={tour} />
+                </Card3DReveal>
               ))}
-            </div>
-          </>
-        ) : (
-          /* 1–2 tours: safe fallback grid with .map() */
-          <div className="grid grid-cols-1 gap-[10px] md:grid-cols-2">
+            </BentoGrid>
+          </div>
+
+          {/* Mobile: single column stack */}
+          <div className="grid grid-cols-1 gap-[10px] md:hidden">
             {tours.map((tour, i) => (
-              <TourCard key={tour.slug} tour={tour} featured={i === 0} />
+              <Card3DReveal
+                key={tour.slug}
+                index={i}
+                rotateXFrom={8}
+                rotateYFrom={-4}
+                depthFrom={-50}
+                distance={35}
+                durationMs={550}
+              >
+                <TourCard tour={tour} featured={i === 0} />
+              </Card3DReveal>
             ))}
           </div>
-        )}
-      </Reveal>
+        </>
+      ) : (
+        /* 1–2 tours: safe fallback grid with .map() */
+        <div className="grid grid-cols-1 gap-[10px] md:grid-cols-2">
+          {tours.map((tour, i) => (
+            <Card3DReveal
+              key={tour.slug}
+              index={i}
+              rotateXFrom={8}
+              rotateYFrom={-4}
+              depthFrom={-50}
+              distance={35}
+              durationMs={550}
+            >
+              <TourCard tour={tour} featured={i === 0} />
+            </Card3DReveal>
+          ))}
+        </div>
+      )}
 
       {/* ── Stat row ───────────────────────────────────────────────── */}
-      <Reveal delayMs={200}>
-        <div className="mt-[10px]">
-          <BentoGrid
-            columns={`repeat(${STATS.length}, 1fr)`}
-            gap={10}
-            className="hidden sm:grid"
-          >
-            {STATS.map((stat) => (
-              <StatCard
-                key={stat.label}
-                value={stat.value}
-                label={stat.label}
-              />
-            ))}
-          </BentoGrid>
+      <div className="mt-[10px]">
+        <BentoGrid
+          columns={`repeat(${STATS.length}, 1fr)`}
+          gap={10}
+          className="hidden sm:grid"
+        >
+          {STATS.map((stat, i) => (
+            <Card3DReveal
+              key={stat.label}
+              index={i}
+              rotateXFrom={5}
+              depthFrom={0}
+              distance={20}
+              durationMs={450}
+            >
+              <StatCard value={stat.value} label={stat.label} />
+            </Card3DReveal>
+          ))}
+        </BentoGrid>
 
-          {/* Mobile: 2-column stat grid */}
-          <div className="grid grid-cols-2 gap-[10px] sm:hidden">
-            {STATS.map((stat) => (
-              <StatCard
-                key={stat.label}
-                value={stat.value}
-                label={stat.label}
-              />
-            ))}
-          </div>
+        {/* Mobile: 2-column stat grid */}
+        <div className="grid grid-cols-2 gap-[10px] sm:hidden">
+          {STATS.map((stat, i) => (
+            <Card3DReveal
+              key={stat.label}
+              index={i}
+              rotateXFrom={5}
+              depthFrom={0}
+              distance={20}
+              durationMs={450}
+            >
+              <StatCard value={stat.value} label={stat.label} />
+            </Card3DReveal>
+          ))}
         </div>
-      </Reveal>
+      </div>
     </section>
   );
 }

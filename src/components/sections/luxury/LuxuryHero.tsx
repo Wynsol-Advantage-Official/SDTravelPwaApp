@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -13,7 +13,7 @@ import {
   CloudSun,
 } from "lucide-react";
 import { BentoGrid, BentoCard } from "@/components/bento";
-import { Reveal } from "@/components/motion";
+import { Reveal, ParallaxLayer } from "@/components/motion";
 
 /* ------------------------------------------------------------------ */
 /*  Filter themes                                                      */
@@ -31,8 +31,12 @@ const FILTER_THEMES = [
 /*  Sub-cards                                                          */
 /* ------------------------------------------------------------------ */
 
+interface HeroMainCardProps {
+  sectionRef: React.RefObject<HTMLElement | null>;
+}
+
 /** Main hero card — col 1, spans both rows */
-function HeroMainCard() {
+function HeroMainCard({ sectionRef }: HeroMainCardProps) {
   const images = [
     { src: "/media/home-hero-poster.jpg", width: 1600, height: 900, alt: "Luxury beach" },
     { src: "/media/home-hero-2.jpg", width: 1600, height: 900, alt: "Mountain view" },
@@ -43,6 +47,15 @@ function HeroMainCard() {
   const [remoteImages, setRemoteImages] = useState<Array<{ src: string; width?: number; height?: number; alt?: string }> | null>(null);
   const touchStartRef = React.useRef<number | null>(null);
   const touchMoveRef = React.useRef<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile viewport for reduced parallax ranges
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Fetch Ads images from server API which wraps the Wix service
   useEffect(() => {
@@ -113,39 +126,63 @@ function HeroMainCard() {
       >
       {/* touch refs */}
       
-      {/* Image gallery background */}
-      <img
-        src={(remoteImages ?? images)[current % (remoteImages ? remoteImages.length : images.length)].src}
-        alt={(remoteImages ?? images)[current % (remoteImages ? remoteImages.length : images.length)].alt ?? "Hero background"}
-        className="absolute inset-0 w-full h-full object-cover opacity-90"
-        aria-hidden="true"
-      />
+      {/* Image gallery background — Layer 1 parallax */}
+      <ParallaxLayer
+        targetRef={sectionRef}
+        offset={["start start", "end start"]}
+        yRange={isMobile ? [0, -40] : [0, -100]}
+        scaleRange={isMobile ? undefined : [1.0, 1.08]}
+        opacityRange={[1, 0.75]}
+        className="absolute inset-0 w-full h-full"
+      >
+        <img
+          src={(remoteImages ?? images)[current % (remoteImages ? remoteImages.length : images.length)].src}
+          alt={(remoteImages ?? images)[current % (remoteImages ? remoteImages.length : images.length)].alt ?? "Hero background"}
+          className="absolute inset-0 w-full h-full object-cover opacity-90"
+          aria-hidden="true"
+        />
+      </ParallaxLayer>
 
-      {/* Gradient scrim for text legibility */}
-      <div className="absolute hidden inset-0 bg-gradient-to-tr from-luxgold-dim via-blue-chill-dim/60 to-transparent" aria-hidden="true" />
+      {/* Gradient scrim for text legibility — Layer 2 parallax */}
+      <ParallaxLayer
+        targetRef={sectionRef}
+        offset={["start start", "end start"]}
+        yRange={isMobile ? [0, -20] : [0, -50]}
+        className="absolute inset-0"
+      >
+        <div className="absolute hidden inset-0 bg-gradient-to-tr from-luxgold-dim via-blue-chill-dim/60 to-transparent" aria-hidden="true" />
+      </ParallaxLayer>
 
-      <div className="absolute left-6 bottom-6 z-10 flex flex-col gap-4 max-w-[60ch] hidden">
-        {/* Eyebrow */}
-        <span className="font-sans text-[9px] uppercase tracking-[0.14em] text-white/60">
-          Featured Collection 2026
-        </span>
+      {/* Content text overlay — Layer 3 parallax */}
+      <ParallaxLayer
+        targetRef={sectionRef}
+        offset={["start start", "end start"]}
+        yRange={isMobile ? [0, 10] : [0, 40]}
+        className="absolute inset-0"
+      >
+        <div className="absolute left-6 bottom-6 z-10 flex flex-col gap-4 max-w-[60ch] hidden">
+          {/* Eyebrow */}
+          <span className="font-sans text-[9px] uppercase tracking-[0.14em] text-white/60">
+            Featured Collection 2026
+          </span>
 
-        {/* Headline */}
-        <h1 className="font-sans text-[38px] leading-tight max-w-[40ch] text-white">
-          Where Every Journey Becomes a{" "}
-          <em className="italic text-blue-chill-300">Diamond</em>
-        </h1>
+          {/* Headline */}
+          <h1 className="font-sans text-[38px] leading-tight max-w-[40ch] text-white">
+            Where Every Journey Becomes a{" "}
+            <em className="italic text-blue-chill-300">Diamond</em>
+          </h1>
 
-        {/* CTAs */}
-        <div className="flex items-center gap-3 mt-2">
-          <Link
-            href="/tours"
-            className="inline-flex items-center gap-2 rounded-[8px] bg-ocean px-4 py-2 text-[12px] font-semibold uppercase text-ocean-deep transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-blue-chill"
-          >
-            Explore Diamonds
-          </Link>
+          {/* CTAs */}
+          <div className="flex items-center gap-3 mt-2">
+            <Link
+              href="/tours"
+              className="inline-flex items-center gap-2 rounded-[8px] bg-ocean px-4 py-2 text-[12px] font-semibold uppercase text-ocean-deep transition-[transform,background-color] duration-[220ms] ease-out hover:-translate-y-[1px] hover:bg-blue-chill"
+            >
+              Explore Diamonds
+            </Link>
+          </div>
         </div>
-      </div>
+      </ParallaxLayer>
 
       {/* Gallery controls */}
       <button
@@ -395,14 +432,15 @@ function ConciergeCard() {
 /* ------------------------------------------------------------------ */
 
 export function LuxuryHero() {
+  const sectionRef = useRef<HTMLElement>(null);
   return (
-    <section aria-label="Hero" className="w-full">
+    <section ref={sectionRef} aria-label="Hero" className="w-full">
       <Reveal>
         {/* Desktop / large-screen bento grid */}
         <div className="hidden lg:block">
           <BentoGrid columns="2fr" rows="360px 180px" gap={10}>
             {/* Col 1, rows 1–2 */}
-            <HeroMainCard />
+            <HeroMainCard sectionRef={sectionRef} />
 
             {/* Col 2, row 1 
             <SearchCard />*/}
@@ -421,7 +459,7 @@ export function LuxuryHero() {
         {/* Mobile / tablet stacked layout */}
         <div className="flex flex-col gap-[10px] lg:hidden ">
           <div className="min-h-[320px] ">
-            <HeroMainCard />
+            <HeroMainCard sectionRef={sectionRef} />
           </div>
           <SearchCard />
           <QuickFilterCard />

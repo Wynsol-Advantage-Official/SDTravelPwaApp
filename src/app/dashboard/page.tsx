@@ -8,6 +8,7 @@ import { AuthGuard } from "@/components/auth/AuthGuard"
 import { Button } from "@/components/ui/Button"
 import { TripCard } from "@/components/dashboard/TripCard"
 import Link from "next/link"
+import { CalendarDays, Gem, MessageCircle, User } from "lucide-react"
 import { formatPrice } from "@/lib/utils/format"
 import {
   mockUser,
@@ -138,36 +139,38 @@ function DashboardContent() {
       </section>
 
       {/* ── Quick Access + Activity Feed ────────────────────────────── */}
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-1">
         {/* Quick Access */}
-        <div className="space-y-3 lg:col-span-1">
+        <div className="space-y-3 lg:col-span-1 grid gap-4 sm:grid-cols-1">
           <h2 className="font-sans text-xl font-semibold text-ocean-deep dark:text-white">
             Quick Access
           </h2>
-          <QuickAccessCard
-            href="/dashboard/bookings"
-            icon="◈"
-            title="My Bookings"
-            subtitle={`${bookings.length} total · ${completedCount} completed`}
-          />
-          <QuickAccessCard
-            href="/dashboard/saved"
-            icon="♦"
-            title="Saved Diamonds"
-            subtitle={`${savedCount} tours wishlisted`}
-          />
-          <QuickAccessCard
-            href="/dashboard/chat"
-            icon="◇"
-            title="Concierge Chat"
-            subtitle="Speak directly with an advisor"
-          />
-          <QuickAccessCard
-            href="/dashboard/profile"
-            icon="●"
-            title="Profile & Settings"
-            subtitle="Manage your account details"
-          />
+          <div className="space-y-3 lg:col-span-1 grid gap-4 sm:grid-cols-4">
+            <QuickAccessCard
+              href="/dashboard/bookings"
+              icon={<CalendarDays className="h-4 w-4" />}
+              title="My Bookings"
+              subtitle={`${bookings.length} total · ${completedCount} completed`}
+            />
+            <QuickAccessCard
+              href="/dashboard/saved"
+              icon={<Gem className="h-4 w-4" />}
+              title="Saved Diamonds"
+              subtitle={`${savedCount} tours wishlisted`}
+            />
+            <QuickAccessCard
+              href="/dashboard/chat"
+              icon={<MessageCircle className="h-4 w-4" />}
+              title="Concierge Chat"
+              subtitle="Speak directly with an advisor"
+            />
+            <QuickAccessCard
+              href="/dashboard/profile"
+              icon={<User className="h-4 w-4" />}
+              title="Profile & Settings"
+              subtitle="Manage your account details"
+            />
+          </div>
         </div>
 
         {/* Activity Feed */}
@@ -269,7 +272,7 @@ function QuickAccessCard({
   subtitle,
 }: {
   href: string
-  icon: string
+  icon: React.ReactNode
   title: string
   subtitle: string
 }) {
@@ -278,7 +281,7 @@ function QuickAccessCard({
       href={href}
       className="group flex items-center gap-4 rounded-sm border border-khaki/40 bg-white p-4 transition-shadow hover:shadow-md dark:border-white/10 dark:bg-ocean-card"
     >
-      <span className="text-xl text-blue-chill">{icon}</span>
+      <span className="text-blue-chill">{icon}</span>
       <div>
         <p className="text-sm font-semibold text-ocean-deep group-hover:text-blue-chill dark:text-white dark:group-hover:text-blue-chill-300">
           {title}

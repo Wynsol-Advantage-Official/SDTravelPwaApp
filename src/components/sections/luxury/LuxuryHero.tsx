@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { BentoGrid, BentoCard } from "@/components/bento";
 import { Reveal, ParallaxLayer } from "@/components/motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 
 /* ------------------------------------------------------------------ */
 /*  Filter themes                                                      */
@@ -48,6 +49,7 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
   const touchStartRef = React.useRef<number | null>(null);
   const touchMoveRef = React.useRef<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [direction, setDirection] = useState<1 | -1>(1);
 
   // Detect mobile viewport for reduced parallax ranges
   useEffect(() => {
@@ -92,17 +94,43 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
   useEffect(() => {
     const list = remoteImages ?? images;
     if (!list || list.length === 0) return;
-    const id = setInterval(() => setCurrent((c) => (c + 1) % list.length), 5000);
+    const id = setInterval(() => {
+      setDirection(1);
+      setCurrent((c) => (c + 1) % list.length);
+    }, 5000);
     return () => clearInterval(id);
   }, [remoteImages]);
+
+  const imageList = remoteImages ?? images;
+  const listLen = imageList.length || 1;
+  const currentImg = imageList[current % listLen];
+
+  const slideVariants: Variants = {
+    enter: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%" }),
+    center: { x: 0 },
+    exit: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%" }),
+  };
+
+  function goNext() {
+    setDirection(1);
+    setCurrent((c) => (c + 1) % listLen);
+  }
+  function goPrev() {
+    setDirection(-1);
+    setCurrent((c) => (c - 1 + listLen) % listLen);
+  }
+  function goTo(i: number) {
+    setDirection(i > current ? 1 : -1);
+    setCurrent(i);
+  }
 
   return (
     <div
       className="w-full max-w-full"
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key === "ArrowLeft") setCurrent((c) => (c - 1 + (remoteImages ?? images).length) % (remoteImages ?? images).length);
-        if (e.key === "ArrowRight") setCurrent((c) => (c + 1) % (remoteImages ?? images).length);
+        if (e.key === "ArrowLeft") goPrev();
+        if (e.key === "ArrowRight") goNext();
       }}
       onTouchStart={(e) => (touchStartRef.current = e.touches?.[0]?.clientX ?? null)}
       onTouchMove={(e) => (touchMoveRef.current = e.touches?.[0]?.clientX ?? null)}
@@ -112,17 +140,16 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
         if (start == null) return;
         const delta = (end as number) - start;
         const threshold = 50;
-        const listLen = (remoteImages ?? images).length;
-        if (delta > threshold) setCurrent((c) => (c - 1 + listLen) % listLen);
-        else if (delta < -threshold) setCurrent((c) => (c + 1) % listLen);
+        if (delta > threshold) goPrev();
+        else if (delta < -threshold) goNext();
         touchStartRef.current = null;
         touchMoveRef.current = null;
       }}
     >
       <BentoCard
         variant="default"
-        span={{ col: 1, row: 2 }}
-        className="relative flex flex-col justify-end p-5 overflow-hidden w-full max-w-full h-full min-h-[320px] sm:min-h-[420px] lg:min-h-[520px]"
+        span={{ col: 1, row: 1 }}
+        className="relative flex flex-col justify-end p-5 overflow-hidden w-full max-w-full h-full min-h-[50dvh] lg:min-h-[calc(100dvh-3.5rem)] rounded-none"
       >
       {/* touch refs */}
       
@@ -133,14 +160,39 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
         yRange={isMobile ? [0, -40] : [0, -100]}
         scaleRange={isMobile ? undefined : [1.0, 1.08]}
         opacityRange={[1, 0.75]}
-        className="absolute inset-0 w-full h-full"
+        className="absolute inset-0 w-full h-full overflow-hidden"
       >
-        <img
-          src={(remoteImages ?? images)[current % (remoteImages ? remoteImages.length : images.length)].src}
-          alt={(remoteImages ?? images)[current % (remoteImages ? remoteImages.length : images.length)].alt ?? "Hero background"}
-          className="absolute inset-0 w-full h-full object-cover opacity-90"
-          aria-hidden="true"
-        />
+        {/* Blurred background — crossfade on image change */}
+        <AnimatePresence initial={false}>
+          <motion.img
+            key={`bg-${current}`}
+            src={currentImg.src}
+            alt=""
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="absolute inset-0 w-full h-full object-cover scale-125 blur-[80px]"
+            aria-hidden="true"
+          />
+        </AnimatePresence>
+
+        {/* Main image — slide transition, contained in frame */}
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.img
+            key={`main-${current}`}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            src={currentImg.src}
+            alt={currentImg.alt ?? "Hero background"}
+            className="absolute inset-0 w-full h-full object-contain"
+            aria-hidden="true"
+          />
+        </AnimatePresence>
       </ParallaxLayer>
 
       {/* Gradient scrim for text legibility — Layer 2 parallax */}
@@ -187,10 +239,7 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
       {/* Gallery controls */}
       <button
         aria-label="Previous image"
-        onClick={() => setCurrent((c) => {
-          const len = (remoteImages ?? images).length || 1;
-          return (c - 1 + len) % len;
-        })}
+        onClick={goPrev}
         className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white hover:bg-black/40 focus:outline-none"
       >
         ‹
@@ -198,7 +247,7 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
 
       <button
         aria-label="Next image"
-        onClick={() => setCurrent((c) => (c + 1) % (remoteImages ?? images).length)}
+        onClick={goNext}
         className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white hover:bg-black/40 focus:outline-none"
       >
         ›
@@ -209,7 +258,7 @@ function HeroMainCard({ sectionRef }: HeroMainCardProps) {
         {(remoteImages ?? images).map((img, i) => (
           <button
             key={img.src}
-            onClick={() => setCurrent(i)}
+            onClick={() => goTo(i)}
             aria-label={`Show image ${i + 1}`}
             className={`h-12 w-20 overflow-hidden rounded-md border-2 transition-opacity ${
               i === current ? "border-white opacity-100" : "border-transparent opacity-60"
@@ -438,7 +487,7 @@ export function LuxuryHero() {
       <Reveal>
         {/* Desktop / large-screen bento grid */}
         <div className="hidden lg:block">
-          <BentoGrid columns="2fr" rows="360px 180px" gap={10}>
+          <BentoGrid columns="2fr" rows="calc(100dvh - 3.5rem)" gap={10}>
             {/* Col 1, rows 1–2 */}
             <HeroMainCard sectionRef={sectionRef} />
 
@@ -458,7 +507,7 @@ export function LuxuryHero() {
 
         {/* Mobile / tablet stacked layout */}
         <div className="flex flex-col gap-[10px] lg:hidden ">
-          <div className="min-h-[320px] ">
+          <div className="min-h-[50dvh]">
             <HeroMainCard sectionRef={sectionRef} />
           </div>
           <SearchCard />

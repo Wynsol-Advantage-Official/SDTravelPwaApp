@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/hooks/useAuth"
 import { useMockMode } from "@/hooks/useMockMode"
+import { useTenant } from "@/hooks/useTenant"
 import { useUserBookings } from "@/hooks/useUserBookings"
 import { useActivity } from "@/hooks/useActivity"
 import { AuthGuard } from "@/components/auth/AuthGuard"
@@ -38,8 +39,9 @@ export default function DashboardPage() {
 }
 
 function DashboardContent() {
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
   const { isMockMode } = useMockMode()
+  const tenant = useTenant()
   const { bookings, loading } = useUserBookings(10)
   const { activity, loading: activityLoading } = useActivity(20)
 
@@ -63,19 +65,41 @@ function DashboardContent() {
   return (
     <div className="space-y-8">
       {/* ── Welcome Header ──────────────────────────────────────────── */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="font-sans text-3xl font-bold text-ocean-deep dark:text-white">
-            Welcome back, {displayName}
-          </h1>
-          <p className="mt-1 text-sm text-ocean-deep/60 dark:text-white/60">{email}</p>
+      <div className="rounded-sm border border-khaki/40 bg-white px-6 py-5 dark:border-white/10 dark:bg-ocean-card">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="font-sans text-3xl font-bold text-ocean-deep dark:text-white">
+              Welcome back, {displayName}
+            </h1>
+            <p className="mt-0.5 text-sm text-ocean-deep/50 dark:text-white/50">{email}</p>
+          </div>
+          <div className="shrink-0 text-right">
+            <p className="font-sans text-sm font-semibold text-ocean-deep dark:text-white">
+              {tenant.tenantName || tenant.tenantId}
+            </p>
+            <p className="text-xs text-ocean/60 dark:text-blue-chill-300">
+              {tenant.branding?.tagline ?? "Where Every Journey Becomes a Diamond"}
+            </p>
+          </div>
         </div>
-        <button
-          onClick={signOut}
-          className="text-sm text-ocean-deep/40 transition-colors hover:text-ocean-deep dark:text-white/40 dark:hover:text-white"
-        >
-          Sign Out
-        </button>
+        {/* Portal quick-details strip */}
+        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 border-t border-khaki/30 pt-4 dark:border-white/10">
+          {tenant.branding?.supportEmail && (
+            <span className="flex items-center gap-1.5 text-xs text-ocean-deep/50 dark:text-white/50">
+              <span className="text-ocean">✉</span>
+              {tenant.branding.supportEmail}
+            </span>
+          )}
+          {tenant.branding?.phone && (
+            <span className="flex items-center gap-1.5 text-xs text-ocean-deep/50 dark:text-white/50">
+              <span className="text-ocean">✆</span>
+              {tenant.branding.phone}
+            </span>
+          )}
+          <span className="flex items-center gap-1.5 text-xs text-ocean-deep/30 dark:text-white/30">
+            Portal: <span className="font-mono">{tenant.tenantId}</span>
+          </span>
+        </div>
       </div>
 
       {/* ── Stats Cards ─────────────────────────────────────────────── */}

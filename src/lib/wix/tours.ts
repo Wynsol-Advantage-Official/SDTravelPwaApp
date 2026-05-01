@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { wixClient } from "./client";
+import { wixClient, wixCmsAdminClient } from "./client";
 import { getWixImageUrl, getWixImageDimensions } from "./media";
 
 /**
@@ -814,7 +814,7 @@ export async function fetchTestimonials(
   limit = 6,
   options?: { featuredOnly?: boolean; tourId?: string },
 ): Promise<WixTestimonial[]> {
-  const client = wixClient(await getTenantSiteId());
+  const client = wixCmsAdminClient(await getTenantSiteId()) ?? wixClient(await getTenantSiteId());
   if (!client) return [];
 
   try {

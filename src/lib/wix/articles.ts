@@ -6,7 +6,7 @@
 // ---------------------------------------------------------------------------
 
 import { headers } from "next/headers";
-import { wixClient } from "./client";
+import { wixClient, wixCmsAdminClient } from "./client";
 import { getWixImageUrl, getWixImageDimensions } from "./media";
 import type { Article } from "@/types/article";
 import type { WixImage } from "@/types/tour";
@@ -109,7 +109,7 @@ export async function getArticles(options?: {
   activeOnly?: boolean;
   limit?: number;
 }): Promise<Article[]> {
-  const client = wixClient(await getTenantSiteId());
+  const client = wixCmsAdminClient(await getTenantSiteId()) ?? wixClient(await getTenantSiteId());
   if (!client) return [];
 
   try {
@@ -127,6 +127,11 @@ export async function getArticles(options?: {
     return (result.items ?? []).map((item) => mapArticle(item as RawItem));
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
+    // WDE0025 = collection does not exist — expected before the CMS collection
+    // is created in Wix. Suppress the noisy error and return empty gracefully.
+    if (msg.includes("WDE0025") || msg.toLowerCase().includes("does not exist")) {
+      return [];
+    }
     console.error(
       `[getArticles] Wix query failed for collection '${ARTICLES_COLLECTION}':`,
       msg,

@@ -192,3 +192,33 @@ export function wixAdminClient(siteId?: string) {
 
 export type WixClient = NonNullable<ReturnType<typeof wixClient>>;
 export type WixAdminClient = NonNullable<ReturnType<typeof wixAdminClient>>;
+
+// ── CMS admin client: ApiKeyStrategy + CMS_MODULES ────────────────────────
+// Use this when the Testimonials/Articles/etc. collection has restricted read
+// permissions (WDE0027) that the OAuth client cannot bypass.
+let _defaultCmsAdminClient: ReturnType<typeof buildTenantCmsClient> | undefined;
+
+/**
+ * Get a CMS client that uses ApiKeyStrategy (elevated permissions).
+ * Unlike wixAdminClient, this includes the `items` module, making it suitable
+ * for reading Wix Data collections with restricted read permissions.
+ * Falls back to null when WIX_API_KEY / WIX_ACCOUNT_ID are not configured.
+ */
+export function wixCmsAdminClient(siteId?: string) {
+  const defaultSiteId =
+    process.env.WIX_META_SITE_ID ||
+    process.env.WIX_SITE_ID ||
+    process.env.NEXT_PUBLIC_WIX_SITE_ID;
+  const resolvedSiteId = siteId || defaultSiteId;
+
+  if (!resolvedSiteId) return null;
+
+  if (!siteId || siteId === defaultSiteId) {
+    if (_defaultCmsAdminClient === undefined) {
+      _defaultCmsAdminClient = buildTenantCmsClient(resolvedSiteId);
+    }
+    return _defaultCmsAdminClient;
+  }
+
+  return buildTenantCmsClient(resolvedSiteId);
+}

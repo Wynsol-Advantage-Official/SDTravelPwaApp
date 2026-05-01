@@ -23,7 +23,7 @@ interface Pillar {
 const PILLARS: Pillar[] = [
   {
     id: "bespoke",
-    image: "/og/default.jpg",
+        image: "/media/1.jpg",
     imageAlt: "A luxury travel concierge reviewing a bespoke itinerary map",
     title: "Bespoke Itineraries",
     body: "Every journey is crafted from scratch — never templated. Your concierge hand-selects properties, experiences, and transfers to match exactly how you travel, so no two itineraries are alike.",
@@ -31,7 +31,7 @@ const PILLARS: Pillar[] = [
   },
   {
     id: "inclusive",
-    image: "/og/default.jpg",
+    image: "/media/5.jpg",
     imageAlt: "White-gloved sommelier presenting champagne on a private terrace",
     title: "All-Inclusive Luxury",
     body: "From the moment you depart to the second you return, every detail is handled. Private transfers, curated dining, spa access, and 24/7 concierge support are woven into every package.",
@@ -39,7 +39,7 @@ const PILLARS: Pillar[] = [
   },
   {
     id: "experts",
-    image: "/og/default.jpg",
+    image: "/media/2.jpg",
     imageAlt: "Local expert guide leading guests through a Caribbean rainforest",
     title: "Local Expert Partners",
     body: "We partner exclusively with vetted on-the-ground experts — historians, naturalists, chefs, and cultural ambassadors — so you experience every destination the way locals do.",
@@ -55,13 +55,13 @@ function PillarCard({ pillar }: { pillar: Pillar }) {
   return (
     <div className="flex flex-col">
       {/* Image */}
-      <div className="relative h-52 w-full overflow-hidden rounded-[14px]">
+      <div className="relative h-100 w-full overflow-hidden rounded-[14px]">
         <Image
           src={pillar.image}
           alt={pillar.imageAlt}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
-          className="object-cover"
+          sizes="(max-width: 768px) 100vw"
+          className="object-fit"
         />
       </div>
 

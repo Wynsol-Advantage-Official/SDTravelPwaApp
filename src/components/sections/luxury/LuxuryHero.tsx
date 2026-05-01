@@ -523,13 +523,13 @@ export function LuxuryHero() {
         </div>
 
         {/* Mobile / tablet stacked layout */}
-        <div className="flex flex-col gap-[10px] lg:hidden ">
+        <div className="flex flex-col gap-2.5 lg:hidden ">
           <div className="min-h-[50dvh]">
             <HeroMainCard sectionRef={sectionRef} />
           </div>
           <SearchCard />
           <QuickFilterCard />
-          <div className="grid grid-cols-2 gap-[10px]">
+          <div className="grid grid-cols-2 gap-2.5">
             <WeatherCard />
             <ConciergeCard />
           </div>

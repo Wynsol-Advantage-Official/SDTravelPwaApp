@@ -129,16 +129,6 @@ function TourCard({
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Stat row data                                                      */
-/* ------------------------------------------------------------------ */
-
-const STATS = [
-  { value: "340+", label: "Destinations" },
-  { value: "4200+", label: "Happy Guests" },
-  { value: "98%", label: "Satisfaction" },
-  { value: "15+", label: "Years of Excellence" },
-];
 
 /* ------------------------------------------------------------------ */
 /*  Empty state                                                        */
@@ -319,44 +309,6 @@ export async function LuxuryToursStats() {
           ))}
         </div>
       )}
-
-      {/* ── Stat row ───────────────────────────────────────────────── */}
-      <div className="mt-[10px]">
-        <BentoGrid
-          columns={`repeat(${STATS.length}, 1fr)`}
-          gap={10}
-          className="hidden sm:grid"
-        >
-          {STATS.map((stat, i) => (
-            <Card3DReveal
-              key={stat.label}
-              index={i}
-              rotateXFrom={5}
-              depthFrom={0}
-              distance={20}
-              durationMs={450}
-            >
-              <StatCard value={stat.value} label={stat.label} />
-            </Card3DReveal>
-          ))}
-        </BentoGrid>
-
-        {/* Mobile: 2-column stat grid */}
-        <div className="grid grid-cols-2 gap-[10px] sm:hidden">
-          {STATS.map((stat, i) => (
-            <Card3DReveal
-              key={stat.label}
-              index={i}
-              rotateXFrom={5}
-              depthFrom={0}
-              distance={20}
-              durationMs={450}
-            >
-              <StatCard value={stat.value} label={stat.label} />
-            </Card3DReveal>
-          ))}
-        </div>
-      </div>
     </section>
   );
 }

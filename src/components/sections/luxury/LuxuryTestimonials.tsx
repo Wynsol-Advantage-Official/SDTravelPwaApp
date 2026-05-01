@@ -67,12 +67,23 @@ function TestimonialCard({ testimonial }: { testimonial: WixTestimonial }) {
         </p>
       </blockquote>
 
-      {/* Tour reference */}
+      {/* Tour recommendation */}
       {(testimonial.tourName ?? testimonial.tourRef) && (
-        <p className="mt-2 flex items-center gap-1 font-sans text-[10px] text-ocean dark:text-blue-chill">
-          <MapPin size={9} aria-hidden="true" />
-          {testimonial.tourName ?? testimonial.tourRef}
-        </p>
+        testimonial.tourSlug ? (
+          <Link
+            href={`/tours/${testimonial.tourSlug}`}
+            className="mt-2 group/tour inline-flex items-center gap-1.5 rounded-full border border-ocean/20 bg-ocean/5 px-2.5 py-1 font-sans text-[10px] font-semibold text-ocean transition-[background-color,color] duration-220 hover:bg-ocean hover:text-white dark:border-blue-chill/20 dark:bg-blue-chill/5 dark:text-blue-chill dark:hover:bg-blue-chill dark:hover:text-ocean-deep"
+          >
+            <MapPin size={9} aria-hidden="true" />
+            {testimonial.tourName ?? testimonial.tourRef}
+            <ArrowUpRight size={9} className="opacity-60 group-hover/tour:opacity-100" aria-hidden="true" />
+          </Link>
+        ) : (
+          <p className="mt-2 flex items-center gap-1 font-sans text-[10px] text-ocean dark:text-blue-chill">
+            <MapPin size={9} aria-hidden="true" />
+            {testimonial.tourName ?? testimonial.tourRef}
+          </p>
+        )
       )}
 
       <footer className="mt-4 flex items-center justify-between">
@@ -120,22 +131,23 @@ function TestimonialCard({ testimonial }: { testimonial: WixTestimonial }) {
 export async function LuxuryTestimonials() {
   const testimonials = await getTestimonials(12, { featuredOnly: false });
 
-  // Separate featured and standard testimonials
+  // Separate recommended, featured, and standard testimonials
+  const recommended = testimonials.filter((t) => t.recommended);
   const featured = testimonials.filter((t) => t.featured);
   const standard = testimonials.filter((t) => !t.featured);
 
-  // Pick a random featured testimonial for the hero image panel
-  // Falls back to first standard testimonial if none are featured
-  const heroPool = featured.length > 0 ? featured : standard;
+  // Pick a random recommended testimonial for the hero image panel.
+  // Falls back to featured, then any standard testimonial if none are recommended.
+  const heroPool = recommended.length > 0 ? recommended : featured.length > 0 ? featured : standard;
   const heroIndex =
     heroPool.length > 1 ? Math.floor(Math.random() * heroPool.length) : 0;
   const hero = heroPool[heroIndex] ?? null;
 
-  // Right-column cards: featured (excluding hero) + fill from standard, max 3
+  // Right-column cards: all testimonials except the hero, featured-first, max 3
   const heroId = hero?._id;
   const cardCandidates = [
     ...featured.filter((t) => t._id !== heroId),
-    ...standard,
+    ...standard.filter((t) => t._id !== heroId),
   ].slice(0, 3);
 
   // Cover image src + alt for the hero image panel
@@ -191,7 +203,7 @@ export async function LuxuryTestimonials() {
 
           {/* Hero: featured testimonial cover image with quote overlay */}
           <Reveal>
-            <div className="relative min-h-60 h-[240px] flex-1 overflow-hidden rounded-[14px] lg:min-h-0">
+            <div className="relative min-h-60 flex-1 overflow-hidden rounded-[14px] border border-khaki/30 bg-white dark:border-white/10 dark:bg-ocean-card">
               <Image
                 src={heroCoverSrc}
                 alt={heroCoverAlt}
@@ -199,7 +211,7 @@ export async function LuxuryTestimonials() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover brightness-90"
               />
-sdfsd
+
               {/* Layered scrims */}
               <div
                 className="absolute inset-0 bg-linear-to-t from-ocean-deep/92 via-ocean-deep/40 to-transparent"
@@ -255,10 +267,29 @@ sdfsd
                       </div>
                     </div>
                     {(hero.tourName ?? hero.tourRef) && (
-                      <span className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 font-sans text-[9px] font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
-                        <MapPin size={8} aria-hidden="true" />
-                        {hero.tourName ?? hero.tourRef}
-                      </span>
+                      hero.tourSlug ? (
+                        <Link
+                          href={`/tours/${hero.tourSlug}`}
+                          className="group/htour flex shrink-0 flex-col items-end gap-0.5 rounded-[10px] bg-white/15 px-3 py-2 backdrop-blur-sm transition-[background-color] duration-220 hover:bg-white/25"
+                        >
+                          <span className="flex items-center gap-1 font-sans text-[9px] font-semibold uppercase tracking-widest text-white/70">
+                            <MapPin size={8} aria-hidden="true" />
+                            Destination
+                          </span>
+                          <span className="flex items-center gap-1 font-sans text-[11px] font-bold text-white">
+                            {hero.tourName ?? hero.tourRef}
+                            <ArrowUpRight size={10} className="opacity-70 group-hover/htour:opacity-100" aria-hidden="true" />
+                          </span>
+                          <span className="font-sans text-[8px] uppercase tracking-widest text-amber-300/80">
+                            View this trip →
+                          </span>
+                        </Link>
+                      ) : (
+                        <span className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 font-sans text-[9px] font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
+                          <MapPin size={8} aria-hidden="true" />
+                          {hero.tourName ?? hero.tourRef}
+                        </span>
+                      )
                     )}
                   </div>
                 </div>

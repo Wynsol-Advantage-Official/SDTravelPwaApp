@@ -729,6 +729,8 @@ export async function fetchRoomsByType(
 const TESTIMONIALS_COLLECTION = "Testimonials";
 
 export interface WixTestimonial {
+  /** CMS field: recommended — eligible for hero rotation */
+  recommended: boolean;
   _id: string;
   /** CMS field: Name */
   name: string;
@@ -744,8 +746,10 @@ export interface WixTestimonial {
   featured: boolean;
   /** CMS field: cover — optional hero cover image for the testimonial */
   cover?: WixImage;
-  /** CMS field: tourName — human-readable tour name for display */
+  /** Resolved from TourRef — human-readable tour name for display */
   tourName?: string;
+  /** Resolved from TourRef — tour slug for linking to /tours/[slug] */
+  tourSlug?: string;
 }
 
 function mapTestimonial(item: RawItem): WixTestimonial {
@@ -799,8 +803,10 @@ function mapTestimonial(item: RawItem): WixTestimonial {
     date,
     tourRef,
     featured: (item.featured as boolean) ?? false,
+    recommended: (item.recommended as boolean) ?? false,
     cover,
-    tourName: (item.tourName as string) ?? undefined,
+    tourName: undefined,  // resolved post-query via tour batch lookup
+    tourSlug: undefined,  // resolved post-query via tour batch lookup
   };
 }
 
@@ -837,6 +843,31 @@ export async function fetchTestimonials(
 
     // Featured items bubble to the top
     mapped.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+
+    // Resolve tourRef _ids → tour title + slug via a single batch query
+    const tourIds = [...new Set(mapped.map((t) => t.tourRef).filter(Boolean) as string[])];
+    if (tourIds.length > 0) {
+      try {
+        const tourRes = await client.items
+          .query(TOURS_COLLECTION)
+          .hasSome("_id", tourIds)
+          .limit(tourIds.length)
+          .find();
+        const tourMap = new Map<string, { title: string; slug: string }>();
+        for (const t of (tourRes.items ?? []) as RawItem[]) {
+          if (t._id) tourMap.set(t._id as string, { title: (t.title as string) ?? "", slug: (t.slug as string) ?? "" });
+        }
+        for (const t of mapped) {
+          if (t.tourRef && tourMap.has(t.tourRef)) {
+            const resolved = tourMap.get(t.tourRef)!;
+            t.tourName = resolved.title || undefined;
+            t.tourSlug = resolved.slug || undefined;
+          }
+        }
+      } catch (err) {
+        console.warn("[fetchTestimonials] tour batch resolve failed:", err);
+      }
+    }
 
     return mapped;
   } catch (err) {

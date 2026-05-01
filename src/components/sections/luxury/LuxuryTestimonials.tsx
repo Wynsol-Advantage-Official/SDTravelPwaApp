@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, MapPin } from "lucide-react";
 import { Reveal } from "@/components/motion";
 import { getTestimonials } from "@/lib/services";
 import type { WixTestimonial } from "@/lib/services";
@@ -44,10 +44,10 @@ function StarRating({ count = 5 }: { count?: number }) {
 
 function TestimonialCard({ testimonial }: { testimonial: WixTestimonial }) {
   return (
-    <div className="group relative overflow-hidden rounded-[14px] border border-khaki/30 bg-white pl-5 pr-5 pt-5 pb-5 transition-[transform,box-shadow] duration-220 ease-out hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(0,0,0,0.09)] dark:border-white/10 dark:bg-ocean-card">
+    <div className="group relative overflow-hidden rounded-[14px] border border-khaki/30 bg-tan/20 pl-5 pr-5 pt-5 pb-5 transition-[transform,box-shadow] duration-220 ease-out hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(0,0,0,0.09)] dark:border-white/10 dark:bg-ocean-card">
       {/* Left accent bar */}
       <div
-        className="absolute left-0 top-0 h-full w-1 rounded-l-[14px] bg-linear-to-b from-ocean via-blue-chill to-ocean/30"
+        className="absolute left-0 top-0 h-full w-1 rounded-l-[14px] bg-linear-to-b from-tan via-khaki to-tan/30"
         aria-hidden="true"
       />
 
@@ -66,6 +66,14 @@ function TestimonialCard({ testimonial }: { testimonial: WixTestimonial }) {
           &ldquo;{testimonial.quote}&rdquo;
         </p>
       </blockquote>
+
+      {/* Tour reference */}
+      {(testimonial.tourName ?? testimonial.tourRef) && (
+        <p className="mt-2 flex items-center gap-1 font-sans text-[10px] text-ocean dark:text-blue-chill">
+          <MapPin size={9} aria-hidden="true" />
+          {testimonial.tourName ?? testimonial.tourRef}
+        </p>
+      )}
 
       <footer className="mt-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -110,17 +118,36 @@ function TestimonialCard({ testimonial }: { testimonial: WixTestimonial }) {
 /* ------------------------------------------------------------------ */
 
 export async function LuxuryTestimonials() {
-  const testimonials = await getTestimonials(6, { featuredOnly: true });
-  const displayed = testimonials.slice(0, 3);
+  const testimonials = await getTestimonials(12, { featuredOnly: false });
+
+  // Separate featured and standard testimonials
+  const featured = testimonials.filter((t) => t.featured);
+  const standard = testimonials.filter((t) => !t.featured);
+
+  // Pick a random featured testimonial for the hero image panel
+  // Falls back to first standard testimonial if none are featured
+  const heroPool = featured.length > 0 ? featured : standard;
+  const heroIndex =
+    heroPool.length > 1 ? Math.floor(Math.random() * heroPool.length) : 0;
+  const hero = heroPool[heroIndex] ?? null;
+
+  // Right-column cards: featured (excluding hero) + fill from standard, max 3
+  const heroId = hero?._id;
+  const cardCandidates = [
+    ...featured.filter((t) => t._id !== heroId),
+    ...standard,
+  ].slice(0, 3);
+
+  // Cover image src + alt for the hero image panel
+  const heroCoverSrc = hero?.cover?.src ?? "/og/default.jpg";
+  const heroCoverAlt =
+    hero?.cover?.alt ||
+    (hero
+      ? `${hero.name}'s Caribbean journey`
+      : "Luxury Caribbean travel destination");
 
   return (
     <section aria-labelledby="luxury-testimonials-heading" className="mt-6">
-      {/* ── Main 2-col grid ─────────────────────────────────────────── */}
-      {/*
-          Desktop: left = heading card + hero image (fills remaining height)
-                   right = 3 stacked testimonial cards
-          Mobile:  heading → testimonial cards → image
-      */}
       <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-2">
 
         {/* ── Left: heading card + hero image ────────────────────────── */}
@@ -162,20 +189,20 @@ export async function LuxuryTestimonials() {
             </div>
           </Reveal>
 
-          {/* Hero image — fills remaining height to match right column */}
+          {/* Hero: featured testimonial cover image with quote overlay */}
           <Reveal>
             <div className="relative min-h-60 flex-1 overflow-hidden rounded-[14px] lg:min-h-0">
               <Image
-                src="/og/default.jpg"
-                alt="Luxury Caribbean travel destination"
+                src={heroCoverSrc}
+                alt={heroCoverAlt}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover brightness-90"
               />
 
-              {/* Layered scrims: strong bottom, lighter top vignette */}
+              {/* Layered scrims */}
               <div
-                className="absolute inset-0 bg-linear-to-t from-ocean-deep/90 via-ocean-deep/30 to-transparent"
+                className="absolute inset-0 bg-linear-to-t from-ocean-deep/92 via-ocean-deep/40 to-transparent"
                 aria-hidden="true"
               />
               <div
@@ -191,39 +218,83 @@ export async function LuxuryTestimonials() {
                 </span>
               </div>
 
-              {/* Stats row — bottom */}
-              <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between p-5">
-                <div>
-                  <p className="font-sans text-[52px] font-extrabold leading-none text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.4)]">
-                    2.4K+
-                  </p>
-                  <p className="mt-0.5 font-sans text-[9px] uppercase tracking-widest text-white/65">
-                    Happy Travelers
-                  </p>
+              {/* Quote + author overlay — bottom */}
+              {hero ? (
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  {/* Stars */}
+                  <div className="mb-2 flex items-center gap-0.5" aria-label="5 out of 5 stars">
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <svg key={i} viewBox="0 0 12 12" className="h-3 w-3 fill-amber-400" aria-hidden="true">
+                        <path d="M6 0l1.35 4.15H11L7.4 6.7l1.35 4.15L6 8.4l-2.75 2.45L4.6 6.7 1 4.15h3.65z" />
+                      </svg>
+                    ))}
+                  </div>
+
+                  {/* Quote */}
+                  <blockquote>
+                    <p className="line-clamp-3 font-sans text-[14px] italic leading-relaxed text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.5)]">
+                      &ldquo;{hero.quote}&rdquo;
+                    </p>
+                  </blockquote>
+
+                  {/* Author + tour reference */}
+                  <div className="mt-3 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      {hero.avatar ? (
+                        <Image
+                          src={hero.avatar}
+                          alt={hero.name}
+                          width={32}
+                          height={32}
+                          className="h-8 w-8 shrink-0 rounded-full object-cover ring-2 ring-white/30"
+                          unoptimized={hero.avatar.startsWith("data:")}
+                        />
+                      ) : (
+                        <div className="h-8 w-8 shrink-0 rounded-full bg-white/20 ring-2 ring-white/30" />
+                      )}
+                      <div>
+                        <p className="font-sans text-[12px] font-bold text-white">{hero.name}</p>
+                        {hero.date && (
+                          <p className="font-sans text-[10px] text-white/60">{hero.date}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {(hero.tourName ?? hero.tourRef) && (
+                      <span className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 font-sans text-[9px] font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
+                        <MapPin size={8} aria-hidden="true" />
+                        {hero.tourName ?? hero.tourRef}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-sans text-[28px] font-extrabold leading-none text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.4)]">
-                    98%
-                  </p>
-                  <p className="mt-0.5 font-sans text-[9px] uppercase tracking-widest text-white/65">
-                    5-Star Reviews
-                  </p>
+              ) : (
+                /* Fallback stats when no testimonials exist */
+                <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between p-5">
+                  <div>
+                    <p className="font-sans text-[52px] font-extrabold leading-none text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.4)]">2.4K+</p>
+                    <p className="mt-0.5 font-sans text-[9px] uppercase tracking-widest text-white/65">Happy Travelers</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-sans text-[28px] font-extrabold leading-none text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.4)]">98%</p>
+                    <p className="mt-0.5 font-sans text-[9px] uppercase tracking-widest text-white/65">5-Star Reviews</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </Reveal>
         </div>
 
-        {/* ── Right: 3 testimonial cards ───────────────────────────────── */}
+        {/* Right column: remaining testimonial cards */}
         <div className="flex flex-col gap-3">
-          {displayed.length === 0 ? (
+          {cardCandidates.length === 0 ? (
             <div className="rounded-[14px] border border-khaki/30 bg-white p-8 text-center dark:border-white/10 dark:bg-ocean-card">
               <p className="font-sans text-[14px] text-ocean-deep/70 dark:text-white/60">
                 Guest stories coming soon.
               </p>
             </div>
           ) : (
-            displayed.map((t, i) => (
+            cardCandidates.map((t, i) => (
               <Reveal key={t._id} delayMs={i * 80}>
                 <TestimonialCard testimonial={t} />
               </Reveal>

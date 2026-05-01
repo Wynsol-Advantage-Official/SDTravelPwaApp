@@ -742,6 +742,10 @@ export interface WixTestimonial {
   tourRef?: string;
   /** CMS field: featured */
   featured: boolean;
+  /** CMS field: cover — optional hero cover image for the testimonial */
+  cover?: WixImage;
+  /** CMS field: tourName — human-readable tour name for display */
+  tourName?: string;
 }
 
 function mapTestimonial(item: RawItem): WixTestimonial {
@@ -781,6 +785,12 @@ function mapTestimonial(item: RawItem): WixTestimonial {
       ? rawAvatar
       : getWixImageUrl(rawAvatar);
 
+  // Cover image — optional hero image for the testimonial
+  const rawCover =
+    (item.cover as Record<string, unknown> | string | undefined) ??
+    (item.coverImage as Record<string, unknown> | string | undefined);
+  const cover = rawCover ? mapWixImage(rawCover) : undefined;
+
   return {
     _id: (item._id as string) ?? "",
     name: (item.name as string) ?? "",
@@ -789,6 +799,8 @@ function mapTestimonial(item: RawItem): WixTestimonial {
     date,
     tourRef,
     featured: (item.featured as boolean) ?? false,
+    cover,
+    tourName: (item.tourName as string) ?? undefined,
   };
 }
 

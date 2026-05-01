@@ -11,24 +11,29 @@ import type { WixTestimonial } from "@/lib/services";
 
 function StarRating({ count = 5 }: { count?: number }) {
   return (
-    <div
-      className="flex items-center gap-0.5"
-      aria-label={`${count} out of 5 stars`}
-    >
-      {Array.from({ length: 5 }, (_, i) => (
-        <svg
-          key={i}
-          viewBox="0 0 12 12"
-          className={`h-3 w-3 ${
-            i < count
-              ? "fill-ocean dark:fill-blue-chill"
-              : "fill-ocean/20 dark:fill-white/20"
-          }`}
-          aria-hidden="true"
-        >
-          <path d="M6 0l1.35 4.15H11L7.4 6.7l1.35 4.15L6 8.4l-2.75 2.45L4.6 6.7 1 4.15h3.65z" />
-        </svg>
-      ))}
+    <div className="flex items-center gap-2">
+      <div
+        className="flex items-center gap-0.5"
+        aria-label={`${count} out of 5 stars`}
+      >
+        {Array.from({ length: 5 }, (_, i) => (
+          <svg
+            key={i}
+            viewBox="0 0 12 12"
+            className={`h-3.5 w-3.5 ${
+              i < count
+                ? "fill-amber-400"
+                : "fill-ocean/15 dark:fill-white/15"
+            }`}
+            aria-hidden="true"
+          >
+            <path d="M6 0l1.35 4.15H11L7.4 6.7l1.35 4.15L6 8.4l-2.75 2.45L4.6 6.7 1 4.15h3.65z" />
+          </svg>
+        ))}
+      </div>
+      <span className="font-sans text-[10px] font-semibold text-ocean/60 dark:text-white/40">
+        {count}.0
+      </span>
     </div>
   );
 }
@@ -39,11 +44,25 @@ function StarRating({ count = 5 }: { count?: number }) {
 
 function TestimonialCard({ testimonial }: { testimonial: WixTestimonial }) {
   return (
-    <div className="relative rounded-[14px] border border-khaki/30 bg-white p-5 dark:border-white/10 dark:bg-ocean-card">
+    <div className="group relative overflow-hidden rounded-[14px] border border-khaki/30 bg-white pl-5 pr-5 pt-5 pb-5 transition-[transform,box-shadow] duration-220 ease-out hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(0,0,0,0.09)] dark:border-white/10 dark:bg-ocean-card">
+      {/* Left accent bar */}
+      <div
+        className="absolute left-0 top-0 h-full w-1 rounded-l-[14px] bg-linear-to-b from-ocean via-blue-chill to-ocean/30"
+        aria-hidden="true"
+      />
+
+      {/* Decorative background quote */}
+      <span
+        className="pointer-events-none absolute right-4 top-1 select-none font-sans text-[72px] font-black leading-none text-ocean/5 dark:text-white/5"
+        aria-hidden="true"
+      >
+        &rdquo;
+      </span>
+
       <StarRating />
 
-      <blockquote className="mt-3">
-        <p className="font-sans text-[13px] leading-relaxed text-ocean-deep dark:text-white/85">
+      <blockquote className="relative mt-3">
+        <p className="font-sans text-[13px] italic leading-relaxed text-ocean-deep dark:text-white/85">
           &ldquo;{testimonial.quote}&rdquo;
         </p>
       </blockquote>
@@ -56,11 +75,11 @@ function TestimonialCard({ testimonial }: { testimonial: WixTestimonial }) {
               alt={testimonial.name}
               width={36}
               height={36}
-              className="h-9 w-9 shrink-0 rounded-full object-cover"
+              className="h-9 w-9 shrink-0 rounded-full object-cover ring-2 ring-ocean/10 dark:ring-white/10"
               unoptimized={testimonial.avatar.startsWith("data:")}
             />
           ) : (
-            <div className="h-9 w-9 shrink-0 rounded-full bg-ocean/10 dark:bg-ocean/20" />
+            <div className="h-9 w-9 shrink-0 rounded-full bg-linear-to-br from-ocean/20 to-blue-chill/20 ring-2 ring-ocean/10 dark:ring-white/10" />
           )}
           <div className="min-w-0">
             <p className="truncate font-sans text-[13px] font-semibold text-ocean-deep dark:text-white">
@@ -74,9 +93,9 @@ function TestimonialCard({ testimonial }: { testimonial: WixTestimonial }) {
           </div>
         </div>
 
-        {/* Decorative arrow */}
+        {/* Arrow button — fills on hover */}
         <div
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-khaki/40 text-ocean-deep/40 dark:border-white/15 dark:text-white/40"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-ocean/20 bg-ocean/5 text-ocean transition-[background-color,color] duration-220 group-hover:bg-ocean group-hover:text-white dark:border-white/15 dark:bg-white/5 dark:text-white/50 dark:group-hover:bg-blue-chill dark:group-hover:text-ocean-deep"
           aria-hidden="true"
         >
           <ArrowUpRight size={13} />
@@ -107,13 +126,25 @@ export async function LuxuryTestimonials() {
         {/* ── Left: heading card + hero image ────────────────────────── */}
         <div className="flex flex-col gap-5">
           <Reveal>
-            <div className="rounded-[14px] border border-khaki/30 bg-white p-7 dark:border-white/10 dark:bg-ocean-card">
-              <p className="font-sans text-[9px] uppercase tracking-widest text-ocean dark:text-blue-chill">
+            <div className="relative overflow-hidden rounded-[14px] border border-khaki/30 bg-white p-7 dark:border-white/10 dark:bg-ocean-card">
+              {/* Decorative radial glow */}
+              <div
+                className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-ocean/5 blur-2xl dark:bg-blue-chill/8"
+                aria-hidden="true"
+              />
+              {/* Top accent line */}
+              <div
+                className="absolute left-0 right-0 top-0 h-0.5 rounded-t-[14px] bg-linear-to-r from-ocean via-blue-chill to-transparent"
+                aria-hidden="true"
+              />
+
+              <p className="relative flex items-center gap-1.5 font-sans text-[9px] uppercase tracking-widest text-ocean dark:text-blue-chill">
+                <span aria-hidden="true" className="text-[10px]">◆</span>
                 Guest Experiences
               </p>
               <h2
                 id="luxury-testimonials-heading"
-                className="mt-3 font-sans text-[26px] font-bold leading-tight text-ocean-deep dark:text-white sm:text-[30px]"
+                className="relative mt-3 font-sans text-[26px] font-bold leading-tight text-ocean-deep dark:text-white sm:text-[30px]"
               >
                 Hear From Our{" "}
                 <em className="italic text-ocean dark:text-blue-chill-300">
@@ -124,6 +155,10 @@ export async function LuxuryTestimonials() {
                   ♥
                 </span>
               </h2>
+              <p className="relative mt-3 font-sans text-[13px] leading-relaxed text-ocean-deep/55 dark:text-white/50">
+                Join over 2,400 travelers who've trusted Sand Diamonds with their
+                dream Caribbean escape.
+              </p>
             </div>
           </Reveal>
 
@@ -135,21 +170,45 @@ export async function LuxuryTestimonials() {
                 alt="Luxury Caribbean travel destination"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
+                className="object-cover brightness-90"
               />
-              {/* Gradient scrim */}
+
+              {/* Layered scrims: strong bottom, lighter top vignette */}
               <div
-                className="absolute inset-0 bg-linear-to-t from-ocean-deep/75 via-ocean-deep/15 to-transparent"
+                className="absolute inset-0 bg-linear-to-t from-ocean-deep/90 via-ocean-deep/30 to-transparent"
                 aria-hidden="true"
               />
-              {/* Stat overlay */}
-              <div className="absolute bottom-5 right-5 text-right">
-                <p className="font-sans text-[52px] font-extrabold leading-none text-white drop-shadow-md">
-                  2.4K+
-                </p>
-                <p className="font-sans text-[9px] uppercase tracking-widest text-white/65">
-                  Happy Travelers
-                </p>
+              <div
+                className="absolute inset-0 bg-linear-to-b from-ocean-deep/30 via-transparent to-transparent"
+                aria-hidden="true"
+              />
+
+              {/* Floating badge — top left */}
+              <div className="absolute left-4 top-4">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 font-sans text-[9px] font-bold uppercase tracking-widest text-white backdrop-blur-sm">
+                  <span aria-hidden="true" className="text-amber-400">◆</span>
+                  Diamond Class
+                </span>
+              </div>
+
+              {/* Stats row — bottom */}
+              <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between p-5">
+                <div>
+                  <p className="font-sans text-[52px] font-extrabold leading-none text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.4)]">
+                    2.4K+
+                  </p>
+                  <p className="mt-0.5 font-sans text-[9px] uppercase tracking-widest text-white/65">
+                    Happy Travelers
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="font-sans text-[28px] font-extrabold leading-none text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.4)]">
+                    98%
+                  </p>
+                  <p className="mt-0.5 font-sans text-[9px] uppercase tracking-widest text-white/65">
+                    5-Star Reviews
+                  </p>
+                </div>
               </div>
             </div>
           </Reveal>
@@ -176,17 +235,43 @@ export async function LuxuryTestimonials() {
 
       {/* ── Bottom CTA band ─────────────────────────────────────────── */}
       <Reveal>
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-[14px] bg-ocean-deep px-7 py-5 dark:bg-ocean-card">
-          <p className="font-sans text-[20px] font-bold text-white sm:text-[22px]">
-            Be Our Next{" "}
-            <em className="italic text-blue-chill-300">Diamond</em> Traveler
-          </p>
-          <Link
-            href="/tours"
-            className="shrink-0 rounded-[10px] bg-white px-5 py-2.5 font-sans text-[11px] font-bold uppercase tracking-widest text-ocean-deep transition-[background-color,transform] duration-220 ease-out hover:-translate-y-0.5 hover:bg-blue-chill-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        <div className="relative mt-5 overflow-hidden rounded-[14px] bg-ocean-deep px-7 py-6 dark:bg-ocean-card">
+          {/* Decorative diamond glyphs */}
+          <span
+            className="pointer-events-none absolute right-24 top-1/2 -translate-y-1/2 select-none font-sans text-[80px] font-black leading-none text-white/5"
+            aria-hidden="true"
           >
-            Explore Tours
-          </Link>
+            ◆
+          </span>
+          <span
+            className="pointer-events-none absolute right-12 top-1/2 -translate-y-1/2 select-none font-sans text-[40px] font-black leading-none text-white/5"
+            aria-hidden="true"
+          >
+            ◆
+          </span>
+          {/* Top accent line */}
+          <div
+            className="absolute left-0 right-0 top-0 h-px bg-linear-to-r from-blue-chill/60 via-blue-chill/20 to-transparent"
+            aria-hidden="true"
+          />
+
+          <div className="relative flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="font-sans text-[9px] uppercase tracking-widest text-blue-chill/70">
+                ◆ Sand Diamonds Travel
+              </p>
+              <p className="mt-1 font-sans text-[20px] font-bold text-white sm:text-[22px]">
+                Be Our Next{" "}
+                <em className="italic text-blue-chill-300">Diamond</em> Traveler
+              </p>
+            </div>
+            <Link
+              href="/tours"
+              className="shrink-0 rounded-[10px] bg-white px-5 py-2.5 font-sans text-[11px] font-bold uppercase tracking-widest text-ocean-deep transition-[background-color,transform] duration-220 ease-out hover:-translate-y-0.5 hover:bg-blue-chill-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              Explore Tours
+            </Link>
+          </div>
         </div>
       </Reveal>
     </section>

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { headers } from "next/headers";
 import localFont from "next/font/local";
 import { DesktopShell } from "@/components/layout";
@@ -141,8 +142,10 @@ function TravelAgencyJsonLd() {
   };
 
   return (
-    <script
+    <Script
+      id="travel-agency-jsonld"
       type="application/ld+json"
+      strategy="afterInteractive"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
   );
@@ -189,7 +192,9 @@ export default async function RootLayout({
         {/* Tenant branding CSS custom properties (SOW §9) */}
         <style dangerouslySetInnerHTML={{ __html: `:root { ${cssVars} }` }} />
         {/* Anti-FOUC: apply stored/OS theme before first paint */}
-        <script
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var s=localStorage.getItem('sdtravel-theme');var p=window.matchMedia('(prefers-color-scheme:dark)').matches;var d=s!==null?s==='dark':p;if(d){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','sanddiamonds-dark');}}catch(e){}})();`,
           }}

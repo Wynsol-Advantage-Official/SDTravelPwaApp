@@ -191,7 +191,7 @@ export async function LuxuryTestimonials() {
 
           {/* Hero: featured testimonial cover image with quote overlay */}
           <Reveal>
-            <div className="relative min-h-60 flex-1 overflow-hidden rounded-[14px] lg:min-h-0">
+            <div className="relative min-h-60 h-[240px] flex-1 overflow-hidden rounded-[14px] lg:min-h-0">
               <Image
                 src={heroCoverSrc}
                 alt={heroCoverAlt}
@@ -199,7 +199,7 @@ export async function LuxuryTestimonials() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover brightness-90"
               />
-
+sdfsd
               {/* Layered scrims */}
               <div
                 className="absolute inset-0 bg-linear-to-t from-ocean-deep/92 via-ocean-deep/40 to-transparent"
@@ -221,7 +221,6 @@ export async function LuxuryTestimonials() {
               {/* Quote + author overlay — bottom */}
               {hero ? (
                 <div className="absolute bottom-0 left-0 right-0 p-5">
-                  {/* Stars */}
                   <div className="mb-2 flex items-center gap-0.5" aria-label="5 out of 5 stars">
                     {Array.from({ length: 5 }, (_, i) => (
                       <svg key={i} viewBox="0 0 12 12" className="h-3 w-3 fill-amber-400" aria-hidden="true">
@@ -229,15 +228,11 @@ export async function LuxuryTestimonials() {
                       </svg>
                     ))}
                   </div>
-
-                  {/* Quote */}
                   <blockquote>
                     <p className="line-clamp-3 font-sans text-[14px] italic leading-relaxed text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.5)]">
                       &ldquo;{hero.quote}&rdquo;
                     </p>
                   </blockquote>
-
-                  {/* Author + tour reference */}
                   <div className="mt-3 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2.5">
                       {hero.avatar ? (
@@ -259,7 +254,6 @@ export async function LuxuryTestimonials() {
                         )}
                       </div>
                     </div>
-
                     {(hero.tourName ?? hero.tourRef) && (
                       <span className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 font-sans text-[9px] font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
                         <MapPin size={8} aria-hidden="true" />
@@ -269,7 +263,6 @@ export async function LuxuryTestimonials() {
                   </div>
                 </div>
               ) : (
-                /* Fallback stats when no testimonials exist */
                 <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between p-5">
                   <div>
                     <p className="font-sans text-[52px] font-extrabold leading-none text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.4)]">2.4K+</p>

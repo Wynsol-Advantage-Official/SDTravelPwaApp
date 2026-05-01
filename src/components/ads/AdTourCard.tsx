@@ -20,7 +20,9 @@ export function AdTourCard({ ad }: AdTourCardProps) {
   const href = ad.href ?? "/tours";
 
   return (
+    <article
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-[transform,box-shadow] duration-220 ease-out hover:-translate-y-1 hover:shadow-[0_8px_28px_rgba(0,0,0,0.12)] dark:border-white/10 dark:bg-ocean-card"
+    >
       {/* ── Cover image ──────────────────────────────────────────────── */}
       <div className="relative h-50 w-full shrink-0 overflow-hidden">
         <Image

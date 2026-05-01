@@ -16,6 +16,7 @@ export const DEFAULT_BRANDING: Required<TenantBranding> = {
   tagline: "Where Every Journey Becomes a Diamond",
   supportEmail: "support@sanddiamondstravel.com",
   phone: "+1 876 276-7352",
+  social: {},
 }
 
 /**
@@ -41,6 +42,7 @@ export async function getTenantBranding(
       tagline: branding?.tagline || DEFAULT_BRANDING.tagline,
       supportEmail: branding?.supportEmail || DEFAULT_BRANDING.supportEmail,
       phone: branding?.phone || DEFAULT_BRANDING.phone,
+      social: branding?.social ?? DEFAULT_BRANDING.social,
     }
   } catch (err) {
     console.error(`[Branding] Failed to fetch branding for tenant ${tenantId}:`, err)

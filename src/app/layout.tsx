@@ -8,7 +8,8 @@ import OfflineBanner from "@/components/pwa/OfflineBanner";
 import { AuthProvider } from "@/hooks/useAuth";
 import { MockModeProvider } from "@/hooks/useMockMode";
 import { TenantProvider } from "@/hooks/useTenant";
-import { SessionExpiryDialog } from "@/components/auth";
+import { SessionExpiryDialog } from "@/components/auth"
+import { ContactWidgetGate } from "@/components/contact-widget";
 import { BRAND } from "@/lib/config/brand";
 import { getTenantBranding, brandingToCssVars } from "@/lib/services/branding.service";
 import type { TenantContext } from "@/types/tenant";
@@ -212,6 +213,7 @@ export default async function RootLayout({
               </div>
               {/* Session expiry warning — shown 2 min before token expires */}
               <SessionExpiryDialog />
+              <ContactWidgetGate />
             </MockModeProvider>
           </AuthProvider>
         </TenantProvider>

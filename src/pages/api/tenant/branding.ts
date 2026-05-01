@@ -8,7 +8,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { adminDb } from "@/lib/firebase/admin"
 import { lookupTenant } from "@/lib/edge-config/tenant-lookup"
-import type { TenantBranding } from "@/types/tenant"
+import type { TenantBranding, TenantSocialLinks } from "@/types/tenant"
 
 export interface TenantBrandingResponse {
   tenantId: string
@@ -19,6 +19,7 @@ export interface TenantBrandingResponse {
   accentColor: string | null
   supportEmail: string | null
   phone: string | null
+  social: TenantSocialLinks | null
 }
 
 interface ErrorData {
@@ -65,6 +66,7 @@ export default async function handler(
       accentColor: branding.accentColor ?? null,
       supportEmail: branding.supportEmail ?? null,
       phone: branding.phone ?? null,
+      social: branding.social ?? null,
     })
   } catch (err) {
     console.error("[tenant/branding GET]", err)

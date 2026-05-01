@@ -11,6 +11,16 @@ export interface TenantConfig {
   name: string
 }
 
+/** Social media profile URLs for a tenant. */
+export interface TenantSocialLinks {
+  instagram?: string
+  facebook?: string
+  x?: string
+  tiktok?: string
+  youtube?: string
+  linkedin?: string
+}
+
 /** Branding overrides stored in Firestore `tenants/{tenantId}` doc. */
 export interface TenantBranding {
   logo?: string
@@ -19,6 +29,7 @@ export interface TenantBranding {
   tagline?: string
   supportEmail?: string
   phone?: string
+  social?: TenantSocialLinks
 }
 
 /** Full tenant record stored in Firestore `tenants/{tenantId}`. */

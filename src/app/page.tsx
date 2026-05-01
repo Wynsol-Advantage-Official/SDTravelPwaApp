@@ -2,8 +2,10 @@ import {
   LuxuryHero,
   LuxuryDestinations,
   LuxuryToursStats,
+  LuxuryWhyUs,
   LuxuryAds,
   LuxuryTestimonials,
+  LuxuryInsights,
   LuxuryPartnersCta,
 } from "@/components/sections";
 import { HomeMotionConfig } from "@/components/motion";
@@ -22,13 +24,15 @@ export const dynamic = "force-dynamic";
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-dvh bg transition-colors duration-300 dark:bg-ocean-deep">
+    <main className="relative mx-0.5 min-h-dvh bg transition-colors duration-300 dark:bg-ocean-deep">
       <HomeMotionConfig>
         <LuxuryHero />
         <div className="mt-6"><LuxuryDestinations /></div>
         <div className="mt-6"><LuxuryToursStats /></div>
+        <div className="mt-6"><LuxuryWhyUs /></div>
         <div className="mt-6"><LuxuryAds /></div>
         <div className="mt-6"><LuxuryTestimonials /></div>
+        <div className="mt-6"><LuxuryInsights /></div>
         <div className="mt-6"><LuxuryPartnersCta /></div>
       </HomeMotionConfig>
     </main>

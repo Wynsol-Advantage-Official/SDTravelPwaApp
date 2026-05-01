@@ -11,7 +11,9 @@ export {
   LuxuryHero,
   LuxuryDestinations,
   LuxuryToursStats,
+  LuxuryWhyUs,
   LuxuryAds,
   LuxuryTestimonials,
+  LuxuryInsights,
   LuxuryPartnersCta,
 } from "./luxury"
